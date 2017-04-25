@@ -24,7 +24,7 @@
         request.send();
     }
 
-    var domChunk = function(ele){
+    var domChunk = context.domChunk = function(ele){
         if (!ele){
             throw "No element selected";
         }
@@ -33,8 +33,9 @@
         var self = (context == this)? {} : this;
 
         // initialize some private values
-        var segment = ele;
-        var insertAt = segment.querySelector("ins") || ele;
+        self.ele = ele;
+		console.log(ele.prototype, ele.__proto__)
+        var insertAt = ele.querySelector("ins") || ele;
         var children = [];
         var parent = [];
 
@@ -61,7 +62,35 @@
         public_method.unlink = function(){
 
         }
-
+		
+		public_method.render = function(){
+			
+		}
+		
+		public_method.text = function(){
+			
+		}
+		
+		public_method.hasClass = function(){
+			
+		}
+		
+		public_method.addClass = function(){
+			
+		}
+		
+		public_method.removeClass = function(){
+			
+		}
+		
+		public_method.attr = function(){
+			
+		}
+		
+		public_method.css = function(){
+			
+		}
+		
         return self;
     }
 
