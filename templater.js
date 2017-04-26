@@ -121,4 +121,8 @@
 
         return self;
     }
+
+    context.Templater = function(ele){
+        
+    }
 })(this)
