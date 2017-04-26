@@ -24,17 +24,29 @@
         request.send();
     }
 
-    var domChunk = context.domChunk = function(ele){
-        if (!ele){
-            throw "No element selected";
-        }
+    var registeredWrap = context.registeredWrap = [];
 
+    var templateInstance = context.templateInstance = function(ele){
         // detect if new or just calling it
         var self = (context == this)? {} : this;
 
+        if (!ele){
+            throw "No element selected";
+        }
         // initialize some private values
         self.ele = ele;
-        console.log(ele.prototype, ele.__proto__)
+
+        var regID;
+        if (ele.dataset.regId){
+            regID = ele.dataset.regId;
+        }
+        else {
+            regID = registeredWrap.push(self)-1;
+            ele.setAttribute('data-reg-id', regID);
+        }
+
+        console.log(regID);
+
         var insertAt = ele.querySelector("ins") || ele;
         var children = [];
         var parent = [];
@@ -98,8 +110,8 @@
         // detect if new or just calling it
         var self = (context == this)? {} : this;
 
-        // simulate "class instantiateableChunk extends domChunk"
-        var actualChunk = new domChunk(ele);
+        // simulate "class instantiateableChunk extends templateInstance"
+        var actualChunk = new templateInstance(ele);
         Object.setPrototypeOf(self, actualChunk);
 
         // limit the instantiate function here
