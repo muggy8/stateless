@@ -106,11 +106,11 @@
         return self;
     }
 
-    context.instantiateableChunk = function(ele){
+    context.instantiateable = function(ele){
         // detect if new or just calling it
         var self = (context == this)? {} : this;
 
-        // simulate "class instantiateableChunk extends templateInstance"
+        // simulate "class instantiateable extends templateInstance"
         var actualChunk = new templateInstance(ele);
         Object.setPrototypeOf(self, actualChunk);
 
