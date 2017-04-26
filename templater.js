@@ -1,17 +1,17 @@
 (function(context){
     function isEmpty(obj) {
-		for(var prop in obj) {
-			if(obj.hasOwnProperty(prop))
-				return false;
-		}
-		return JSON.stringify(obj) === JSON.stringify({});
-	}
+        for(var prop in obj) {
+            if(obj.hasOwnProperty(prop))
+                return false;
+        }
+        return JSON.stringify(obj) === JSON.stringify({});
+    }
 
     var ajaxGet = function(url, successCallback, failCallback){
         var request = new XMLHttpRequest();
 
         successCallback = successCallback || function (data){/*console.log(data)*/};
-		failCallback = failCallback || function (data){/*console.log(data)*/};
+        failCallback = failCallback || function (data){/*console.log(data)*/};
 
         request.onload = function(){
             successCallback(request)
@@ -34,7 +34,7 @@
 
         // initialize some private values
         self.ele = ele;
-		console.log(ele.prototype, ele.__proto__)
+        console.log(ele.prototype, ele.__proto__)
         var insertAt = ele.querySelector("ins") || ele;
         var children = [];
         var parent = [];
@@ -62,35 +62,35 @@
         public_method.unlink = function(){
 
         }
-		
-		public_method.render = function(){
-			
-		}
-		
-		public_method.text = function(){
-			
-		}
-		
-		public_method.hasClass = function(){
-			
-		}
-		
-		public_method.addClass = function(){
-			
-		}
-		
-		public_method.removeClass = function(){
-			
-		}
-		
-		public_method.attr = function(){
-			
-		}
-		
-		public_method.css = function(){
-			
-		}
-		
+
+        public_method.render = function(){
+
+        }
+
+        public_method.text = function(){
+
+        }
+
+        public_method.hasClass = function(){
+
+        }
+
+        public_method.addClass = function(){
+
+        }
+
+        public_method.removeClass = function(){
+
+        }
+
+        public_method.attr = function(){
+
+        }
+
+        public_method.css = function(){
+
+        }
+
         return self;
     }
 
