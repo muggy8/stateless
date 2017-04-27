@@ -93,7 +93,7 @@
         }
 
         public_method.data = function(){
-            
+
         }
 
         return self;
@@ -133,8 +133,11 @@
         var index = length;
         var id = ele.id || index;
         if (ele.id){
-            ele.className = ele.id + " " + ele.className;
-            ele.className = ele.className.replace(/(^\s|\s$)/);
+            var className = ele.className;
+            ele.className = ele.id;
+            if (className){
+                ele.className += " " + className;
+            }
             ele.removeAttribute("id");
         }
         length ++;
@@ -163,8 +166,22 @@
         configurable: false,
         writable: false,
         value: function(ele){ // public static function
-            ele.parentElement.removeChild(ele);
-            return pushEle(ele);
+            if (ele instanceof HTMLElement){
+                ele.parentElement && ele.parentElement.removeChild(ele);
+                return pushEle(ele);
+            }
+            else if (typeof ele === "string"){
+                var converter = document.createElement("div");
+                converter.innerHTML = ele;
+                stateless.consume(converter.children);
+            }
+            else if (ele.length && ele[0] ){ //
+                for (var i = 0; i < ele.length; i++){
+                    var el = ele[i];
+                    el.parentElement && el.parentElement.removeChild(el);
+                    pushEle(el);
+                }
+            }
         }
     });
 

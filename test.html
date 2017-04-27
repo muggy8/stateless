@@ -8,8 +8,9 @@ ideal usage:
 
 step 1 - register:
 stateless.register (element)
-stateless.import (url)
 stateless.register (htmlString)
+stateless.register ([elements...])
+stateless.import (url)
 
 step 2 - instantiate
 var item = stateless.instantiate(id)
@@ -30,13 +31,20 @@ item.html(string)
 item.attr(string [, string])
 item.data(string [,string])
 </pre>
-        <div id="first-div" class="test1-div"></div>
+        <div id="first-div" class="test1-div">
+            <strong>testing</strong>
+            <p>I am testing something bla bla</p>
+        </div>
+        <div class="test2-div"></div>
+        <div class="test2-div"></div>
         <div class="test2-div"></div>
         <script>
             // var segment1 = new templateInstance(document.querySelector(".test1-div"))
             // var segment2 = new instantiateable(document.querySelector(".test2-div"))
 
-            stateless.register(document.querySelector(".test1-div"))
+            stateless.register(document.querySelector(".test1-div"));
+            stateless.register("<div id='string-div'>I was made from a string</div>");
+            stateless.register(document.querySelectorAll(".test2-div"));
             stateless.forEach(function(item){
                 console.log(item);
             });
