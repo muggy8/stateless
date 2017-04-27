@@ -170,10 +170,11 @@
             }
             else if (ele.length && ele[0] ){ //
                 for (var i = 0; i < ele.length; i++){
-                    var el = ele[i];
-                    el.parentElement && el.parentElement.removeChild(el);
-                    pushEle(el);
+                    stateless.consume(ele[i]);
                 }
+            }
+            else {
+                throw new Error("Invalid inputs");
             }
         }
     });
