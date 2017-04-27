@@ -36,17 +36,6 @@
         // initialize some private values
         self.ele = ele;
 
-        var regID;
-        if (ele.dataset.regId){
-            regID = ele.dataset.regId;
-        }
-        else {
-            regID = registeredWrap.push(self)-1;
-            ele.setAttribute('data-reg-id', regID);
-        }
-
-        console.log(regID);
-
         var insertAt = ele.querySelector("ins") || ele;
         var children = [];
         var parent = [];
@@ -122,7 +111,46 @@
         return self;
     }
 
-    context.Templater = function(ele){
-        
-    }
+    context.stateless = {};
+    var statelessOpps = {};
+    Object.setPrototypeOf(context.stateless, statelessOpps);
+
+    var length = 0;
+    // public unchangeable variable
+    Object.defineProperty(statelessOpps, "length", {
+        enumerable: false,
+        configurable: false,
+        writable: false,
+        value: length
+    });
+
+    Object.defineProperty(statelessOpps, "push", {
+        enumerable: false,
+        configurable: false,
+        writable: false,
+        value: function(ele){ // public static function
+
+        }
+    });
+
+    Object.defineProperty(statelessOpps, "consume", {
+        enumerable: false,
+        configurable: false,
+        writable: false,
+        value: function(ele){ // public static function
+            
+        }
+    });
+
+    Object.defineProperty(statelessOpps, "instantiate", {
+        enumerable: false,
+        configurable: false,
+        writable: false,
+        value: function(identifyer){ // public static function
+
+        }
+    });
+
+
+
 })(this)
