@@ -120,25 +120,42 @@
     Object.defineProperty(statelessOpps, "length", {
         enumerable: false,
         configurable: false,
-        writable: false,
-        value: length
-    });
-
-    Object.defineProperty(statelessOpps, "push", {
-        enumerable: false,
-        configurable: false,
-        writable: false,
-        value: function(ele){ // public static function
-
+        get: function(){
+            return length;
         }
     });
+
+    var pushEle = function (ele){
+        var index = length;
+        var id = ele.id || index;
+        length ++;
+
+        Object.defineProperty(context.stateless, id, {
+            enumerable: false,
+            configurable: false,
+            writable: false,
+            value: ele
+        });
+
+        if (!context.stateless[index]){
+            Object.defineProperty(context.stateless, index, {
+                enumerable: false,
+                configurable: false,
+                writable: false,
+                value: ele
+            });
+        }
+
+        return id;
+    }
 
     Object.defineProperty(statelessOpps, "consume", {
         enumerable: false,
         configurable: false,
         writable: false,
         value: function(ele){ // public static function
-            
+            ele.parentElement.removeChild(ele);
+            return pushEle(ele);
         }
     });
 
