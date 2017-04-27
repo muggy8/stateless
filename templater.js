@@ -112,15 +112,8 @@
     var statelessOpps = {};
     Object.setPrototypeOf(context.stateless, statelessOpps);
 
+    // private values to be manipulated internally
     var length = 0;
-    // public unchangeable variable
-    Object.defineProperty(statelessOpps, "length", {
-        enumerable: false,
-        configurable: false,
-        get: function(){
-            return length;
-        }
-    });
 
     var pushEle = function (ele){
         var index = length;
@@ -153,6 +146,14 @@
 
         return id;
     }
+    // public unchangeable variable
+    Object.defineProperty(statelessOpps, "length", {
+        enumerable: false,
+        configurable: false,
+        get: function(){
+            return length;
+        }
+    });
 
     Object.defineProperty(statelessOpps, "consume", {
         enumerable: false,
