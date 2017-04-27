@@ -193,7 +193,7 @@
             ajaxGet(url, function(xmlhttp){
                 stateless.consume(xmlhttp.responseText);
             }, function(xmlhttp){
-                throw new Error("The URL did not load. Either the network failed or the URL was incorrect");
+                throw new Error("The URL failed to load");
             })
         }
     });
