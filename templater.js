@@ -164,6 +164,13 @@
         }
     });
 
+    Object.defineProperty(statelessOpps, "register", {
+        enumerable: false,
+        configurable: false,
+        writable: false,
+        value: statelessOpps.consume
+    });
+
     Object.defineProperty(statelessOpps, "forEach", {
         enumerable: false,
         configurable: false,
