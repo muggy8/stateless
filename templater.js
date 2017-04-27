@@ -1,4 +1,8 @@
 (function(context){
+
+    // --------------------------------------------------------
+    // helper functions that do stuff
+    // --------------------------------------------------------
     function isEmpty(obj) {
         for(var prop in obj) {
             if(obj.hasOwnProperty(prop))
@@ -24,8 +28,9 @@
         request.send();
     }
 
-    var registeredWrap = context.registeredWrap = [];
-
+    // --------------------------------------------------------
+    // templater that does the heavy lifting kinda
+    // --------------------------------------------------------
     var templateInstance = context.templateInstance = function(ele){
         // detect if new or just calling it
         var self = (context == this)? {} : this;
@@ -99,22 +104,10 @@
         return self;
     }
 
-    context.instantiateable = function(ele){
-        // detect if new or just calling it
-        var self = (context == this)? {} : this;
 
-        // simulate "class instantiateable extends templateInstance"
-        var actualChunk = new templateInstance(ele);
-        Object.setPrototypeOf(self, actualChunk);
-
-        // limit the instantiate function here
-        actualChunk.instantiate = function(){
-
-        }
-
-        return self;
-    }
-
+    // --------------------------------------------------------
+    // Stateless object exposed to the main execution scope for managing and playing with the templates
+    // --------------------------------------------------------
     context.stateless = {};
     var statelessOpps = {};
     Object.setPrototypeOf(context.stateless, statelessOpps);
