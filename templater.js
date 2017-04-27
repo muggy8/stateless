@@ -159,6 +159,17 @@
         }
     });
 
+    Object.defineProperty(statelessOpps, "forEach", {
+        enumerable: false,
+        configurable: false,
+        writable: false,
+        value: function(callback){
+            for (var i = 0; i < length; i++){
+                callback(context.stateless[i], i, context.stateless);
+            }
+        }
+    })
+
     Object.defineProperty(statelessOpps, "instantiate", {
         enumerable: false,
         configurable: false,
