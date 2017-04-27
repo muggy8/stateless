@@ -185,6 +185,19 @@
         }
     });
 
+    Object.defineProperty(statelessOpps, "import", {
+        enumerable: false,
+        configurable: false,
+        writable: false,
+        value: function(url){
+            ajaxGet(url, function(xmlhttp){
+                stateless.consume(xmlhttp.responseText);
+            }, function(xmlhttp){
+                throw new Error("The URL did not load. Either the network failed or the URL was incorrect");
+            })
+        }
+    });
+
     Object.defineProperty(statelessOpps, "register", {
         enumerable: false,
         configurable: false,
