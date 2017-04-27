@@ -92,6 +92,10 @@
 
         }
 
+        public_method.data = function(){
+            
+        }
+
         return self;
     }
 

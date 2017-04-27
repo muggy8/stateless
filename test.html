@@ -3,13 +3,40 @@
         <script src="templater.js"></script>
     </head>
     <body>
+<pre>
+ideal usage:
+
+step 1 - register:
+stateless.register (element)
+stateless.import (url)
+stateless.register (htmlString)
+
+step 2 - instantiate
+var item = stateless.instantiate(id)
+
+step 3 - manipulate the item
+item.render() -> renders to body
+item.addClass(string)
+item.removeClass(string)
+item.hasClass(string)
+item.css(string [, string])
+item.appendChild(item)
+item.unlink()
+item.on(callback)
+item.off(callback)
+item.once(callback)
+item.text(string)
+item.html(string)
+item.attr(string [, string])
+item.data(string [,string])
+</pre>
         <div id="first-div" class="test1-div"></div>
         <div class="test2-div"></div>
         <script>
             // var segment1 = new templateInstance(document.querySelector(".test1-div"))
             // var segment2 = new instantiateable(document.querySelector(".test2-div"))
 
-            stateless.consume(document.querySelector(".test1-div"))
+            stateless.register(document.querySelector(".test1-div"))
             stateless.forEach(function(item){
                 console.log(item);
             });
