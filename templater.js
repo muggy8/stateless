@@ -128,6 +128,11 @@
     var pushEle = function (ele){
         var index = length;
         var id = ele.id || index;
+        if (ele.id){
+            ele.className = ele.id + " " + ele.className;
+            ele.className = ele.className.replace(/(^\s|\s$)/);
+            ele.removeAttribute("id");
+        }
         length ++;
 
         Object.defineProperty(context.stateless, id, {
@@ -178,7 +183,5 @@
 
         }
     });
-
-
 
 })(this)
