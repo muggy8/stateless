@@ -119,13 +119,17 @@
 
         }
 
-        public_method.appendChild = function(){
-
-        }
-
         public_method.include = function(ele){
             insertAt.appendChild(ele);
             recursiveDefineScope(ele, false);
+            return self;
+        }
+
+        public_method.appendChild = function(childContext){
+            childContext.unlink();
+            Object.setPrototypeOf(Object.getPrototypeOf(childContext), self);
+            ele.appendChild(childContext.element())
+            return self;
         }
 
         public_method.unlink = function(){
@@ -134,6 +138,7 @@
 
         public_method.render = function(){
             document.body.appendChild(ele)
+            return self
         }
 
         public_method.text = function(){

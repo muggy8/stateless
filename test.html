@@ -59,6 +59,8 @@ instantiated_domobject.context -> property that provides the templateInstance
                 });
 
             var firstDiv = stateless.instantiate("first-div")
+                .appendChild(stateless.instantiate(2))
+                .render();
         </script>
     </body>
 </html>
