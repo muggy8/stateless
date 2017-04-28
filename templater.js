@@ -123,12 +123,17 @@
 
         }
 
+        public_method.include = function(ele){
+            insertAt.appendChild(ele);
+            recursiveDefineScope(ele, false);
+        }
+
         public_method.unlink = function(){
 
         }
 
         public_method.render = function(){
-
+            
         }
 
         public_method.text = function(){
