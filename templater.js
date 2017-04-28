@@ -31,7 +31,7 @@
     // --------------------------------------------------------
     // templater that does the heavy lifting kinda
     // --------------------------------------------------------
-    var templateInstance = context.templateInstance = function(ele){
+    var templateInstance = function(ele){
         // detect if new or just calling it
         var self = (context == this)? {} : this;
 
@@ -162,7 +162,6 @@
         value: function(ele){ // public static function
             if (ele instanceof HTMLElement){
                 ele.parentElement && ele.parentElement.removeChild(ele);
-                return pushEle(ele);
             }
             else if (typeof ele === "string"){
                 var converter = document.createElement("div");
@@ -177,6 +176,7 @@
             else {
                 throw new Error("Invalid inputs");
             }
+            return context.stateless;
         }
     });
 
@@ -189,7 +189,8 @@
                 stateless.consume(xmlhttp.responseText);
             }, function(xmlhttp){
                 throw new Error("The URL failed to load");
-            })
+            });
+            return context.stateless;
         }
     });
 
@@ -200,14 +201,15 @@
         value: statelessOpps.consume
     });
 
-    Object.defineProperty(statelessOpps, "forEach", {
+    Object.defineProperty(statelessOpps, "each", {
         enumerable: false,
         configurable: false,
         writable: false,
         value: function(callback){
             for (var i = 0; i < length; i++){
-                callback(context.stateless[i], i, context.stateless);
+                callback(context.stateless[i], i);
             }
+            return context.stateless;
         }
     })
 
@@ -216,7 +218,13 @@
         configurable: false,
         writable: false,
         value: function(identifyer){ // public static function
-
+            if (stateless[identifyer]) {
+                var instance = new templateInstance(stateless[identifyer].cloneNode(true));
+                return instance;
+            }
+            else {
+                throw new Error( identifyer + " cannot be found in the template librare");
+            }
         }
     });
 

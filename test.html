@@ -30,6 +30,9 @@ item.text(string)
 item.html(string)
 item.attr(string [, string])
 item.data(string [,string])
+
+Other tools:
+stateless.each(callback(item, index));
 </pre>
         <div id="first-div" class="test1-div">
             <strong>testing</strong>
@@ -43,11 +46,13 @@ item.data(string [,string])
             // var segment2 = new instantiateable(document.querySelector(".test2-div"))
 
             stateless.register(document.querySelector(".test1-div"));
-            stateless.register("<div id='string-div'>I was made from a string</div>");
-            stateless.register(document.querySelectorAll(".test2-div"));
-            stateless.forEach(function(item){
-                console.log(item);
-            });
+                .register("<div id='string-div'>I was made from a string</div>");
+                .register(document.querySelectorAll(".test2-div"));
+                .each(function(item){
+                    console.log(item);
+                });
+
+            var firstDiv = stateless.instantiate("first-div")
         </script>
     </body>
 </html>
