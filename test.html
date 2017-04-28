@@ -44,7 +44,9 @@ instantiated_domobject.context -> property that provides the templateInstance
             <strong>testing</strong>
             <p>I am testing something bla bla</p>
         </div>
-        <div class="test2-div"></div>
+        <div class="test2-div" >
+            <a href="javascript:void[0]" onclick="this.context.fn()">Here is something to click on</a>
+        </div>
         <div class="test2-div"></div>
         <div class="test2-div"></div>
         <script>
@@ -60,7 +62,10 @@ instantiated_domobject.context -> property that provides the templateInstance
 
             var firstDiv = stateless.instantiate("first-div")
                 .appendChild(stateless.instantiate(2))
-                .render();
+                .render()
+                .fn = function(){
+                    console.log("I got called");
+                };
         </script>
     </body>
 </html>
