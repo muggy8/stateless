@@ -133,7 +133,7 @@
         }
 
         public_method.render = function(){
-            
+            document.body.appendChild(ele)
         }
 
         public_method.text = function(){
