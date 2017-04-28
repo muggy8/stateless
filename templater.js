@@ -161,8 +161,14 @@
 
         }
 
-        public_method.attr = function(){
-
+        public_method.attr = function(attribute, value){
+            if (typeof value == "undefined") {
+                return ele.getAttribute(attribute)
+            }
+            else {
+                ele.setAttribute(attribute, value)
+                return self
+            }
         }
 
         public_method.css = function(){

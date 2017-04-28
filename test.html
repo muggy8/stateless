@@ -57,18 +57,19 @@ instantiated_domobject.scope -> property that provides the templateInstance
                 .register("<div id='string-div'>I was made from a string</div>")
                 .register(document.querySelectorAll(".test2-div"))
                 .each(function(item){
-                    console.log(item);
+                    console.log(item)
                 });
 
             var firstDiv = stateless.instantiate("first-div")
                 .appendChild(stateless.instantiate(2))
                 .render()
-                .fn = function(){
+
+            firstDiv.fn = function(){
                     console.log("I got called");
                 };
 
             var secondDiv = document.querySelector("a").scope.unlink()
-                .render();
+                .render()
         </script>
     </body>
 </html>
