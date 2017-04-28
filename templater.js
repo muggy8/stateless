@@ -53,7 +53,7 @@
             enumerable: false,
             configurable: false,
             get: function(){
-                return ele.parentNode && ele.parentNode.context
+                return ele.parentNode && ele.parentNode.scope
             }
         })
 
@@ -63,9 +63,9 @@
             get: function(){
                 if (insertAt.children){
                     return Array.prototype.filter.call(insertAt.children, function(item){
-                        return (item.context && item.context != self)
+                        return (item.scope && item.scope != self)
                     }).map(function(item){
-                        return item.context
+                        return item.scope
                     })
                 }
                 else {
@@ -78,12 +78,12 @@
             enumerable: false,
             configurable: false,
             get: function(){
-                function getParentR (context){
-                    if (context.parent) {
-                        return getParentR(context.parent)
+                function getParentR (scope){
+                    if (scope.parent) {
+                        return getParentR(scope.parent)
                     }
                     else {
-                        return context
+                        return scope
                     }
                 }
                 return getParentR(self)
@@ -91,7 +91,7 @@
         })
 
         function recursiveDefineScope (ele, recur){
-             Object.defineProperty(ele, "context", {
+             Object.defineProperty(ele, "scope", {
                 enumerable: false,
                 configurable: false,
                 get: function(){
@@ -125,10 +125,10 @@
             return self
         }
 
-        public_method.appendChild = function(childContext){
-            childContext.unlink()
-            Object.setPrototypeOf(Object.getPrototypeOf(childContext), self)
-            ele.appendChild(childContext.element())
+        public_method.appendChild = function(childScope){
+            childScope.unlink()
+            Object.setPrototypeOf(Object.getPrototypeOf(childScope), self)
+            ele.appendChild(childScope.element())
             return self
         }
 

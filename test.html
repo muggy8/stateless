@@ -31,21 +31,21 @@ item.attr(string [, string]) -> get or set the attribute
 item.data(string [,string]) -> get or set the data- attribute
 item.define(callback(element)) -> define a peroperty for the object
 item.element() -> gets the dom element
-item.children -> read only property that returns all child contexts
-item.parent -> read only property that returns the parent context if it exists;
-item.root -> returns the root context of the chain;
-item.include() -> inclode another html node into the currnet context
+item.children -> read only property that returns all child scopes
+item.parent -> read only property that returns the parent scope if it exists;
+item.root -> returns the root scope of the chain;
+item.include() -> inclode another html node into the currnet scope
 
 Other options:
 stateless.each(callback(item, index)) -> itterate through all the templates once
-instantiated_domobject.context -> property that provides the templateInstance
+instantiated_domobject.scope -> property that provides the templateInstance
 </pre>
         <div id="first-div" class="test1-div">
             <strong>testing</strong>
             <p>I am testing something bla bla</p>
         </div>
         <div class="test2-div" >
-            <a href="javascript:void[0]" onclick="this.context.fn()">Here is something to click on</a>
+            <a href="javascript:void[0]" onclick="this.scope.fn()">Here is something to click on</a>
         </div>
         <div class="test2-div"></div>
         <div class="test2-div"></div>
@@ -67,7 +67,7 @@ instantiated_domobject.context -> property that provides the templateInstance
                     console.log("I got called");
                 };
 
-            var secondDiv = document.querySelector("a").context.unlink()
+            var secondDiv = document.querySelector("a").scope.unlink()
                 .render();
         </script>
     </body>
