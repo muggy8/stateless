@@ -39,7 +39,7 @@
             throw "No element selected";
         }
         // initialize some private values
-        self.ele = ele;
+        //self.ele = ele;
 
         var insertAt = ele.querySelector("ins") || ele;
         var children = [];
@@ -99,6 +99,14 @@
 
         public_method.data = function(){
 
+        }
+
+        public_method.define = function(){
+
+        }
+
+        public_method.element = function(){
+            return ele;
         }
 
         return self;
