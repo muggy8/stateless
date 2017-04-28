@@ -162,6 +162,7 @@
         value: function(ele){ // public static function
             if (ele instanceof HTMLElement){
                 ele.parentElement && ele.parentElement.removeChild(ele);
+                pushEle(ele);
             }
             else if (typeof ele === "string"){
                 var converter = document.createElement("div");

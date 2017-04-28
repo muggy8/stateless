@@ -45,9 +45,9 @@ stateless.each(callback(item, index));
             // var segment1 = new templateInstance(document.querySelector(".test1-div"))
             // var segment2 = new instantiateable(document.querySelector(".test2-div"))
 
-            stateless.register(document.querySelector(".test1-div"));
-                .register("<div id='string-div'>I was made from a string</div>");
-                .register(document.querySelectorAll(".test2-div"));
+            stateless.register(document.querySelector(".test1-div"))
+                .register("<div id='string-div'>I was made from a string</div>")
+                .register(document.querySelectorAll(".test2-div"))
                 .each(function(item){
                     console.log(item);
                 });
