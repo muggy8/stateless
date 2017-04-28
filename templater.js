@@ -53,7 +53,7 @@
             enumerable: false,
             configurable: false,
             get: function(){
-                return ele.parentNode && ele.parentNode.scope;
+                return ele.parentNode && ele.parentNode.context;
             }
         });
 
@@ -63,9 +63,9 @@
             get: function(){
                 if (insertAt.children){
                     return Array.prototype.filter.call(insertAt.children, function(item){
-                        return (item.scope && item.scope != self);
+                        return (item.context && item.context != self);
                     }).map(function(item){
-                        return item.scope;
+                        return item.context;
                     })
                 }
                 else {
@@ -74,8 +74,24 @@
             }
         });
 
+        Object.defineProperty(public_method, "root", {
+            enumerable: false,
+            configurable: false,
+            get: function(){
+                function getParentR (context){
+                    if (context.parent) {
+                        return getParentR(context.parent);
+                    }
+                    else {
+                        return context;
+                    }
+                }
+                return getParentR(self);
+            }
+        });
+
         function recursiveDefineScope (ele, recur){
-             Object.defineProperty(ele, "scope", {
+             Object.defineProperty(ele, "context", {
                 enumerable: false,
                 configurable: false,
                 get: function(){
