@@ -6,26 +6,26 @@
     function isEmpty(obj) {
         for(var prop in obj) {
             if(obj.hasOwnProperty(prop))
-                return false;
+                return false
         }
-        return JSON.stringify(obj) === JSON.stringify({});
+        return JSON.stringify(obj) === JSON.stringify({})
     }
 
     var ajaxGet = function(url, successCallback, failCallback){
-        var request = new XMLHttpRequest();
+        var request = new XMLHttpRequest()
 
-        successCallback = successCallback || function (data){/*console.log(data)*/};
-        failCallback = failCallback || function (data){/*console.log(data)*/};
+        successCallback = successCallback || function (data){/*console.log(data)*/}
+        failCallback = failCallback || function (data){/*console.log(data)*/}
 
         request.onload = function(){
             successCallback(request)
-        };
+        }
         request.onerror = function(){
             failCallback(request)
         }
 
-        request.open('GET', url, true);
-        request.send();
+        request.open('GET', url, true)
+        request.send()
     }
 
     // --------------------------------------------------------
@@ -33,29 +33,29 @@
     // --------------------------------------------------------
     var templateInstance = function(ele){
         // detect if new or just calling it
-        var self = (context == this)? {} : this;
+        var self = (context == this)? {} : this
 
         if (!ele){
-            throw "No element selected";
+            throw "No element selected"
         }
         // initialize some private values
-        //self.ele = ele;
+        //self.ele = ele
 
-        var insertAt = ele.querySelector("ins") || ele;
-        var children = [];
-        var parent = [];
+        var insertAt = ele.querySelector("ins") || ele
+        var children = []
+        var parent = []
 
         // set public methods into the prototype of this object.
-        var public_method = {};
-        Object.setPrototypeOf(self, public_method);
+        var public_method = {}
+        Object.setPrototypeOf(self, public_method)
 
         Object.defineProperty(public_method, "parent", {
             enumerable: false,
             configurable: false,
             get: function(){
-                return ele.parentNode && ele.parentNode.context;
+                return ele.parentNode && ele.parentNode.context
             }
-        });
+        })
 
         Object.defineProperty(public_method, "Children", {
             enumerable: false,
@@ -63,16 +63,16 @@
             get: function(){
                 if (insertAt.children){
                     return Array.prototype.filter.call(insertAt.children, function(item){
-                        return (item.context && item.context != self);
+                        return (item.context && item.context != self)
                     }).map(function(item){
-                        return item.context;
+                        return item.context
                     })
                 }
                 else {
-                    return false;
+                    return false
                 }
             }
-        });
+        })
 
         Object.defineProperty(public_method, "root", {
             enumerable: false,
@@ -80,31 +80,31 @@
             get: function(){
                 function getParentR (context){
                     if (context.parent) {
-                        return getParentR(context.parent);
+                        return getParentR(context.parent)
                     }
                     else {
-                        return context;
+                        return context
                     }
                 }
-                return getParentR(self);
+                return getParentR(self)
             }
-        });
+        })
 
         function recursiveDefineScope (ele, recur){
              Object.defineProperty(ele, "context", {
                 enumerable: false,
                 configurable: false,
                 get: function(){
-                    return self;
+                    return self
                 }
-            });
+            })
             if (recur !== false){
                 Array.prototype.forEach.call(ele.querySelectorAll("*"), function(item){
-                    recursiveDefineScope(item, false);
-                });
+                    recursiveDefineScope(item, false)
+                })
             }
-        };
-        recursiveDefineScope(ele);
+        }
+        recursiveDefineScope(ele)
 
 
         public_method.on = function(){
@@ -120,24 +120,24 @@
         }
 
         public_method.include = function(ele){
-            insertAt.appendChild(ele);
-            recursiveDefineScope(ele, false);
-            return self;
+            insertAt.appendChild(ele)
+            recursiveDefineScope(ele, false)
+            return self
         }
 
         public_method.appendChild = function(childContext){
-            childContext.unlink();
-            Object.setPrototypeOf(Object.getPrototypeOf(childContext), self);
+            childContext.unlink()
+            Object.setPrototypeOf(Object.getPrototypeOf(childContext), self)
             ele.appendChild(childContext.element())
-            return self;
+            return self
         }
 
         public_method.unlink = function(){
             if (ele.parentNode) {
-                Object.setPrototypeOf(Object.getPrototypeOf(self), Object.prototype);
-                ele.parentNode.removeChild(ele);
+                Object.setPrototypeOf(Object.getPrototypeOf(self), Object.prototype)
+                ele.parentNode.removeChild(ele)
             }
-            return self;
+            return self
         }
 
         public_method.render = function(){
@@ -178,42 +178,42 @@
         }
 
         public_method.element = function(){
-            return ele;
+            return ele
         }
 
-        return self;
+        return self
     }
 
 
     // --------------------------------------------------------
     // Stateless object exposed to the main execution scope for managing and playing with the templates
     // --------------------------------------------------------
-    context.stateless = {};
-    var statelessOpps = {};
-    Object.setPrototypeOf(context.stateless, statelessOpps);
+    context.stateless = {}
+    var statelessOpps = {}
+    Object.setPrototypeOf(context.stateless, statelessOpps)
 
     // private values to be manipulated internally
-    var length = 0;
+    var length = 0
 
     var pushEle = function (ele){
-        var index = length;
-        var id = ele.id || index;
+        var index = length
+        var id = ele.id || index
         if (ele.id){
-            var className = ele.className;
-            ele.className = ele.id;
+            var className = ele.className
+            ele.className = ele.id
             if (className){
-                ele.className += " " + className;
+                ele.className += " " + className
             }
-            ele.removeAttribute("id");
+            ele.removeAttribute("id")
         }
-        length ++;
+        length ++
 
         Object.defineProperty(context.stateless, id, {
             enumerable: false,
             configurable: false,
             writable: false,
             value: ele
-        });
+        })
 
         if (!context.stateless[index]){
             Object.defineProperty(context.stateless, index, {
@@ -221,19 +221,19 @@
                 configurable: false,
                 writable: false,
                 value: ele
-            });
+            })
         }
 
-        return id;
+        return id
     }
     // public unchangeable variable
     Object.defineProperty(statelessOpps, "length", {
         enumerable: false,
         configurable: false,
         get: function(){
-            return length;
+            return length
         }
-    });
+    })
 
     Object.defineProperty(statelessOpps, "consume", {
         enumerable: false,
@@ -241,25 +241,25 @@
         writable: false,
         value: function(ele){ // public static function
             if (ele instanceof HTMLElement){
-                ele.parentElement && ele.parentElement.removeChild(ele);
-                pushEle(ele);
+                ele.parentElement && ele.parentElement.removeChild(ele)
+                pushEle(ele)
             }
             else if (typeof ele === "string"){
-                var converter = document.createElement("div");
-                converter.innerHTML = ele;
-                stateless.consume(converter.children);
+                var converter = document.createElement("div")
+                converter.innerHTML = ele
+                stateless.consume(converter.children)
             }
             else if (ele.length && ele[0] ){ //
                 for (var i = 0; i < ele.length; i++){
-                    stateless.consume(ele[i]);
+                    stateless.consume(ele[i])
                 }
             }
             else {
-                throw new Error("Invalid inputs");
+                throw new Error("Invalid inputs")
             }
-            return context.stateless;
+            return context.stateless
         }
-    });
+    })
 
     Object.defineProperty(statelessOpps, "import", {
         enumerable: false,
@@ -267,20 +267,20 @@
         writable: false,
         value: function(url){
             ajaxGet(url, function(xmlhttp){
-                stateless.consume(xmlhttp.responseText);
+                stateless.consume(xmlhttp.responseText)
             }, function(xmlhttp){
-                throw new Error("The URL failed to load");
-            });
-            return context.stateless;
+                throw new Error("The URL failed to load")
+            })
+            return context.stateless
         }
-    });
+    })
 
     Object.defineProperty(statelessOpps, "register", {
         enumerable: false,
         configurable: false,
         writable: false,
         value: statelessOpps.consume
-    });
+    })
 
     Object.defineProperty(statelessOpps, "each", {
         enumerable: false,
@@ -288,9 +288,9 @@
         writable: false,
         value: function(callback){
             for (var i = 0; i < length; i++){
-                callback(context.stateless[i], i);
+                callback(context.stateless[i], i)
             }
-            return context.stateless;
+            return context.stateless
         }
     })
 
@@ -300,13 +300,12 @@
         writable: false,
         value: function(identifyer){ // public static function
             if (stateless[identifyer]) {
-                var instance = new templateInstance(stateless[identifyer].cloneNode(true));
-                return instance;
+                var instance = new templateInstance(stateless[identifyer].cloneNode(true))
+                return instance
             }
             else {
-                throw new Error( identifyer + " cannot be found in the template librare");
+                throw new Error( identifyer + " cannot be found in the template librare")
             }
         }
-    });
-
+    })
 })(this)
