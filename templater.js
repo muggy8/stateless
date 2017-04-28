@@ -53,9 +53,31 @@
             enumerable: false,
             configurable: false,
             get: function(){
-                return
+                if (ele.parentNode){
+                    return ele.parentNode.scope || ele.parentNode;
+                }
+                else {
+                    return false;
+                }
             }
-        })
+        });
+
+        Object.defineProperty(public_method, "Children", {
+            enumerable: false,
+            configurable: false,
+            get: function(){
+                if (insertAt.children){
+                    return Array.prototype.filter.call(insertAt.children, function(item){
+                        return (item.scope && item.scope != self);
+                    }).map(function(item){
+                        return item.scope;
+                    })
+                }
+                else {
+                    return false;
+                }
+            }
+        });
 
         function recursiveDefineScope (ele, recur){
              Object.defineProperty(ele, "scope", {
