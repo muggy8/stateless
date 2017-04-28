@@ -17,21 +17,20 @@ var item = stateless.instantiate(id)
 
 step 3 - manipulate the item
 item.render() -> renders to body
-item.addClass(string)
-item.removeClass(string)
-item.hasClass(string)
-item.css(string [, string])
-item.appendChild(item)
-item.unlink()
-item.on(callback)
-item.off(callback)
-item.once(callback)
-item.text(string)
-item.html(string)
-item.attr(string [, string])
-item.data(string [,string])
-item.define(callback(element))
-item.element()
+item.addClass(string) -> adds a class to the dom element
+item.removeClass(string) -> removes a class to the dom element
+item.hasClass(string) -> returns true/false based of if the dom element has the class
+item.css(string [, string]) -> query the css property or set it
+item.appendChild(item) -> append dom element to this dom element
+item.unlink() -> remove this dom element from it's parent
+item.on("event", callback) -> attach an event listener to the dom element
+item.off("event", callback) -> remove an event listener from the dom element
+item.once("event", callback) -> add a call once event listener to the dom element
+item.text(string) -> append the string to the element at the ins location
+item.attr(string [, string]) -> get or set the attribute
+item.data(string [,string]) -> get or set the data- attribute
+item.define(callback(element)) -> define a peroperty for the object
+item.element() -> gets the dom element
 
 Other tools:
 stateless.each(callback(item, index));
