@@ -49,6 +49,31 @@
         var public_method = {};
         Object.setPrototypeOf(self, public_method);
 
+        Object.defineProperty(public_method, "parent", {
+            enumerable: false,
+            configurable: false,
+            get: function(){
+                return
+            }
+        })
+
+        function recursiveDefineScope (ele, recur){
+             Object.defineProperty(ele, "scope", {
+                enumerable: false,
+                configurable: false,
+                get: function(){
+                    return self;
+                }
+            });
+            if (recur !== false){
+                Array.prototype.forEach.call(ele.querySelectorAll("*"), function(item){
+                    recursiveDefineScope(item, false);
+                });
+            }
+        };
+        recursiveDefineScope(ele);
+
+
         public_method.on = function(){
 
         }
