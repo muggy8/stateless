@@ -133,7 +133,11 @@
         }
 
         public_method.unlink = function(){
-
+            if (ele.parentNode) {
+                Object.setPrototypeOf(Object.getPrototypeOf(self), Object.prototype);
+                ele.parentNode.removeChild(ele);
+            }
+            return self;
         }
 
         public_method.render = function(){

@@ -66,6 +66,9 @@ instantiated_domobject.context -> property that provides the templateInstance
                 .fn = function(){
                     console.log("I got called");
                 };
+
+            var secondDiv = document.querySelector("a").context.unlink()
+                .render();
         </script>
     </body>
 </html>
