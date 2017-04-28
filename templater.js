@@ -53,12 +53,7 @@
             enumerable: false,
             configurable: false,
             get: function(){
-                if (ele.parentNode){
-                    return ele.parentNode.scope || ele.parentNode;
-                }
-                else {
-                    return false;
-                }
+                return ele.parentNode && ele.parentNode.scope;
             }
         });
 
