@@ -48,7 +48,7 @@
         </script>
     </head>
     <body>
-<pre>
+<pre style="width:100%; overflow:auto;">
 ideal usage:
 
 step 1 - register:
@@ -107,12 +107,12 @@ instantiated_domobject.scope -> property that provides the templateInstance
                 });
 
             var firstDiv = stateless.instantiate("first-div")
-                .appendChild(stateless.instantiate(3))
+                .appendChild(stateless.instantiate(3), "p")
                 .render()
 
             firstDiv.fn = function(){
-                    console.log("I got called");
-                };
+                console.log("I got called");
+            };
 
             var secondDiv = document.querySelector("a").scope//.unlink()
                 //.render()
@@ -121,6 +121,11 @@ instantiated_domobject.scope -> property that provides the templateInstance
                 .addClass("state", true)
             console.log(secondDiv.attr("class"))
             secondDiv.removeClass("state")
+            console.log(secondDiv.attr("class"))
+            secondDiv.addClass("state", true)
+                .addClass("state", true)
+                .addClass("state", true)
+                .removeClass("state", true);
             console.log(secondDiv.attr("class"))
         </script>
     </body>
