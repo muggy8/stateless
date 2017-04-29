@@ -151,7 +151,7 @@
 
         public_method.hasClass = function(q){
             if (q) {
-                return (ele.className.match(new RegExp("(^$"+q+"$|\s"+q+"\s|^"+q+"\s|\s"+q+"$)")))? true : false
+                return (ele.className.match(new RegExp("(^"+q+"$|\s"+q+"\s|^"+q+"\s|\s"+q+"$)")))? true : false
             }
             else {
                 return self
@@ -159,6 +159,7 @@
         }
 
         public_method.addClass = function(c, multiple){
+        	alert(self.hasClass(c) + " " + c + " " + self.attr("class"))
             if (!self.hasClass(c) || multiple === true){
             	ele.className += " " + c
             }
@@ -199,8 +200,8 @@
 
         }
 
-        public_method.element = function(){
-            return ele
+        public_method.element = function(selector){
+            return (selector)? ele.querySelectorAll(selector) : ele
         }
 
         return self

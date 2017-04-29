@@ -1,6 +1,48 @@
 <html>
     <head>
+    	<script>
+            // var segment1 = new templateInstance(document.querySelector(".test1-div"))
+            // var segment2 = new instantiateable(document.querySelector(".test2-div"))
+            function mobileLog(){
+                var originalLog = console.log; 
+                console.log = function(){
+                	originalLog.apply(this, arguments)
+                    var domLogger = document.querySelector(".console")
+                    alert(domLogger + " -> domLogger")
+                    if (domLogger){
+                    	
+						domLogger.scope._log(arguments)
+					} 
+					else{
+						alert(
+                        	Array.prototype.toString.call(arguments)
+                    	)
+					}
+					
+                }
+            }
+            
+        </script>
         <script src="templater.js"></script>
+        <script>
+        try{
+        	stateless.consume("<div id='console'><pre style='width: 100%; height:8em'></pre><textarea rows='3' style='width:100%'></textarea><button onclick='this.scope._eval()'>run</button></div>")
+            var cons = stateless.instantiate("console")
+            cons._eval = function(){
+                	var string = cons.element("textarea").innerHTML
+                    cons.element("textarea").innerHTML = ""
+                	cons._log(eval(string))
+                }
+            cons._log = function(){
+            	var text = cons.element("pre").innerHTML
+                var added = Array.prototype.toString.call(arguments) + "\n"
+                text = added + text;
+                cons.element("pre").innerHTML = text
+            }
+        } catch (err){
+			console.log(err)
+		}
+        </script>
     </head>
     <body>
 <pre>
@@ -49,10 +91,11 @@ instantiated_domobject.scope -> property that provides the templateInstance
         </div>
         <div class="test2-div"></div>
         <div class="test2-div"></div>
+        
         <script>
-            // var segment1 = new templateInstance(document.querySelector(".test1-div"))
-            // var segment2 = new instantiateable(document.querySelector(".test2-div"))
-
+        try{
+        	cons.render()
+        	mobileLog()
             stateless.register(document.querySelector(".test1-div"))
                 .register("<div id='string-div'>I was made from a string</div>")
                 .register(document.querySelectorAll(".test2-div"))
@@ -70,6 +113,13 @@ instantiated_domobject.scope -> property that provides the templateInstance
 
             var secondDiv = document.querySelector("a").scope.unlink()
                 .render()
+                .addClass("state")
+                .addClass("state")
+            console.log(secondDiv.attr("class"))
+        } 
+        catch (err) {
+        	alert (err)
+        }
         </script>
     </body>
 </html>
