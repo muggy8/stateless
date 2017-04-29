@@ -1,8 +1,16 @@
-(function(context){
+(function(context, eval){
 
 	// --------------------------------------------------------
 	// helper functions that do stuff
 	// --------------------------------------------------------
+	function recursive(fn){
+	    var bound = function(){
+	        var inputs = Array.prototype.concat.call([bound], Array.prototype.splice.call(arguments, 0))
+	        return fn.apply(null, inputs)
+	    }
+	    return bound
+	}
+
 	function isEmpty(obj) {
 		for(var prop in obj) {
 			if(obj.hasOwnProperty(prop))
@@ -11,7 +19,7 @@
 		return JSON.stringify(obj) === JSON.stringify({})
 	}
 
-	var ajaxGet = function(url, successCallback, failCallback){
+	function ajaxGet(url, successCallback, failCallback){
 		var request = new XMLHttpRequest()
 
 		successCallback = successCallback || function (data){/*console.log(data)*/}
@@ -28,8 +36,8 @@
 		request.send()
 	}
 
-	var xor = function(a,b) {
-		return ( a || b ) && !( a && b );
+	function xor(a,b) {
+		return ( a || b ) && !( a && b )
 	}
 
 	var onlyOneIsDefined = function(){
@@ -86,21 +94,19 @@
 		Object.defineProperty(public_method, "root", {
 			enumerable: false,
 			configurable: false,
-			get: function(){
-				function getParentR (scope){
-					var parentScope = scope.parent
-					if (parentScope) {
-						return getParentR(parentScope)
-					}
-					else {
-						return scope
-					}
+			get: recursive(function(getParent, scope){
+				scope = scope || self
+				var parentScope = scope.parent
+				if (parentScope) {
+					return getParent(parentScope)
 				}
-				return getParentR(self)
-			}
+				else {
+					return scope
+				}
+			})
 		})
 
-		function recursiveDefineScope (ele, recur){
+		recursive(function(recurFn, ele, recur){
 			 Object.defineProperty(ele, "scope", {
 				enumerable: false,
 				configurable: false,
@@ -110,11 +116,10 @@
 			})
 			if (recur !== false){
 				Array.prototype.forEach.call(ele.querySelectorAll("*"), function(item){
-					recursiveDefineScope(item, false)
+					recurFn(item, false)
 				})
 			}
-		}
-		recursiveDefineScope(ele)
+		})(ele)
 
 
 		public_method.on = function(){
@@ -390,4 +395,10 @@
 			}
 		}
 	})
-})(this)
+})(
+	/*var context = */ this,
+	/*var safeEval = */ function(code){
+		var safeContext = this;
+		eval.call(safeContext, code)
+	}.bind(this)
+)
