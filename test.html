@@ -113,8 +113,8 @@ instantiated_domobject.scope -> property that provides the templateInstance
                     console.log("I got called");
                 };
 
-            var secondDiv = document.querySelector("a").scope.unlink()
-                .render()
+            var secondDiv = document.querySelector("a").scope//.unlink()
+                //.render()
                 .addClass("state")
                 .addClass("state")
             console.log(secondDiv.attr("class"))

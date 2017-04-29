@@ -41,7 +41,6 @@
         // initialize some private values
         //self.ele = ele
 
-        var insertAt = ele.querySelector("ins") || ele
         var children = []
         var parent = []
 
@@ -57,20 +56,18 @@
             }
         })
 
-        Object.defineProperty(public_method, "Children", {
+        Object.defineProperty(public_method, "children", {
             enumerable: false,
             configurable: false,
             get: function(){
-                if (insertAt.children){
-                    return Array.prototype.filter.call(insertAt.children, function(item){
-                        return (item.scope && item.scope != self)
-                    }).map(function(item){
-                        return item.scope
-                    })
-                }
-                else {
-                    return false
-                }
+                var unique = [];
+                Array.prototype.forEach.call(ele.querySelectorAll("*"), function(item){
+                    var scope = item.scope
+                    if (scope && scope != self && unique.indexOf(scope) === -1){
+                        unique.push(scope)
+                    }
+                })
+                return unique;
             }
         })
 
@@ -119,9 +116,10 @@
 
         }
 
-        public_method.include = function(ele){
-            insertAt.appendChild(ele)
-            recursiveDefineScope(ele, false)
+        public_method.include = function(el, where){
+            var insertAt = ele.querySelector(where) || ele
+            insertAt.appendChild(el)
+            recursiveDefineScope(el, false)
             return self
         }
 
