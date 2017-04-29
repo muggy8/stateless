@@ -146,7 +146,7 @@
 
         public_method.hasClass = function(q){
             if (q) {
-                return (ele.className.match(new RegExp("(^"+q+"$|\s"+q+"\s|^"+q+"\s|\s"+q+"$)")))? true : false
+                return (ele.className.match(new RegExp("(^"+q+"$|\\s"+q+"\\s|^"+q+"\\s|\\s"+q+"$)")))? true : false
             }
             else {
                 return self
