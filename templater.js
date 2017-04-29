@@ -195,7 +195,18 @@
         }
 
         public_method.element = function(selector){
-            return (selector)? ele.querySelectorAll(selector) : ele
+            return (selector)? ele.querySelector(selector) : ele
+        }
+
+        public_method.elements = function(selector){
+            if (selector){
+                return Array.prototype.splice.call(ele.querySelectorAll(selector), 1)
+            }
+            else{
+                var everything = Array.prototype.splice.call(ele.querySelectorAll("*"), 1)
+                everything.push(ele)
+                return everything
+            }
         }
 
         return self

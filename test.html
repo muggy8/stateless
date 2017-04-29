@@ -24,12 +24,12 @@
         	stateless.consume("<div id='console'><pre style='width: 100%; height:8em; border: solid 1px #000; overflow:auto;'></pre><textarea rows='3' style='width:100%; margin-top:1em; margin-bottom:1em;'></textarea><button onclick='this.scope._eval(true)' style='width:50%; display:inline'>run and clear</button><button onclick='this.scope._eval()' style='width:50%; display:inline'>run</button></div>")
             var cons = stateless.instantiate("console")
             cons._eval = function(clear){
-                	var string = cons.element("textarea")[0].value
-                    clear && (cons.element("textarea")[0].value = "")
+                	var string = cons.element("textarea").value
+                    clear && (cons.element("textarea").value = "")
                 	cons._log(eval(string))
                 }
             cons._log = function(){
-                var pre = cons.element("pre")[0]
+                var pre = cons.element("pre")
                 var added = Array.prototype.splice.call(arguments, 0).map(function(item){
                     if (typeof item == 'object') {
                         var str;
@@ -75,7 +75,8 @@ item.text(string) -> append the string to the element at the ins location
 item.attr(string [, string]) -> get or set the attribute
 item.data(string [,string]) -> get or set the data- attribute
 item.define(callback(element)) -> define a peroperty for the object
-item.element() -> gets the dom element
+item.element(selector) -> gets the one dom element or the first selected match
+item.elements(selector) -> gets everything including the root or just everything that matches the selector
 item.children -> read only property that returns all child scopes
 item.parent -> read only property that returns the parent scope if it exists;
 item.root -> returns the root scope of the chain;
