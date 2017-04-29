@@ -170,6 +170,12 @@ instantiated_domobject.scope -> property that provides the templateInstance
 
 			secondDiv.getOnly = 12
 			console.log("secondDiv.getOnly should still be \"meow8\" has", (secondDiv.getOnly == secondDiv.static + secondDiv.status)? "passed" : `failed. secondDiv.getOnly = ${secondDiv.getOnly}`);
+
+			var indexable = []
+			for(var key in secondDiv){
+				indexable.push(key)
+			}
+			console.log("secondDiv's indexable keys should be \"status\",\"changeStatus\",\"static\",\"getSet\",\"getOnly\" has", (indexable.toString == "status,changeStatus,static,getSet,getOnly")? "passed" : `failed. secondDiv.getOnly = ${indexable.toString()}`);
 		</script>
 	</body>
 </html>
