@@ -244,6 +244,7 @@
 			}
 
 			Object.defineProperty(self, prop, deffs)
+			return self
 		}
 		public_method.property = public_method.define
 
