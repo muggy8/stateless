@@ -161,12 +161,18 @@
         }
 
         public_method.removeClass = function(c, multiple){
-            if (self.hasclass(c)){
+            if (self.hasClass(c)){
                 if (multiple === true){
-                    ele.className = ele.className.replace(new RegExp(c, "g"), "").replace(/(^\s+|\s+$)/g, "")
+                    ele.className = ele.className
+                        .replace(new RegExp(c, "g"), "")
+                        .replace(/(^\s+|\s+$)/g, "")
+                        .replace(/\s+/g, " ")
                 }
                 else {
-                    ele.className = ele.className.replace(c, "").replace(/(^\s+|\s+$)/g, "")
+                    ele.className = ele.className
+                        .replace(c, "")
+                        .replace(/(^\s+|\s+$)/g, "")
+                        .replace(/\s+/g, " ")
                 }
             }
             return self
