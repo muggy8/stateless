@@ -158,12 +158,18 @@
             }
         }
 
-        public_method.addClass = function(){
-
+        public_method.addClass = function(c){
+            if (!self.hasClass(c)){
+            	ele.className += " " + c
+            }
+            return self
         }
 
-        public_method.removeClass = function(){
-
+        public_method.removeClass = function(c){
+            if (self.hasclass(c)){
+            	ele.className = ele.className.replace(c, "").replace(/(^\s+|\s+$)/g, "")
+            }
+            return self
         }
 
         public_method.attr = function(attribute, value){
