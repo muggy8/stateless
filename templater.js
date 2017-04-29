@@ -159,7 +159,6 @@
         }
 
         public_method.addClass = function(c, multiple){
-        	alert(self.hasClass(c) + " " + c + " " + self.attr("class"))
             if (!self.hasClass(c) || multiple === true){
             	ele.className += " " + c
             }
