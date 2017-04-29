@@ -48,7 +48,7 @@
 	// --------------------------------------------------------
 	// templater that does the heavy lifting kinda
 	// --------------------------------------------------------
-	var templateInstance = function(ele){
+	var _scope = function(ele){
 		// detect if new or just calling it
 		var self = (context == this)? {} : this
 
@@ -216,8 +216,7 @@
 		public_method.define = function(prop, config){
 			var deffs = {
 				enumerable: (typeof config.enumerable == "undefined")?  true : config.enumerable,
-				configurable: true,
-				writable: false
+				configurable: true
 			}
 
 			if (!onlyOneIsDefined((config.get || config.set), config.static, config.asVar)) {
@@ -225,7 +224,6 @@
 			}
 			else if (config.get || config.set){
 				if (config.set && config.get){
-					deffs.writable = true
 					deffs.set = config.set
 				}
 				else if (config.set && !config.get){
@@ -247,7 +245,6 @@
 
 			Object.defineProperty(self, prop, deffs)
 		}
-
 		public_method.property = public_method.define
 
 		public_method.element = function(selector){
@@ -384,7 +381,7 @@
 		writable: false,
 		value: function(identifyer){ // public static function
 			if (stateless[identifyer]) {
-				var instance = new templateInstance(stateless[identifyer].cloneNode(true))
+				var instance = new _scope(stateless[identifyer].cloneNode(true))
 				return instance
 			}
 			else {

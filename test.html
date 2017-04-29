@@ -128,10 +128,48 @@ instantiated_domobject.scope -> property that provides the templateInstance
 			console.log(secondDiv.attr("class"))
 
 			secondDiv.define("status", {asVar: 0})
-			console.log("secondDiv.status should be 0 has", (secondDiv.status === 0)? "passed" : "failed");
+			console.log("secondDiv.status should be 0 has", (secondDiv.status === 0)? "passed" : `failed. secondDiv.status = ${secondDiv.status}`);
 
 			secondDiv.status = 15
-			console.log("secondDiv.status should now be 15 has", (secondDiv.status == 15)? "passed" : "failed");
+			console.log("secondDiv.status should now be 15 has", (secondDiv.status == 15)? "passed" : `failed. secondDiv.status = ${secondDiv.status}`);
+
+			secondDiv.define("changeStatus", {static: function(num){
+				secondDiv.status = num
+			}})
+			console.log("secondDiv.changeStatus should a function", (typeof secondDiv.changeStatus == "function")? "passed" : `failed. secondDiv.changeStatus = ${secondDiv.changeStatus}`);
+
+			secondDiv.changeStatus(5)
+			console.log("secondDiv.status should be 5 has", (secondDiv.status === 5)? "passed" : `failed. secondDiv.status = ${secondDiv.status}`);
+
+			var meow = "meow"
+			secondDiv.property("static", {static:meow})
+			console.log("secondDiv.static should be \"meow\" has", (secondDiv.static == meow)? "passed" : `failed. secondDiv.static = ${secondDiv.static}`);
+
+			secondDiv.static = "Attempt to change static"
+			console.log("secondDiv.static should still be \"meow\" has", (secondDiv.static == meow)? "passed" : `failed. secondDiv.static = ${secondDiv.static}`);
+
+			secondDiv.property("getSet", {
+				get: function(){
+					return secondDiv.static + secondDiv.status;
+				},
+				set: function(number){
+					secondDiv.status = number;
+				}
+			})
+			console.log("secondDiv.getSet should be \"meow5\" has", (secondDiv.getSet == secondDiv.static + secondDiv.status)? "passed" : `failed. secondDiv.getSet = ${secondDiv.getSet}`);
+
+			secondDiv.getSet = 8
+			console.log("secondDiv.getSet should be \"meow8\" has", (secondDiv.getSet == secondDiv.static + secondDiv.status)? "passed" : `failed. secondDiv.getSet = ${secondDiv.getSet}`);
+
+			secondDiv.property("getOnly", {
+				get: function(){
+					return secondDiv.static + secondDiv.status;
+				}
+			})
+			console.log("secondDiv.getOnly should be \"meow8\" has", (secondDiv.getOnly == secondDiv.static + secondDiv.status)? "passed" : `failed. secondDiv.getOnly = ${secondDiv.getOnly}`);
+
+			secondDiv.getOnly = 12
+			console.log("secondDiv.getOnly should still be \"meow8\" has", (secondDiv.getOnly == secondDiv.static + secondDiv.status)? "passed" : `failed. secondDiv.getOnly = ${secondDiv.getOnly}`);
 		</script>
 	</body>
 </html>
