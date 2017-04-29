@@ -1,8 +1,8 @@
 <html>
-    <head>
-        <script src="templater.js"></script>
-    </head>
-    <body>
+	<head>
+		<script src="templater.js"></script>
+	</head>
+	<body>
 <pre style="width:100%; overflow:auto;">
 ideal usage:
 
@@ -41,91 +41,91 @@ Other options:
 stateless.each(callback(item, index)) -> itterate through all the templates once
 instantiated_domobject.scope -> property that provides the templateInstance
 </pre>
-        <div id="first-div" class="test1-div">
-            <strong>testing</strong>
-            <p>I am testing something bla bla</p>
-        </div>
-        <div class="test2-div" >
-            <a href="javascript:void[0]" onclick="this.scope.fn()">Here is something to click on</a>
-        </div>
-        <div class="test2-div"></div>
-        <div class="test2-div"></div>
+		<div id="first-div" class="test1-div">
+			<strong>testing</strong>
+			<p>I am testing something bla bla</p>
+		</div>
+		<div class="test2-div" >
+			<a href="javascript:void[0]" onclick="this.scope.fn()">Here is something to click on</a>
+		</div>
+		<div class="test2-div"></div>
+		<div class="test2-div"></div>
 
-        <script>
-            // used for mobile deving where the console doesn't exist
-            function mobileLog(){
-                var originalLog = console.log;
-                console.log = function(){
-                    originalLog.apply(this, arguments)
-                    var domLogger = document.querySelector(".console")
-                    if (domLogger){
-                        domLogger.scope._log.apply(this, arguments)
-                    }
-                    else{
-                        alert(Array.prototype.toString.call(arguments))
-                    }
+		<script>
+			// used for mobile deving where the console doesn't exist
+			function mobileLog(){
+				var originalLog = console.log;
+				console.log = function(){
+					originalLog.apply(this, arguments)
+					var domLogger = document.querySelector(".console")
+					if (domLogger){
+						domLogger.scope._log.apply(this, arguments)
+					}
+					else{
+						alert(Array.prototype.toString.call(arguments))
+					}
 
-                }
-            }
+				}
+			}
 
-            // a dom based console module made using stateless
-            stateless.consume("<div id='console'><pre style='width: 100%; height:8em; border: solid 1px #000; overflow:auto;'></pre><textarea rows='3' style='width:100%; margin-top:1em; margin-bottom:1em;'></textarea><button onclick='this.scope._eval(true)' style='width:50%; display:inline'>run and clear</button><button onclick='this.scope._eval()' style='width:50%; display:inline'>run</button></div>")
-            var cons = stateless.instantiate("console")
-            cons._eval = function(clear){
-                	var string = cons.element("textarea").value
-                    clear && (cons.element("textarea").value = "")
-                	cons._log(eval.call(this, string))
-                }
-            cons._log = function(){
-                var pre = cons.element("pre")
-                var added = Array.prototype.splice.call(arguments, 0).map(function(item){
-                    if (typeof item == 'object') {
-                        var str;
-                        if (str = JSON.stringify(item), str != "{}"){
-                            return str
-                        }
-                        else {
-                            return item.toString()
-                        }
-                    }
-                    else return item
-                })
-                pre.innerHTML += added.toString().replace(/\,/g, ",\n") + "\n\n"
-                pre.scrollTop = pre.scrollHeight;
-            }
+			// a dom based console module made using stateless
+			stateless.consume("<div id='console'><pre style='width: 100%; height:8em; border: solid 1px #000; overflow:auto;'></pre><textarea rows='3' style='width:100%; margin-top:1em; margin-bottom:1em;'></textarea><button onclick='this.scope._eval(true)' style='width:50%; display:inline'>run and clear</button><button onclick='this.scope._eval()' style='width:50%; display:inline'>run</button></div>")
+			var cons = stateless.instantiate("console")
+			cons._eval = function(clear){
+					var string = cons.element("textarea").value
+					clear && (cons.element("textarea").value = "")
+					cons._log(eval.call(this, string))
+				}
+			cons._log = function(){
+				var pre = cons.element("pre")
+				var added = Array.prototype.splice.call(arguments, 0).map(function(item){
+					if (typeof item == 'object') {
+						var str;
+						if (str = JSON.stringify(item), str != "{}"){
+							return str
+						}
+						else {
+							return item.toString()
+						}
+					}
+					else return item
+				})
+				pre.innerHTML += added.toString().replace(/\,/g, ",\n") + "\n\n"
+				pre.scrollTop = pre.scrollHeight;
+			}
 
-        	cons.render()
-        	//mobileLog()
+			cons.render()
+			//mobileLog()
 
-            // the actual test code here
-            stateless.register(document.querySelector(".test1-div"))
-                .register("<div id='string-div'>I was made from a string</div>")
-                .register(document.querySelectorAll(".test2-div"))
-                .each(function(item){
-                    console.log(item)
-                });
+			// the actual test code here
+			stateless.register(document.querySelector(".test1-div"))
+				.register("<div id='string-div'>I was made from a string</div>")
+				.register(document.querySelectorAll(".test2-div"))
+				.each(function(item){
+					console.log(item)
+				});
 
-            var firstDiv = stateless.instantiate("first-div")
-                .appendChild(stateless.instantiate(3), "p")
-                .render()
+			var firstDiv = stateless.instantiate("first-div")
+				.appendChild(stateless.instantiate(3), "p")
+				.render()
 
-            firstDiv.fn = function(){
-                console.log("I got called");
-            };
+			firstDiv.fn = function(){
+				console.log("I got called");
+			};
 
-            var secondDiv = document.querySelector("a").scope//.unlink()
-                //.render()
-                .addClass("state")
-                .addClass("state")
-                .addClass("state", true)
-            console.log(secondDiv.attr("class"))
-            secondDiv.removeClass("state")
-            console.log(secondDiv.attr("class"))
-            secondDiv.addClass("state", true)
-                .addClass("state", true)
-                .addClass("state", true)
-                .removeClass("state", true);
-            console.log(secondDiv.attr("class"))
-        </script>
-    </body>
+			var secondDiv = document.querySelector("a").scope//.unlink()
+				//.render()
+				.addClass("state")
+				.addClass("state")
+				.addClass("state", true)
+			console.log(secondDiv.attr("class"))
+			secondDiv.removeClass("state")
+			console.log(secondDiv.attr("class"))
+			secondDiv.addClass("state", true)
+				.addClass("state", true)
+				.addClass("state", true)
+				.removeClass("state", true);
+			console.log(secondDiv.attr("class"))
+		</script>
+	</body>
 </html>
