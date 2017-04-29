@@ -123,10 +123,11 @@
             return self
         }
 
-        public_method.appendChild = function(childScope){
+        public_method.appendChild = function(childScope, where){
             childScope.unlink()
             Object.setPrototypeOf(Object.getPrototypeOf(childScope), self)
-            ele.appendChild(childScope.element())
+            var insertAt = ele.querySelector(where) || ele
+            insertAt.appendChild(childScope.element())
             return self
         }
 
