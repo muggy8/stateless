@@ -29,7 +29,7 @@ item.once("event", callback) -> add a call once event listener to the dom elemen
 item.text([string[, where]]) -> no args = get inner string, 1 arg = replace inner string, 2 arg = replace inner string at element
 item.attr(string [, string]) -> get or set the attribute
 item.data(string [,string]) -> get or set the data- attribute
-item.define(property, options) -> define a peroperty for the object
+idem.property = item.define(property, options) -> define a peroperty for the object
 item.element([selector]) -> gets the one dom element or the first selected match
 item.elements([selector]) -> gets everything including the root or just everything that matches the selector
 item.children -> read only property that returns all child scopes
@@ -126,6 +126,12 @@ instantiated_domobject.scope -> property that provides the templateInstance
 				.addClass("state", true)
 				.removeClass("state", true);
 			console.log(secondDiv.attr("class"))
+
+			secondDiv.define("status", {asVar: 0})
+			console.log("secondDiv.status should be 0 has", (secondDiv.status === 0)? "passed" : "failed");
+
+			secondDiv.status = 15
+			console.log("secondDiv.status should now be 15 has", (secondDiv.status == 15)? "passed" : "failed");
 		</script>
 	</body>
 </html>

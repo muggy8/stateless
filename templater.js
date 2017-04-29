@@ -28,6 +28,23 @@
 		request.send()
 	}
 
+	var xor = function(a,b) {
+		return ( a || b ) && !( a && b );
+	}
+
+	var onlyOneIsDefined = function(){
+		var truthness = false;
+		for (var i = 0; i < arguments.length; i++){
+			if (arguments[i] !== null  && typeof arguments[i] != "undefined" && truthness) { // found a second truthful item in array
+				return false
+			}
+			else if (arguments[i] !== null  && typeof arguments[i] != "undefined" && !truthness){ // found the first truthful item
+				truthness = true;
+			}
+		}
+		return truthness // you can only get here if there was one truthful item in the array
+	}
+
 	// --------------------------------------------------------
 	// templater that does the heavy lifting kinda
 	// --------------------------------------------------------
@@ -196,9 +213,42 @@
 
 		}
 
-		public_method.define = function(){
+		public_method.define = function(prop, config){
+			var deffs = {
+				enumerable: (typeof config.enumerable == "undefined")?  true : config.enumerable,
+				configurable: true,
+				writable: false
+			}
 
+			if (!onlyOneIsDefined((config.get || config.set), config.static, config.asVar)) {
+				throw new Error("You can only have one of (getter[+setter]), static, or asVar");
+			}
+			else if (config.get || config.set){
+				if (config.set && config.get){
+					deffs.writable = true
+					deffs.set = config.set
+				}
+				else if (config.set && !config.get){
+					throw new Error("You need a getter with your setter")
+				}
+
+				deffs.get = config.get
+			}
+			else if (config.static){
+				deffs.value = config.static
+			}
+			else if (config.asVar !== null || typeof config.asVar != "undefined"){
+				deffs.value = config.asVar
+				deffs.writable = true
+			}
+			else {
+				throw new Error("Your congifs must include either a get, a static, or an asVar property")
+			}
+
+			Object.defineProperty(self, prop, deffs)
 		}
+
+		public_method.property = public_method.define
 
 		public_method.element = function(selector){
 			return (selector)? ele.querySelector(selector) : ele
