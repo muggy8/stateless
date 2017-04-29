@@ -26,7 +26,7 @@
             cons._eval = function(clear){
                 	var string = cons.element("textarea").value
                     clear && (cons.element("textarea").value = "")
-                	cons._log(eval(string))
+                	cons._log(eval.call(this, string))
                 }
             cons._log = function(){
                 var pre = cons.element("pre")
