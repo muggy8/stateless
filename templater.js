@@ -38,11 +38,6 @@
         if (!ele){
             throw "No element selected"
         }
-        // initialize some private values
-        //self.ele = ele
-
-        var children = []
-        var parent = []
 
         // set public methods into the prototype of this object.
         var public_method = {}
@@ -76,8 +71,9 @@
             configurable: false,
             get: function(){
                 function getParentR (scope){
-                    if (scope.parent) {
-                        return getParentR(scope.parent)
+                    var parentScope = scope.parent
+                    if (parentScope) {
+                        return getParentR(parentScope)
                     }
                     else {
                         return scope
