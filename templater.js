@@ -121,17 +121,143 @@
 			}
 		})(ele)
 
+		var listeners = {};
+		public_method.on = function(selectorOrType, typeOrCallback, potentialCallback){
+			var type, callback, selector
 
-		public_method.on = function(){
+			// checking type is correct
+			if (
+				typeof potentialCallback == "function" &&
+				typeof selectorOrType == "string" &&
+				typeof typeOrCallback == "string"
+			){
+				callback = potentialCallback
+				selector = selectorOrType
+				type = typeOrCallback
+			}
+			else if (
+				typeof typeOrCallback == "function" &&
+				typeof selectorOrType == "string" &&
+				!potentialCallback
+			){
+				type = selectorOrType
+				callback = typeOrCallback
+			}
+			else {
+				throw new Error("Malformed event listener registration")
+			}
 
+			// find repeats
+			var typeList = listeners[type] || (listeners[type] = []),
+				target = ele.querySelector(selector) || ele,
+				repeat = false
+
+			typeList.forEach(function(targetCallback){
+				var fn = targetCallback.fn,
+				 	to = targetCallback.to
+				if (
+					(fn == callback || fn.toString == callback.toString) &&
+					(to == target)
+				){
+					console.warn("Listener already registered")
+					repeat = true
+				}
+			})
+
+			// actual type registration
+			if (!repeat){
+				target.addEventListener(type, callback)
+				typeList.push({
+					fn: callback,
+					to: target
+				})
+			}
+
+			return self
 		}
 
-		public_method.off = function(){
+		public_method.off = function(selectorOrType, typeOrCallback, potentialCallback){
+			var type, callback, selector
 
+			// checking type is correct
+			if (
+				typeof potentialCallback == "function" &&
+				typeof selectorOrType == "string" &&
+				typeof typeOrCallback == "string"
+			){
+				callback = potentialCallback
+				selector = selectorOrType
+				type = typeOrCallback
+			}
+			else if (
+				typeof typeOrCallback == "function" &&
+				typeof selectorOrType == "string" &&
+				!potentialCallback
+			){
+				type = selectorOrType
+				callback = typeOrCallback
+			}
+			else {
+				throw new Error("Malformed event listener removal")
+			}
+
+			// find repeats
+			var typeList = listeners[type],
+				target = ele.querySelector(selector) || ele
+				removed = false
+
+			if (typeList){
+				typeList.forEach(function(targetCallback, index){
+					var fn = targetCallback.fn,
+					 	to = targetCallback.to
+					if (
+						(fn == callback || fn.toString == callback.toString) &&
+						(to == target)
+					){
+						to.removeEventListener(type, fn)
+						typeList.splice(index, 1)
+						removed = true
+					}
+				})
+			}
+
+			if (!removed){
+				console.warn("Listener not found")
+			}
+
+			return self
 		}
 
-		public_method.once = function(){
+		public_method.once = function(selectorOrType, typeOrCallback, potentialCallback){
+			if (
+				typeof typeOrCallback == "function" &&
+				typeof selectorOrType == "string" &&
+				!potentialCallback
+			) {
+				var callbackOnce = function(e){
+					self.off(selectorOrType, callbackOnce)
+					typeOrCallback(e)
+				}
 
+				self.on(selectorOrType, callbackOnce);
+			}
+			else if (
+				typeof potentialCallback == "function" &&
+				typeof selectorOrType == "string" &&
+				typeof typeOrCallback == "string"
+			){
+				var callbackOnce = function(e){
+					self.off(selectorOrType, typeOrCallback, callbackOnce)
+					potentialCallback(e)
+				}
+
+				self.on(selectorOrType, typeOrCallback, callbackOnce)
+			}
+			else {
+				throw new Error("Malformed event listener registration")
+			}
+
+			return self
 		}
 
 		public_method.include = function(el, where){
@@ -396,9 +522,11 @@
 		}
 	})
 })(
-	/*var context = */ this,
-	/*var safeEval = */ function(code){
-		var safeContext = this;
-		eval.call(safeContext, code)
-	}.bind(this)
+	//var context =
+		this,
+	//var safeEval =
+		function(code){
+			var safeContext = this;
+			eval.call(safeContext, code)
+		}.bind(this)
 )
