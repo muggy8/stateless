@@ -158,16 +158,21 @@
             }
         }
 
-        public_method.addClass = function(c){
-            if (!self.hasClass(c)){
+        public_method.addClass = function(c, multiple){
+            if (!self.hasClass(c) || multiple === true){
             	ele.className += " " + c
             }
             return self
         }
 
-        public_method.removeClass = function(c){
+        public_method.removeClass = function(c, multiple){
             if (self.hasclass(c)){
-            	ele.className = ele.className.replace(c, "").replace(/(^\s+|\s+$)/g, "")
+                if (multiple === true){
+                    ele.className = ele.className.replace(new RegExp(c, "g"), "").replace(/(^\s+|\s+$)/g, "")
+                }
+                else {
+                    ele.className = ele.className.replace(c, "").replace(/(^\s+|\s+$)/g, "")
+                }
             }
             return self
         }
