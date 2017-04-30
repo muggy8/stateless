@@ -127,6 +127,8 @@
 		}
 		recursiveDefineScope(ele)
 
+		// begin dom manip functions
+
 		var addEventInterface = function(el, again){
 			var listeners = {}
 
@@ -179,147 +181,70 @@
 		addEventInterface(ele)
 
 		// public methods (kept in the prototype) for others to access
-		public_method.on = function(selectorOrType, typeOrCallback, potentialCallback){
-			if (
-				typeof potentialCallback == "function" &&
-				typeof selectorOrType == "string" &&
-				typeof typeOrCallback == "string"
-			){
-				var el = ele.querySelectorAll(selectorOrType)
-				Array.prototype.forEach.call(el, function(ele){
-					console.log(ele)
-					ele.on(typeOrCallback, potentialCallback)
-				})
-			}
-			else if (
-				typeof typeOrCallback == "function" &&
-				typeof selectorOrType == "string" &&
-				!potentialCallback
-			){
-				ele.on(typeOrCallback, potentialCallback)
-			}
-			else {
-				throw new Error("Malformed event listener registration")
-			}
-
+		public_method.on = function(type, callback){
+			ele.on(type, callback)
 			return self
 		}
 
-		public_method.off = function(selectorOrType, typeOrCallback, potentialCallback){
-			if (
-				typeof potentialCallback == "function" &&
-				typeof selectorOrType == "string" &&
-				typeof typeOrCallback == "string"
-			){
-				var el = ele.querySelectorAll(selectorOrType)
-				Array.prototype.forEach.call(function(ele){
-					ele.on(typeOrCallback, potentialCallback)
-				})
-			}
-			else if (
-				typeof typeOrCallback == "function" &&
-				typeof selectorOrType == "string" &&
-				!potentialCallback
-			){
-				ele.on(typeOrCallback, potentialCallback)
-			}
-			else {
-				throw new Error("Malformed event listener removal")
-			}
-
+		public_method.off = function(type, callback){
+			ele.off(type, callback)
 			return self
 		}
 
-		public_method.once = function(selectorOrType, typeOrCallback, potentialCallback){
-			if (
-				typeof potentialCallback == "function" &&
-				typeof selectorOrType == "string" &&
-				typeof typeOrCallback == "string"
-			){
-				var el = ele.querySelectorAll(selectorOrType)
-				Array.prototype.forEach.call(function(ele){
-					ele.once(typeOrCallback, potentialCallback)
-				})
-			}
-			else if (
-				typeof typeOrCallback == "function" &&
-				typeof selectorOrType == "string" &&
-				!potentialCallback
-			){
-				ele.once(typeOrCallback, potentialCallback)
-			}
-			else {
-				throw new Error("Malformed event listener registration")
-			}
-
+		public_method.once = function(type, callback){
+			ele.once(type, callback)
 			return self
 		}
 
-		public_method.include = function(el, where){
-			var insertAt = ele.querySelector(where) || ele
-			insertAt.appendChild(el)
-			recursiveDefineScope(el, false)
-			addEventInterface(ele, false)
-			return self
-		}
-
-		public_method.appendChild = function(childScope, where){
-			childScope.unlink()
-			Object.setPrototypeOf(Object.getPrototypeOf(childScope), self)
-			var insertAt = ele.querySelector(where) || ele
-			insertAt.appendChild(childScope.element())
-			return self
-		}
-
-		public_method.unlink = function(){
-			if (ele.parentNode) {
-				Object.setPrototypeOf(Object.getPrototypeOf(self), Object.prototype)
-				ele.parentNode.removeChild(ele)
-			}
-			return self
-		}
-
-		public_method.render = function(){
-			self.unlink()
-			document.body.appendChild(ele)
-			return self
-		}
-
-		public_method.text = function(){
-
-		}
-
-		public_method.hasClass = function(q){
-			if (q) {
-				return (ele.className.match(new RegExp("(^"+q+"$|\\s"+q+"\\s|^"+q+"\\s|\\s"+q+"$)")))? true : false
-			}
-			else {
-				return self
-			}
-		}
-
-		public_method.addClass = function(c, multiple){
-			if (!self.hasClass(c) || multiple === true){
-				ele.className += " " + c
-			}
-			return self
-		}
-
-		public_method.removeClass = function(c, multiple){
-			if (self.hasClass(c)){
-				if (multiple === true){
-					ele.className = ele.className
-						.replace(new RegExp(c, "g"), "")
-						.replace(/(^\s+|\s+$)/g, "")
-						.replace(/\s+/g, " ")
-				}
-				else {
-					ele.className = ele.className
-						.replace(c, "")
-						.replace(/(^\s+|\s+$)/g, "")
-						.replace(/\s+/g, " ")
+		var addClassInterface = function(ele, again){
+			ele.hasClass = function(q){
+				if (q) {
+					return (ele.className.match(new RegExp("(^"+q+"$|\\s"+q+"\\s|^"+q+"\\s|\\s"+q+"$)")))? true : false
 				}
 			}
+
+			ele.addClass = function(c, multiple){
+				if (!ele.hasClass(c) || multiple === true){
+					ele.className += " " + c
+				}
+			}
+
+			ele.removeClass = function(c, multiple){
+				if (ele.hasClass(c)){
+					if (multiple === true){
+						ele.className = ele.className
+							.replace(new RegExp(c, "g"), "")
+							.replace(/(^\s+|\s+$)/g, "")
+							.replace(/\s+/g, " ")
+					}
+					else {
+						ele.className = ele.className
+							.replace(c, "")
+							.replace(/(^\s+|\s+$)/g, "")
+							.replace(/\s+/g, " ")
+					}
+				}
+			}
+
+			if (again !== false){
+				Array.prototype.forEach.call(ele.querySelectorAll("*"), function(node){
+					addClassInterface(node, false)
+				})
+			}
+		}
+		addClassInterface(ele)
+
+		public_method.hasClass = function (className){
+			return ele.hasClass(className)
+		}
+
+		public_method.addClass = function (className, multiple){
+			ele.addClass(className, multiple)
+			return self
+		}
+
+		public_method.removeClass = function (className, multiple){
+			ele.removeClass(className, multiple)
 			return self
 		}
 
@@ -340,6 +265,23 @@
 		public_method.data = function(){
 
 		}
+
+		public_method.text = function(){
+
+		}
+
+		// functions for dom manip end
+
+		public_method.include = function(el, where){
+			var insertAt = ele.querySelector(where) || ele
+			insertAt.appendChild(el)
+			recursiveDefineScope(el, false)
+			addEventInterface(ele, false)
+			addClassInterface(ele, false)
+			return self
+		}
+
+		// functions for module manip begin
 
 		public_method.define = function(prop, config){
 			var deffs = {
@@ -389,6 +331,28 @@
 				everything.push(ele)
 				return everything
 			}
+		}
+
+		public_method.appendChild = function(childScope, where){
+			childScope.unlink()
+			Object.setPrototypeOf(Object.getPrototypeOf(childScope), self)
+			var insertAt = ele.querySelector(where) || ele
+			insertAt.appendChild(childScope.element())
+			return self
+		}
+
+		public_method.unlink = function(){
+			if (ele.parentNode) {
+				Object.setPrototypeOf(Object.getPrototypeOf(self), Object.prototype)
+				ele.parentNode.removeChild(ele)
+			}
+			return self
+		}
+
+		public_method.render = function(){
+			self.unlink()
+			document.body.appendChild(ele)
+			return self
 		}
 
 		return self
