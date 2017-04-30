@@ -133,17 +133,6 @@
 
 		// public methods (kept in the prototype) for others to access
 		public_method.on = overload()
-			.args("string", "string", "function").use(function(where, type, callback){
-				self.elements(where).forEach(function(subEle){
-					if (subEle.scope != self){
-						subEle.scope.on(subEle, type, callback)
-					}
-					else{
-						self.on(subEle, type, callback)
-					}
-				})
-				return self
-			})
 			.args({scope:{on:"function"}, addEventListener: "function"}, "string", "function").use(function(ele, type, callback){
 				if (ele.scope == self){
 					//ele_on(ele, type, callback)
@@ -175,8 +164,19 @@
 				}
 				return self
 			})
+			.args("string", "string", "function").use(function(where, type, callback){
+				self.elements(where).forEach(function(subEle){
+					if (subEle.scope != self){
+						subEle.scope.on(subEle, type, callback)
+					}
+					else{
+						self.on(subEle, type, callback)
+					}
+				})
+				return self
+			})
 			.args("string", "function").use(function(type, callback){
-				ele.on(type, callback)
+				self.on(ele, type, callback)
 				return self
 			})
 			.args().use(function(){
@@ -184,17 +184,6 @@
 			})
 
 		public_method.off = overload()
-			.args("string", "string", "function").use(function(where, type, callback){
-				self.elements(where).forEach(function(subEle){
-					if (subEle.scope != self){
-						subEle.scope.off(subEle, type, callback)
-					}
-					else{
-						self.off(subEle, type, callback)
-					}
-				})
-				return self
-			})
 			.args({scope:{off:"function"}, addEventListener: "function"}, "string", "function").use(function(ele, type, callback){
 				if (ele.scope == self){
 					var typeList = listeners[type],
@@ -220,8 +209,19 @@
 				}
 				return self
 			})
+			.args("string", "string", "function").use(function(where, type, callback){
+				self.elements(where).forEach(function(subEle){
+					if (subEle.scope != self){
+						subEle.scope.off(subEle, type, callback)
+					}
+					else{
+						self.off(subEle, type, callback)
+					}
+				})
+				return self
+			})
 			.args("string", "function").use(function(type, callback){
-				ele_off(ele, type, callback)
+				self.off(ele, type, callback)
 				return self
 			})
 			.args().use(function(){
@@ -229,16 +229,6 @@
 			})
 
 		public_method.once = overload()
-			.args("string", "string", "function").use(function(where, type, callback){
-				self.elements(where).forEach(function(subEle){
-					if (subEle.scope == self){
-						self.once(subEle, type, callback)
-					}
-					else {
-						subEle.scope.once(subEle, type, callback)
-					}
-				})
-			})
 			.args({scope:{off:"function"}, addEventListener: "function"}, "string", "function").use(function(ele, type, callback){
 				if (ele.scope == self){
 					var cb = function(e){
@@ -251,12 +241,18 @@
 					ele.scope.once(ele, type, callback)
 				}
 			})
+			.args("string", "string", "function").use(function(where, type, callback){
+				self.elements(where).forEach(function(subEle){
+					if (subEle.scope == self){
+						self.once(subEle, type, callback)
+					}
+					else {
+						subEle.scope.once(subEle, type, callback)
+					}
+				})
+			})
 			.args("string", "function").use(function(type, callback){
-				var cb = function(e){
-					callback(e)
-					self.off(type, cb)
-				}
-				self.on(cb)
+				self.once(ele, type, callback)
 			})
 			.args().use(function(){
 				console.warn("once function inputs improperly formatted")
