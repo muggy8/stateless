@@ -129,93 +129,7 @@
 
 		// begin dom manip functions
 
-		var addEventInterface = function(el, again){
-			var listeners = {}
-
-			el.on = function(type, callback){
-				var typeList = listeners[type] || (listeners[type] = []),
-					repeat = false
-
-				typeList.forEach(function(fn){
-					if (fn == callback || fn.toString() == callback.toString()){
-						repeat = true
-					}
-				})
-
-				if (!repeat){
-					el.addEventListener(type, callback)
-					listeners[type].push(callback)
-				}
-				else {
-					console.warn("listener is already registered")
-				}
-
-				return callback
-			}
-
-			el.off = function(type, callback){
-				var typeList = listeners[type],
-					found = false
-
-				typeList && typeList.forEach(function(fn){
-					if (fn == callback || fn.toString() == callback.toString()){
-						found = true
-						el.removeEventListener(type, fn)
-					}
-				})
-
-				if (!found){
-					console.warn("Listener is not currently registered")
-				}
-
-				return callback
-			}
-
-			el.once = function(type, callback){
-				var handler = function(ev){
-					callback(ev)
-					el.off(type, callback)
-				}
-				el.on(type, handler)
-
-				return handler
-			}
-
-			if (again !== false){
-				Array.prototype.forEach.call(el.querySelectorAll("*"), function(node){
-					addEventInterface(node, false)
-				})
-			}
-		}
-		addEventInterface(ele)
-
 		var listeners = {}
-		context.listeners = context.listeners || []
-		context.listeners.push(listeners)
-		var ele_on = function(ele, type, callback){
-			var typeList = listeners[type] || (listeners[type] = []),
-				repeat = false
-
-			typeList.forEach(function(elfn){
-				if (
-					(elfn.fn == callback || elfn.fn.toString() == callback.toString()) &&
-					(elfn.el == ele)
-				){
-					repeat = true
-				}
-			})
-
-			if (!repeat){
-				ele.addEventListener(type, callback)
-				listeners[type].push({
-					fn: callback,
-					el: ele
-				})
-			}
-			else {
-				console.warn("listener is already registered")
-			}
-		}
 
 		// public methods (kept in the prototype) for others to access
 		public_method.on = overload()
@@ -225,14 +139,36 @@
 						subEle.scope.on(subEle, type, callback)
 					}
 					else{
-						ele_on(subEle, type, callback)
+						self.on(subEle, type, callback)
 					}
 				})
 				return self
 			})
 			.args({scope:{on:"function"}, addEventListener: "function"}, "string", "function").use(function(ele, type, callback){
 				if (ele.scope == self){
-					ele_on(ele, type, callback)
+					//ele_on(ele, type, callback)
+					var typeList = listeners[type] || (listeners[type] = []),
+						repeat = false
+
+					typeList.forEach(function(elfn){
+						if (
+							(elfn.fn == callback || elfn.fn.toString() == callback.toString()) &&
+							(elfn.el == ele)
+						){
+							repeat = true
+						}
+					})
+
+					if (!repeat){
+						ele.addEventListener(type, callback)
+						listeners[type].push({
+							fn: callback,
+							el: ele
+						})
+					}
+					else {
+						console.warn("listener is already registered")
+					}
 				}
 				else {
 					ele.scope.on(ele, type, callback)
@@ -244,46 +180,40 @@
 				return self
 			})
 			.args().use(function(){
-				console.warn("on inputs improperly formatted")
+				console.warn("on function inputs improperly formatted")
 			})
-
-		var ele_off = function(ele, type, callback){
-				var typeList = listeners[type],
-					found = false
-
-				typeList && typeList.forEach(function(elfn, index){
-					if (
-						(elfn.fn == callback || elfn.fn.toString() == callback.toString()) &&
-						elfn.el == ele
-					){
-						found = true
-						ele.removeEventListener(type, elfn.fn)
-						typeList.splice(index, 1)
-					}
-				})
-
-				if (!found){
-					console.warn("Listener is not currently registered")
-				}
-
-			}
 
 		public_method.off = overload()
 			.args("string", "string", "function").use(function(where, type, callback){
 				self.elements(where).forEach(function(subEle){
-
 					if (subEle.scope != self){
 						subEle.scope.off(subEle, type, callback)
 					}
 					else{
-						ele_off(subEle, type, callback)
+						self.off(subEle, type, callback)
 					}
 				})
 				return self
 			})
 			.args({scope:{off:"function"}, addEventListener: "function"}, "string", "function").use(function(ele, type, callback){
 				if (ele.scope == self){
-					ele_on(ele, type, callback)
+					var typeList = listeners[type],
+						found = false
+
+					typeList && typeList.forEach(function(elfn, index){
+						if (
+							(elfn.fn == callback || elfn.fn.toString() == callback.toString()) &&
+							elfn.el == ele
+						){
+							found = true
+							ele.removeEventListener(type, elfn.fn)
+							typeList.splice(index, 1)
+						}
+					})
+
+					if (!found){
+						console.warn("Listener is not currently registered")
+					}
 				}
 				else {
 					ele.scope.off(ele, type, callback)
@@ -295,14 +225,42 @@
 				return self
 			})
 			.args().use(function(){
-				console.warn("on inputs improperly formatted")
+				console.warn("off function inputs improperly formatted")
 			})
 
-
-		public_method.once = function(type, callback){
-			ele.once(type, callback)
-			return self
-		}
+		public_method.once = overload()
+			.args("string", "string", "function").use(function(where, type, callback){
+				self.elements(where).forEach(function(subEle){
+					if (subEle.scope == self){
+						self.once(subEle, type, callback)
+					}
+					else {
+						subEle.scope.once(subEle, type, callback)
+					}
+				})
+			})
+			.args({scope:{off:"function"}, addEventListener: "function"}, "string", "function").use(function(ele, type, callback){
+				if (ele.scope == self){
+					var cb = function(e){
+						callback(e)
+						self.off(ele, type, cb)
+					}
+					self.on(ele, type, cb)
+				}
+				else {
+					ele.scope.once(ele, type, callback)
+				}
+			})
+			.args("string", "function").use(function(type, callback){
+				var cb = function(e){
+					callback(e)
+					self.off(type, cb)
+				}
+				self.on(cb)
+			})
+			.args().use(function(){
+				console.warn("once function inputs improperly formatted")
+			})
 
 		var addClassInterface = function(ele, again){
 			ele.hasClass = function(q){
@@ -384,7 +342,6 @@
 			var insertAt = ele.querySelector(where) || ele
 			insertAt.appendChild(el)
 			recursiveDefineScope(el, false)
-			addEventInterface(ele, false)
 			addClassInterface(ele, false)
 			return self
 		}
