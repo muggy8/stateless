@@ -110,152 +110,121 @@
 
 		// set the "scope" property of every HTML element associated to self to provide a reference to self
 		// most depended upon property in the framework
-		recursive(function(recurFn, ele, recur){
-			 Object.defineProperty(ele, "scope", {
+		var recursiveDefineScope = function(ele, recur){
+			Object.defineProperty(ele, "scope", {
 				enumerable: false,
 				configurable: false,
 				get: function(){
 					return self
 				}
 			})
+
 			if (recur !== false){
 				Array.prototype.forEach.call(ele.querySelectorAll("*"), function(item){
-					recurFn(item, false)
+					recursiveDefineScope(item, false)
 				})
 			}
-		})(ele)
+		}
+		recursiveDefineScope(ele)
+
+		var addEventInterface = function(el, again){
+			var listeners = {}
+
+			el.on = function(type, callback){
+				var typeList = listeners[type] || (listeners[type] = []),
+					repeat = false
+
+				typeList.forEach(function(fn){
+					if (fn == callback || fn.toString() == callback.toString()){
+						repeat = true
+					}
+				})
+
+				if (!repeat){
+					el.addEventListener(type, callback)
+					typeList.push(callback)
+				}
+			}
+
+			el.off = function(type, callback){
+				var typeList = listeners[type],
+					found = false
+
+				typeList && typeList.forEach(function(fn){
+					if (fn == callback || fn.toString() == callback.toString()){
+						found = true
+						el.removeEventListener(type, fn)
+					}
+				})
+
+				if (!found){
+					console.warn("Listener is not currently registered")
+				}
+			}
+
+			el.once = function(type, callback){
+				var handler = function(ev){
+					callback(ev)
+					el.off(type, callback)
+				}
+				el.on(type, callback)
+			}
+
+			if (again !== false){
+				Array.prototype.forEach.call(el.querySelectorAll("*"), function(node){
+					addEventInterface(node, false)
+				})
+			}
+		}
+		addEventInterface(ele)
 
 		// public methods (kept in the prototype) for others to access
-		var listeners = {};
-		public_method.on = function(selectorOrTypeOrElement, typeOrCallback, potentialCallback){
-			var type, callback, selector,
-				target, typeList, repeat = false
-
-			// checking type is correct
+		public_method.on = function(selectorOrType, typeOrCallback, potentialCallback){
 			if (
 				typeof potentialCallback == "function" &&
-				typeof selectorOrTypeOrElement == "string" &&
+				typeof selectorOrType == "string" &&
 				typeof typeOrCallback == "string"
 			){
-				callback = potentialCallback
-				selector = selectorOrTypeOrElement
-				type = typeOrCallback
-			}
-			else if (
-				selectorOrTypeOrElement instanceof HTMLElement &&
-				typeof typeOrCallback == "string" &&
-				typeof potentialCallback == "function"
-			){
-				callback = potentialCallback
-				type = typeOrCallback
-				target = selectorOrTypeOrElement
+				var el = ele.querySelectorAll(selectorOrType)
+				Array.prototype.forEach.call(el, function(ele){
+					console.log(ele)
+					ele.on(typeOrCallback, potentialCallback)
+				})
 			}
 			else if (
 				typeof typeOrCallback == "function" &&
-				typeof selectorOrTypeOrElement == "string" &&
+				typeof selectorOrType == "string" &&
 				!potentialCallback
 			){
-				type = selectorOrTypeOrElement
-				callback = typeOrCallback
+				ele.on(typeOrCallback, potentialCallback)
 			}
 			else {
 				throw new Error("Malformed event listener registration")
 			}
 
-			// find repeats
-			typeList = listeners[type] || (listeners[type] = [])
-			target = target || ele.querySelector(selector) || ele
-
-			if (target.scope != self){
-				target.scope.on(target, typeOrCallback, potentialCallback)
-				return self
-			}
-
-			typeList.forEach(function(targetCallback){
-				var fn = targetCallback.fn,
-				 	to = targetCallback.to
-				if (
-					(fn == callback || fn.toString == callback.toString) &&
-					(to == target)
-				){
-					console.warn("Listener already registered")
-					repeat = true
-				}
-			})
-
-			// actual type registration
-			if (!repeat){
-				target.addEventListener(type, callback)
-				typeList.push({
-					fn: callback,
-					to: target
-				})
-			}
-
 			return self
 		}
 
-		public_method.off = function(selectorOrTypeOrElement, typeOrCallback, potentialCallback){
-			var type, callback, selector,
-				target, typeList, repeat = false
-
-			// checking type is correct
+		public_method.off = function(selectorOrType, typeOrCallback, potentialCallback){
 			if (
 				typeof potentialCallback == "function" &&
-				typeof selectorOrTypeOrElement == "string" &&
+				typeof selectorOrType == "string" &&
 				typeof typeOrCallback == "string"
 			){
-				callback = potentialCallback
-				selector = selectorOrTypeOrElement
-				type = typeOrCallback
-			}
-			else if (
-				selectorOrTypeOrElement instanceof HTMLElement &&
-				typeof typeOrCallback == "string" &&
-				typeof potentialCallback == "function"
-			){
-				callback = potentialCallback
-				type = typeOrCallback
-				target = selectorOrTypeOrElement
+				var el = ele.querySelectorAll(selectorOrType)
+				Array.prototype.forEach.call(function(ele){
+					ele.on(typeOrCallback, potentialCallback)
+				})
 			}
 			else if (
 				typeof typeOrCallback == "function" &&
-				typeof selectorOrTypeOrElement == "string" &&
+				typeof selectorOrType == "string" &&
 				!potentialCallback
 			){
-				type = selectorOrTypeOrElement
-				callback = typeOrCallback
+				ele.on(typeOrCallback, potentialCallback)
 			}
 			else {
 				throw new Error("Malformed event listener removal")
-			}
-
-			// find repeats
-			typeList = listeners[type],
-			target = target || ele.querySelector(selector) || ele
-
-			if (target.scope != self){
-				target.scope.off(target, typeOrCallback, potentialCallback)
-				return self
-			}
-
-			if (typeList){
-				typeList.forEach(function(targetCallback, index){
-					var fn = targetCallback.fn,
-					 	to = targetCallback.to
-					if (
-						(fn == callback || fn.toString == callback.toString) &&
-						(to == target)
-					){
-						to.removeEventListener(type, fn)
-						typeList.splice(index, 1)
-						removed = true
-					}
-				})
-			}
-
-			if (!removed){
-				console.warn("Listener not found")
 			}
 
 			return self
@@ -263,28 +232,21 @@
 
 		public_method.once = function(selectorOrType, typeOrCallback, potentialCallback){
 			if (
-				typeof typeOrCallback == "function" &&
-				typeof selectorOrType == "string" &&
-				!potentialCallback
-			) {
-				var callbackOnce = function(e){
-					self.off(selectorOrType, callbackOnce)
-					typeOrCallback(e)
-				}
-
-				self.on(selectorOrType, callbackOnce);
-			}
-			else if (
 				typeof potentialCallback == "function" &&
 				typeof selectorOrType == "string" &&
 				typeof typeOrCallback == "string"
 			){
-				var callbackOnce = function(e){
-					self.off(selectorOrType, typeOrCallback, callbackOnce)
-					potentialCallback(e)
-				}
-
-				self.on(selectorOrType, typeOrCallback, callbackOnce)
+				var el = ele.querySelectorAll(selectorOrType)
+				Array.prototype.forEach.call(function(ele){
+					ele.once(typeOrCallback, potentialCallback)
+				})
+			}
+			else if (
+				typeof typeOrCallback == "function" &&
+				typeof selectorOrType == "string" &&
+				!potentialCallback
+			){
+				ele.once(typeOrCallback, potentialCallback)
 			}
 			else {
 				throw new Error("Malformed event listener registration")
@@ -297,6 +259,7 @@
 			var insertAt = ele.querySelector(where) || ele
 			insertAt.appendChild(el)
 			recursiveDefineScope(el, false)
+			addEventInterface(ele, false)
 			return self
 		}
 
@@ -547,7 +510,7 @@
 		writable: false,
 		value: function(identifyer){ // public static function
 			if (stateless[identifyer]) {
-				var instance = new _scope(stateless[identifyer].cloneNode(true))
+				var instance = _scope(stateless[identifyer].cloneNode(true))
 				return instance
 			}
 			else {
