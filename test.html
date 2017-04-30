@@ -41,6 +41,9 @@ item.include() -> inclode another html node into the currnet scope
 Other options:
 stateless.each(callback(item, index)) -> itterate through all the templates once
 instantiated_domobject.scope -> property that provides the templateInstance
+
+Hints:
+functions that manipulate the dom are on the DOM Element as well as the scope object. if you want to manipulate a spicific element you can use something like `item.element(".selector-class").addClass("added-class")`
 </pre>
 		<div id="first-div" class="test1-div">
 			<strong>testing</strong>
