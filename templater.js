@@ -317,6 +317,7 @@
 		}
 
 		public_method.render = function(){
+			self.unlink()
 			document.body.appendChild(ele)
 			return self
 		}
