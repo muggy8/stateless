@@ -144,7 +144,10 @@
 
 				if (!repeat){
 					el.addEventListener(type, callback)
-					typeList.push(callback)
+					listeners[type].push(callback)
+				}
+				else {
+					console.warn("listener is already registered")
 				}
 
 				return callback
