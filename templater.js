@@ -190,10 +190,22 @@
 		addEventInterface(ele)
 
 		// public methods (kept in the prototype) for others to access
-		public_method.on = function(type, callback){
+		public_method.on = overload()
+			.args("string", "string", "function").use(function(where, type, callback){
+				self.elements(where).forEach(function(subEle){
+					subEle.on(type, callback)
+				})
+				return self
+			})
+			.args("string", "function").use(function(type, callback){
+				ele.on(type, callback)
+				return self
+			})
+		
+		/*function(type, callback){
 			ele.on(type, callback)
 			return self
-		}
+		}*/
 
 		public_method.off = function(type, callback){
 			ele.off(type, callback)
@@ -498,5 +510,7 @@
 		function(code){
 			var safeContext = this;
 			eval.call(safeContext, code)
-		}.bind(this)
+		}.bind(this),
+	// method-overload v0.0.1
+	(function(a){var b=function(a,c){var d=!0;for(var e in c)"object"==typeof a[e]&&"object"==typeof c[e]?d=b(a[e],c[e])&&d:typeof a[e]!==c[e]&&(d=!1);return d};a.overload=a.overload||function(){var a=this,c=arguments;1===arguments.length&&(c=arguments[0]);var d=[],e=function(){};e.use=e.args=function(){return e};var f=function(){for(var a in d){var c=d[a];if(b(arguments,c.a))return c.b.apply(this,arguments)}},g=function(){var g=arguments;return{use:function(h){return d.push({a:g,b:h}),c.length&&b(c,g)?(h.apply(a,c),e):f}}};return f.args=g,f},a.overload.define=a.overload.define||function(b){if("function"!=typeof b){if("object"!=typeof b)return;for(var c={},d=Object.keys(b),e=0;e<d.length;e++){var f=d[e];c[f]=typeof b[f]}if(b.__proto__)for(var g=a.overload.define(b.__proto__),h=Object.keys(g),e=0;e<h.length;e++){var i=h[e];c[i]=c[i]||g[i]}return c}try{return a.overload.define(new b)}catch(a){return void console.log("Class does not have a null constructor")}},"undefined"!=typeof module&&module.exports&&(module.exports=a.overload)})(this);
 )
