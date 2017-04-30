@@ -189,6 +189,33 @@
 		}
 		addEventInterface(ele)
 
+		var listeners = {}
+		var ele_on = function(ele, type, callback){
+			var typeList = listeners[type] || (listeners[type] = []),
+				repeat = false
+
+			typeList.forEach(function(elfn){
+				
+				if (
+					(elfn.fn == callback || elfn.fn.toString() == callback.toString()) &&
+					(elfn.ele == ele)
+				){
+					repeat = true
+				}
+			})
+
+			if (!repeat){
+				ele.addEventListener(type, callback)
+				listeners[type].push({
+					fn: callback,
+					el: ele
+				})
+			}
+			else {
+				console.warn("listener is already registered")
+			}
+		}
+		
 		// public methods (kept in the prototype) for others to access
 		public_method.on = overload()
 			.args("string", "string", "function").use(function(where, type, callback){
