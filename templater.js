@@ -220,7 +220,12 @@
 		public_method.on = overload()
 			.args("string", "string", "function").use(function(where, type, callback){
 				self.elements(where).forEach(function(subEle){
-					subEle.on(type, callback)
+					if (subEle.scope != self){
+						subEle.scope.on(type, callback)
+					}
+					else{
+						ele_on(subEle, type, callback)
+					}
 				})
 				return self
 			})
@@ -229,15 +234,43 @@
 				return self
 			})
 		
-		/*function(type, callback){
-			ele.on(type, callback)
-			return self
-		}*/
+		var ele_off = function(ele, type, callback){
+				var typeList = listeners[type],
+					found = false
 
-		public_method.off = function(type, callback){
-			ele.off(type, callback)
-			return self
-		}
+				typeList && typeList.forEach(function(elfn){
+					if (
+						(elfn.fn == callback || elfn.fn.toString() == callback.toString()) &&
+						elfn.el == ele
+					){
+						found = true
+						ele.removeEventListener(type, elfn.fn)
+					}
+				})
+
+				if (!found){
+					console.warn("Listener is not currently registered")
+				}
+				
+			}
+
+		public_method.off = overload()
+			.args("string", "string", "function").use(function(where, type, callback){
+				self.elements(where).forEach(function(subEle){
+					if (subEle.scope != self){
+						subEle.scope.off(type, callback)
+					}
+					else{
+						ele_off(subEle, type, callback)
+					}
+				})
+				return self
+			})
+			.args("string", "function").use(function(type, callback){
+				ele_off(ele, type, callback)
+				return self
+			})
+		
 
 		public_method.once = function(type, callback){
 			ele.once(type, callback)
