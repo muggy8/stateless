@@ -122,25 +122,35 @@
 		})(ele)
 
 		var listeners = {};
-		public_method.on = function(selectorOrType, typeOrCallback, potentialCallback){
-			var type, callback, selector
+		public_method.on = function(selectorOrTypeOrElement, typeOrCallback, potentialCallback){
+			var type, callback, selector,
+				target, typeList, repeat = false
 
 			// checking type is correct
 			if (
 				typeof potentialCallback == "function" &&
-				typeof selectorOrType == "string" &&
+				typeof selectorOrTypeOrElement == "string" &&
 				typeof typeOrCallback == "string"
 			){
 				callback = potentialCallback
-				selector = selectorOrType
+				selector = selectorOrTypeOrElement
 				type = typeOrCallback
 			}
 			else if (
+				selectorOrTypeOrElement instanceof HTMLElement &&
+				typeof typeOrCallback == "string" &&
+				typeof potentialCallback == "function"
+			){
+				callback = potentialCallback
+				type = typeOrCallback
+				target = selectorOrTypeOrElement
+			}
+			else if (
 				typeof typeOrCallback == "function" &&
-				typeof selectorOrType == "string" &&
+				typeof selectorOrTypeOrElement == "string" &&
 				!potentialCallback
 			){
-				type = selectorOrType
+				type = selectorOrTypeOrElement
 				callback = typeOrCallback
 			}
 			else {
@@ -148,9 +158,13 @@
 			}
 
 			// find repeats
-			var typeList = listeners[type] || (listeners[type] = []),
-				target = ele.querySelector(selector) || ele,
-				repeat = false
+			typeList = listeners[type] || (listeners[type] = [])
+			target = target || ele.querySelector(selector) || ele
+
+			if (target.scope != self){
+				target.scope.on(target, typeOrCallback, potentialCallback)
+				return self
+			}
 
 			typeList.forEach(function(targetCallback){
 				var fn = targetCallback.fn,
@@ -176,25 +190,35 @@
 			return self
 		}
 
-		public_method.off = function(selectorOrType, typeOrCallback, potentialCallback){
-			var type, callback, selector
+		public_method.off = function(selectorOrTypeOrElement, typeOrCallback, potentialCallback){
+			var type, callback, selector,
+				target, typeList, repeat = false
 
 			// checking type is correct
 			if (
 				typeof potentialCallback == "function" &&
-				typeof selectorOrType == "string" &&
+				typeof selectorOrTypeOrElement == "string" &&
 				typeof typeOrCallback == "string"
 			){
 				callback = potentialCallback
-				selector = selectorOrType
+				selector = selectorOrTypeOrElement
 				type = typeOrCallback
 			}
 			else if (
+				selectorOrTypeOrElement instanceof HTMLElement &&
+				typeof typeOrCallback == "string" &&
+				typeof potentialCallback == "function"
+			){
+				callback = potentialCallback
+				type = typeOrCallback
+				target = selectorOrTypeOrElement
+			}
+			else if (
 				typeof typeOrCallback == "function" &&
-				typeof selectorOrType == "string" &&
+				typeof selectorOrTypeOrElement == "string" &&
 				!potentialCallback
 			){
-				type = selectorOrType
+				type = selectorOrTypeOrElement
 				callback = typeOrCallback
 			}
 			else {
@@ -202,9 +226,13 @@
 			}
 
 			// find repeats
-			var typeList = listeners[type],
-				target = ele.querySelector(selector) || ele
-				removed = false
+			typeList = listeners[type],
+			target = target || ele.querySelector(selector) || ele
+
+			if (target.scope != self){
+				target.scope.off(target, typeOrCallback, potentialCallback)
+				return self
+			}
 
 			if (typeList){
 				typeList.forEach(function(targetCallback, index){

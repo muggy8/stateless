@@ -177,6 +177,11 @@ instantiated_domobject.scope -> property that provides the templateInstance
 				indexable.push(key)
 			}
 			console.log("secondDiv's indexable keys should be \"status\",\"changeStatus\",\"static\",\"getSet\",\"getOnly\" has", (indexable.toString == "status,changeStatus,static,getSet,getOnly")? "passed" : `failed. secondDiv.getOnly = ${indexable.toString()}`);
+
+			firstDiv.on("a", "mouseover", function(){console.log("hovered")})
+			console.log("There should be a warning after this message")
+			secondDiv.on("a", "mouseover", function(){console.log("hovered")})
+			console.log("If there was a warning before this message then the test has passed")
 		</script>
 	</body>
 </html>
