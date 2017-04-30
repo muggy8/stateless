@@ -146,6 +146,8 @@
 					el.addEventListener(type, callback)
 					typeList.push(callback)
 				}
+
+				return callback
 			}
 
 			el.off = function(type, callback){
@@ -162,6 +164,8 @@
 				if (!found){
 					console.warn("Listener is not currently registered")
 				}
+
+				return callback
 			}
 
 			el.once = function(type, callback){
@@ -169,7 +173,9 @@
 					callback(ev)
 					el.off(type, callback)
 				}
-				el.on(type, callback)
+				el.on(type, handler)
+
+				return handler
 			}
 
 			if (again !== false){
