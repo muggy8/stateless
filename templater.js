@@ -190,15 +190,16 @@
 		addEventInterface(ele)
 
 		var listeners = {}
+		context.listeners = context.listeners || []
+		context.listeners.push(listeners)
 		var ele_on = function(ele, type, callback){
 			var typeList = listeners[type] || (listeners[type] = []),
 				repeat = false
 
 			typeList.forEach(function(elfn){
-				
 				if (
 					(elfn.fn == callback || elfn.fn.toString() == callback.toString()) &&
-					(elfn.ele == ele)
+					(elfn.el == ele)
 				){
 					repeat = true
 				}
@@ -215,13 +216,13 @@
 				console.warn("listener is already registered")
 			}
 		}
-		
+
 		// public methods (kept in the prototype) for others to access
 		public_method.on = overload()
 			.args("string", "string", "function").use(function(where, type, callback){
 				self.elements(where).forEach(function(subEle){
 					if (subEle.scope != self){
-						subEle.scope.on(type, callback)
+						subEle.scope.on(subEle, type, callback)
 					}
 					else{
 						ele_on(subEle, type, callback)
@@ -229,36 +230,50 @@
 				})
 				return self
 			})
+			.args({scope:{on:"function"}, addEventListener: "function"}, "string", "function").use(function(ele, type, callback){
+				if (ele.scope == self){
+					ele_on(ele, type, callback)
+				}
+				else {
+					ele.scope.on(ele, type, callback)
+				}
+				return self
+			})
 			.args("string", "function").use(function(type, callback){
 				ele.on(type, callback)
 				return self
 			})
-		
+			.args().use(function(){
+				console.warn("on inputs improperly formatted")
+			})
+
 		var ele_off = function(ele, type, callback){
 				var typeList = listeners[type],
 					found = false
 
-				typeList && typeList.forEach(function(elfn){
+				typeList && typeList.forEach(function(elfn, index){
 					if (
 						(elfn.fn == callback || elfn.fn.toString() == callback.toString()) &&
 						elfn.el == ele
 					){
 						found = true
 						ele.removeEventListener(type, elfn.fn)
+						typeList.splice(index, 1)
 					}
 				})
 
 				if (!found){
 					console.warn("Listener is not currently registered")
 				}
-				
+
 			}
 
 		public_method.off = overload()
 			.args("string", "string", "function").use(function(where, type, callback){
 				self.elements(where).forEach(function(subEle){
+
 					if (subEle.scope != self){
-						subEle.scope.off(type, callback)
+						subEle.scope.off(subEle, type, callback)
 					}
 					else{
 						ele_off(subEle, type, callback)
@@ -266,11 +281,23 @@
 				})
 				return self
 			})
+			.args({scope:{off:"function"}, addEventListener: "function"}, "string", "function").use(function(ele, type, callback){
+				if (ele.scope == self){
+					ele_on(ele, type, callback)
+				}
+				else {
+					ele.scope.off(ele, type, callback)
+				}
+				return self
+			})
 			.args("string", "function").use(function(type, callback){
 				ele_off(ele, type, callback)
 				return self
 			})
-		
+			.args().use(function(){
+				console.warn("on inputs improperly formatted")
+			})
+
 
 		public_method.once = function(type, callback){
 			ele.once(type, callback)
@@ -405,12 +432,14 @@
 
 		public_method.elements = function(selector){
 			if (selector){
-				return Array.prototype.splice.call(ele.querySelectorAll(selector), 1)
+				return Array.prototype.slice.call(ele.querySelectorAll(selector), 0)
 			}
 			else{
-				var everything = Array.prototype.splice.call(ele.querySelectorAll("*"), 1)
-				everything.push(ele)
-				return everything
+				var arr = Array.prototype.filter.call(ele.querySelectorAll("*"), function(node){
+					return node.scope == self
+				})
+				arr.unshift(ele)
+				return arr
 			}
 		}
 
