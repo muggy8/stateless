@@ -24,9 +24,9 @@ item.hasClass(string) -> returns true/false based of if the dom element has the 
 item.css(string [, string]) -> query the css property or set it
 item.appendChild(item[, where]) -> append dom element to this dom element or at a specified CSS selected element's child
 item.unlink() -> remove this dom element from it's parent
-item.on("event", callback) -> attach an event listener to the dom element
-item.off("event", callback) -> remove an event listener from the dom element
-item.once("event", callback) -> add a call once event listener to the dom element
+item.on([selector,] "event", callback) -> attach an event listener to the top most dom element or the selected element
+item.off([selector,] "event", callback) -> remove an event listener from the top most dom element or the selected
+item.once([selector,] "event", callback) -> add a call once event listener to the top most dom element or the selected
 item.text([string[, where]]) -> no args = get inner string, 1 arg = replace inner string, 2 arg = replace inner string at element
 item.attr(string [, string]) -> get or set the attribute
 item.data(string [,string]) -> get or set the data- attribute
@@ -41,9 +41,6 @@ item.include() -> inclode another html node into the currnet scope
 Other options:
 stateless.each(callback(item, index)) -> itterate through all the templates once
 instantiated_domobject.scope -> property that provides the templateInstance
-
-Hints:
-functions that manipulate the dom are on the DOM Element as well as the scope object. if you want to manipulate a spicific element you can use something like `item.element(".selector-class").addClass("added-class")`
 </pre>
 		<div id="first-div" class="test1-div">
 			<strong>testing</strong>
