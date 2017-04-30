@@ -3,6 +3,8 @@
 	// --------------------------------------------------------
 	// helper functions that do stuff
 	// --------------------------------------------------------
+
+	// lets you declare recursive anonamyous recursive functions
 	function recursive(fn){
 	    var bound = function(){
 	        var inputs = Array.prototype.concat.call([bound], Array.prototype.splice.call(arguments, 0))
@@ -11,6 +13,7 @@
 	    return bound
 	}
 
+	// unused right now but checks if an object is empty
 	function isEmpty(obj) {
 		for(var prop in obj) {
 			if(obj.hasOwnProperty(prop))
@@ -19,6 +22,7 @@
 		return JSON.stringify(obj) === JSON.stringify({})
 	}
 
+	// make ajax calls (used in stateless.import)
 	function ajaxGet(url, successCallback, failCallback){
 		var request = new XMLHttpRequest()
 
@@ -36,10 +40,12 @@
 		request.send()
 	}
 
+	// exclusive or never a bad thing to have but unused right now
 	function xor(a,b) {
 		return ( a || b ) && !( a && b )
 	}
 
+	// make sure that only 1 of 2 or more variables are defined
 	var onlyOneIsDefined = function(){
 		var truthness = false;
 		for (var i = 0; i < arguments.length; i++){
@@ -54,20 +60,21 @@
 	}
 
 	// --------------------------------------------------------
-	// templater that does the heavy lifting kinda
+	// The templater that does the heavy lifting kinda
 	// --------------------------------------------------------
 	var _scope = function(ele){
 		// detect if new or just calling it
-		var self = (context == this)? {} : this
+		var self = {}
 
 		if (!ele){
-			throw "No element selected"
+			throw new Error("No element selected")
 		}
 
 		// set public methods into the prototype of this object.
 		var public_method = {}
 		Object.setPrototypeOf(self, public_method)
 
+		// define public propertyies that can be gotten with .varname
 		Object.defineProperty(public_method, "parent", {
 			enumerable: false,
 			configurable: false,
@@ -83,7 +90,8 @@
 				var unique = [];
 				Array.prototype.forEach.call(ele.querySelectorAll("*"), function(item){
 					var scope = item.scope
-					if (scope && scope != self && unique.indexOf(scope) === -1){
+					// todo: refactor this and make a better way of keeping track of child scopes.
+					if (scope && scope != self && scope.parent == self && unique.indexOf(scope) === -1){
 						unique.push(scope)
 					}
 				})
@@ -96,16 +104,12 @@
 			configurable: false,
 			get: recursive(function(getParent, scope){
 				scope = scope || self
-				var parentScope = scope.parent
-				if (parentScope) {
-					return getParent(parentScope)
-				}
-				else {
-					return scope
-				}
+				return (scope.parent)? getParent(scope.parent) : scope
 			})
 		})
 
+		// set the "scope" property of every HTML element associated to self to provide a reference to self
+		// most depended upon property in the framework
 		recursive(function(recurFn, ele, recur){
 			 Object.defineProperty(ele, "scope", {
 				enumerable: false,
@@ -121,6 +125,7 @@
 			}
 		})(ele)
 
+		// public methods (kept in the prototype) for others to access
 		var listeners = {};
 		public_method.on = function(selectorOrTypeOrElement, typeOrCallback, potentialCallback){
 			var type, callback, selector,
