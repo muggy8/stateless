@@ -264,44 +264,6 @@
 				return self
 			})
 
-		var addClassInterface = function(ele, again){
-			ele.hasClass = function(q){
-				if (q) {
-					return (ele.className.match(new RegExp("(^"+q+"$|\\s"+q+"\\s|^"+q+"\\s|\\s"+q+"$)")))? true : false
-				}
-			}
-
-			ele.addClass = function(c, multiple){
-				if (!ele.hasClass(c) || multiple === true){
-					ele.className += " " + c
-				}
-			}
-
-			ele.removeClass = function(c, multiple){
-				if (ele.hasClass(c)){
-					if (multiple === true){
-						ele.className = ele.className
-							.replace(new RegExp(c, "g"), "")
-							.replace(/(^\s+|\s+$)/g, "")
-							.replace(/\s+/g, " ")
-					}
-					else {
-						ele.className = ele.className
-							.replace(c, "")
-							.replace(/(^\s+|\s+$)/g, "")
-							.replace(/\s+/g, " ")
-					}
-				}
-			}
-
-			if (again !== false){
-				Array.prototype.forEach.call(ele.querySelectorAll("*"), function(node){
-					addClassInterface(node, false)
-				})
-			}
-		}
-		addClassInterface(ele)
-
 		public_method.hasClass = overload()
 			.args({className: "string"}, "string").use(function(ele, c){
 				return (ele.className.match(new RegExp("(^"+c+"$|\\s"+c+"\\s|^"+c+"\\s|\\s"+c+"$)")))? true : false
@@ -420,7 +382,6 @@
 			var insertAt = ele.querySelector(where) || ele
 			insertAt.appendChild(el)
 			recursiveDefineScope(el, false)
-			addClassInterface(ele, false)
 			return self
 		}
 
