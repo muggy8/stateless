@@ -351,10 +351,46 @@
 				return self
 			})
 
-		public_method.removeClass = function (className, multiple){
-			ele.removeClass(className, multiple)
-			return self
-		}
+		public_method.removeClass = overload()
+			.args({scope:"object", className:"string"}, "string", "boolean").use(function(ele, c, multiple){
+				if (ele.scope == self){
+					var matcher = (multiple)? new RegExp(c, "g") : c
+					if (multiple || self.hasClass(ele, c)){
+						ele.className = ele.className
+							.replace(matcher, "")
+							.replace(/(^\s+|\s+$)/g, "")
+							.replace(/\s+/g, " ")
+					}
+				}
+				else {
+					ele.scope.removeClass(ele, c, multiple)
+				}
+				return self
+			})
+			.args("string", "string", "boolean").use(function(selector, c, multiple){
+				self.elements(selector).forEach(function(ele){
+					self.removeClass(ele, c, multiple)
+				})
+				return self
+			})
+			.args("string", "string").use(function(selector, c){
+				self.elements(selector).forEach(function(ele){
+					self.removeClass(ele, c, false)
+				})
+				return self
+			})
+			.args("string", "boolean").use(function(c, multiple){
+				self.removeClass(ele, c, multiple)
+				return self
+			})
+			.args("string").use(function(c){
+				self.removeClass(ele, c, false)
+				return self
+			})
+			.args().use(function(){
+				console.warn("removeClass function inputs improperly formatted")
+				return self
+			})
 
 		public_method.attr = function(attribute, value){
 			if (typeof value == "undefined") {
