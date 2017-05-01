@@ -181,6 +181,7 @@
 			})
 			.args().use(function(){
 				console.warn("on function inputs improperly formatted")
+				return self
 			})
 
 		public_method.off = overload()
@@ -226,6 +227,7 @@
 			})
 			.args().use(function(){
 				console.warn("off function inputs improperly formatted")
+				return self
 			})
 
 		public_method.once = overload()
@@ -240,6 +242,7 @@
 				else {
 					ele.scope.once(ele, type, callback)
 				}
+				return self
 			})
 			.args("string", "string", "function").use(function(where, type, callback){
 				self.elements(where).forEach(function(subEle){
@@ -250,12 +253,15 @@
 						subEle.scope.once(subEle, type, callback)
 					}
 				})
+				return self
 			})
 			.args("string", "function").use(function(type, callback){
 				self.once(ele, type, callback)
+				return self
 			})
 			.args().use(function(){
 				console.warn("once function inputs improperly formatted")
+				return self
 			})
 
 		var addClassInterface = function(ele, again){
@@ -296,14 +302,54 @@
 		}
 		addClassInterface(ele)
 
-		public_method.hasClass = function (className){
-			return ele.hasClass(className)
-		}
+		public_method.hasClass = overload()
+			.args({className: "string"}, "string").use(function(ele, c){
+				return (ele.className.match(new RegExp("(^"+c+"$|\\s"+c+"\\s|^"+c+"\\s|\\s"+c+"$)")))? true : false
+			})
+			.args("string").use(function(c){
+				return self.hasClass(ele, c)
+			})
 
-		public_method.addClass = function (className, multiple){
-			ele.addClass(className, multiple)
-			return self
-		}
+		public_method.addClass = overload()
+			.args({scope:"object", className:"string"}, "string", "boolean").use(function(ele, c, multiple){
+				if (ele.scope == self){
+					if (multiple || !self.hasClass(ele, c)){
+						ele.className += " " + c
+					}
+				}
+				else {
+					ele.scope.addClass(ele, c, multiple)
+				}
+				return self
+			})
+			.args("string", "string", "boolean").use(function(selector, c, multiple){
+				self.elements().forEach(function(ele){
+					self.addClass(ele, c, multiple)
+				})
+				return self
+			})
+			.args({scope:"object", className:"string"}, "string").use(function(ele, c){
+				self.addClass(ele, c, false)
+				return self
+			})
+			.args("string", "string").use(function(selector, c){
+				self.elements().forEach(function(ele){
+					self.addClass(ele, c, false)
+				})
+				return self
+			})
+			.args("string", "boolean").use(function(c, multiple){
+				self.addClass(ele, c, multiple)
+				return self
+			})
+			.args("string").use(function(c){
+				self.addClass(ele, c, false)
+				return self
+			})
+			.args().use(function(){
+				console.warn("addClass function inputs improperly formatted")
+				return self
+			})
 
 		public_method.removeClass = function (className, multiple){
 			ele.removeClass(className, multiple)
