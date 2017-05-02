@@ -393,7 +393,7 @@
 
 		// functions for module manip begin
 
-		public_method.define = function(prop, config){
+		public_method.property = public_method.define = function(prop, config){
 			var deffs = {
 				enumerable: (typeof config.enumerable == "undefined")?  true : config.enumerable,
 				configurable: true
@@ -426,7 +426,6 @@
 			Object.defineProperty(self, prop, deffs)
 			return self
 		}
-		public_method.property = public_method.define
 
 		public_method.element = function(selector){
 			return (selector)? ele.querySelector(selector) : ele
@@ -445,7 +444,7 @@
 			}
 		}
 
-		public_method.appendChild = function(childScope, where){
+		public_method.append = public_method.appendChild = function(childScope, where){
 			childScope.unlink()
 			Object.setPrototypeOf(Object.getPrototypeOf(childScope), self)
 			var insertAt = ele.querySelector(where) || ele
