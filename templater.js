@@ -376,17 +376,11 @@
 			})
 
 
-		public_method.css = function(){
+		public_method.css = overload()
 
-		}
+		public_method.data = overload()
 
-		public_method.data = function(){
-
-		}
-
-		public_method.text = function(){
-
-		}
+		public_method.text = overload()
 
 		// functions for dom manip end
 
