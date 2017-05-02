@@ -182,6 +182,10 @@ instantiated_domobject.scope -> property that provides the templateInstance
 			console.log("There should be a warning after this message")
 			secondDiv.on(secondDiv.element("a"), "mouseover", function(){console.log("hovered")})
 			console.log("If there was a warning before this message then the test has passed")
+
+			firstDiv.data('mess', 'abcd1234')
+			console.log("firstDiv.data('mess', 'abcd1234') should set data-mess to abcd1234", (firstDiv.element().getAttribute("data-mess") == 'abcd1234')? "passed" : "failed")
+			console.log("firstDiv.data('mess') should retur 'abcd1234'", (firstDiv.data("mess") == 'abcd1234')? "passed":"failed")
 		</script>
 	</body>
 </html>
