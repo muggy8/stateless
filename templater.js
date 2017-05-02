@@ -133,6 +133,8 @@
 		// begin dom manip functions
 
 		var listeners = {}
+		var cl = context.listeners = context.listeners || []
+		cl.push(listeners)
 
 		// public methods (kept in the prototype) for others to access
 		public_method.on = overload()
