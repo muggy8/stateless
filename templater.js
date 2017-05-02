@@ -450,20 +450,15 @@
 					subScope.unlink()
 					Object.setPrototypeOf(Object.getPrototypeOf(subScope), self)
 					ele.appendChild(subScope.element())
-				} 
+				}
 				else {
 					ele.scope.append(ele, subScope)
 				}
 			})
-		
-		/*function(childScope, where){
-			childScope.unlink()
-			Object.setPrototypeOf(Object.getPrototypeOf(childScope), self)
-			var insertAt = ele.querySelector(where) || ele
-			insertAt.appendChild(childScope.element())
-			return self
-		}*/
-
+			.args({children:"object", root:"object", element:"function", unlink:"function"}).use(function(subScope){
+				self.append(ele, subScope)
+			})
+			
 		public_method.unlink = function(){
 			if (ele.parentNode) {
 				Object.setPrototypeOf(Object.getPrototypeOf(self), Object.prototype)
