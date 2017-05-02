@@ -482,6 +482,7 @@
 		}
 
 		public_method.append = public_method.appendChild = overload()
+			// main method 1 append child scope
 			.args({scope:{append:"function"}, appendChild:"function"}, {children:"object", root:"object", element:"function", unlink:"function"}).use(function(ele, subScope){
 				if (ele.scope == self){
 					subScope.unlink()
@@ -493,10 +494,7 @@
 				}
 				return self
 			})
-			.args({children:"object", root:"object", element:"function", unlink:"function"}).use(function(subScope){
-				self.append(ele, subScope)
-				return self
-			})
+			// main method 2: alias for include
 			.args({scope:{append:"function"}, appendChild:"function"}, "object").use(function(ele, addedEle){
 				if (ele.scope == self){
 					self.include(ele, addedEle)
@@ -506,11 +504,33 @@
 				}
 				return self
 			})
+			// bootstrap off main method 2
+			.args({scope:{append:"function"}, appendChild:"function"}, "string").use(function(ele, htmlString){
+				var converter = document.createElement("div")
+				converter.innerHTML = htmlString
+				Array.prototype.forEach.call(converter.children, function(addedEle){
+					self.append(ele, addedEle)
+				})
+			})
+			// bootstrp off of main method 1
+			.args({children:"object", root:"object", element:"function", unlink:"function"}).use(function(subScope){
+				self.append(ele, subScope)
+				return self
+			})
+			// bootstraps off main method 2
 			.args("object").use(function(addedEle){
 				if (ele.scope == self){
 					self.append(ele, addedEle)
 				}
 				return self
+			})
+			// bootstrap off main method 2
+			.args("string").use(function(htmlString){
+				var converter = document.createElement("div")
+				converter.innerHTML = htmlString
+				Array.prototype.forEach.call(converter.children, function(addedEle){
+					self.append(ele, addedEle)
+				})
 			})
 			.args().use(function(){
 				console.warn("append/appendChild function inputs improperly formatted")
