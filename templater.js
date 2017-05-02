@@ -174,17 +174,6 @@
 					self.on(ele, type, callback)
 				})
 			})
-			/*.args("string", "string", "function").use(function(where, type, callback){
-				self.elements(where).forEach(function(subEle){
-					if (subEle.scope != self){
-						subEle.scope.on(subEle, type, callback)
-					}
-					else{
-						self.on(subEle, type, callback)
-					}
-				})
-				return self
-			})*/
 			.args("string", "function").use(function(type, callback){
 				self.on(ele, type, callback)
 				return self
@@ -225,17 +214,6 @@
 					self.off(ele, type, callback)
 				})
 			})
-			/*.args("string", "string", "function").use(function(where, type, callback){
-				self.elements(where).forEach(function(subEle){
-					if (subEle.scope != self){
-						subEle.scope.off(subEle, type, callback)
-					}
-					else{
-						self.off(subEle, type, callback)
-					}
-				})
-				return self
-			})*/
 			.args("string", "function").use(function(type, callback){
 				self.off(ele, type, callback)
 				return self
@@ -264,17 +242,6 @@
 					self.once(ele, type, callback)
 				})
 			})
-			/*.args("string", "string", "function").use(function(where, type, callback){
-				self.elements(where).forEach(function(subEle){
-					if (subEle.scope == self){
-						self.once(subEle, type, callback)
-					}
-					else {
-						subEle.scope.once(subEle, type, callback)
-					}
-				})
-				return self
-			})*/
 			.args("string", "function").use(function(type, callback){
 				self.once(ele, type, callback)
 				return self
@@ -308,20 +275,18 @@
 				}
 				return self
 			})
-			.args("string", "string", "boolean").use(function(selector, c, multiple){
-				self.elements().forEach(function(ele){
+			.args({"0":"object", length:"number", forEach:"function"}, "string", "boolean").use(function(eles, c, multiple){
+				eles.forEach(function(ele){
 					self.addClass(ele, c, multiple)
 				})
-				return self
+			})
+			.args({"0":"object", length:"number", forEach:"function"}, "string").use(function(eles, c){
+				eles.forEach(function(ele){
+					self.addClass(ele, c, false)
+				})
 			})
 			.args({scope:"object", className:"string"}, "string").use(function(ele, c){
 				self.addClass(ele, c, false)
-				return self
-			})
-			.args("string", "string").use(function(selector, c){
-				self.elements().forEach(function(ele){
-					self.addClass(ele, c, false)
-				})
 				return self
 			})
 			.args("string", "boolean").use(function(c, multiple){
