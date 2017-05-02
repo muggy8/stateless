@@ -186,6 +186,8 @@ instantiated_domobject.scope -> property that provides the templateInstance
 			firstDiv.data('mess', 'abcd1234')
 			console.log("firstDiv.data('mess', 'abcd1234') should set data-mess to abcd1234", (firstDiv.element().getAttribute("data-mess") == 'abcd1234')? "passed" : "failed")
 			console.log("firstDiv.data('mess') should retur 'abcd1234'", (firstDiv.data("mess") == 'abcd1234')? "passed":"failed")
+
+			secondDiv.append(firstDiv.element("a"), `<strong>ABC</strong><em>123</em>`)
 		</script>
 	</body>
 </html>

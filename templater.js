@@ -508,9 +508,12 @@
 			.args({scope:{append:"function"}, appendChild:"function"}, "string").use(function(ele, htmlString){
 				var converter = document.createElement("div")
 				converter.innerHTML = htmlString
-				Array.prototype.forEach.call(converter.children, function(addedEle){
+				console.log(converter.children)
+				Array.prototype.slice.call(converter.children, 0).forEach(function(addedEle){
+					console.log(addedEle)
 					self.append(ele, addedEle)
 				})
+				return self
 			})
 			// bootstrp off of main method 1
 			.args({children:"object", root:"object", element:"function", unlink:"function"}).use(function(subScope){
@@ -528,9 +531,10 @@
 			.args("string").use(function(htmlString){
 				var converter = document.createElement("div")
 				converter.innerHTML = htmlString
-				Array.prototype.forEach.call(converter.children, function(addedEle){
+				Array.prototype.slice.call(converter.children, 0).forEach.call(converter.children, function(addedEle){
 					self.append(ele, addedEle)
 				})
+				return self
 			})
 			.args().use(function(){
 				console.warn("append/appendChild function inputs improperly formatted")
