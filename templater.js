@@ -341,15 +341,40 @@
 				return self
 			})
 
-		public_method.attr = function(attribute, value){
-			if (typeof value == "undefined") {
-				return ele.getAttribute(attribute)
-			}
-			else {
-				ele.setAttribute(attribute, value)
+		public_method.attr = overload()
+			.args({scope:"object", getAttribute:"function", setAttribute: "function"}, "string").use(function(ele, attribute, value){
+				if (ele.scope == self){
+					if (typeof value == "undefined") {
+						return ele.getAttribute(attribute)
+					}
+					else {
+						ele.setAttribute(attribute, value)
+						return self
+					}
+				}
+				else {
+					if (typeof value == "undefined"){
+						return ele.scope.attr(ele, attribute)
+					}
+					else {
+						return self
+					}
+				}
+			})
+			.args({"0":"object", length:"number", forEach:"function"}, "string").use(function(eles, attribute, value){
+				eles.forEach(function(ele){
+					self.attr(ele, attribute, value)
+				})
 				return self
-			}
-		}
+			})
+			.args("string").use(function(attribute, value){
+				return self.attr(ele, attribute, value)
+			})
+			.args().use(function(){
+				console.warn("attr function inputs improperly formatted")
+				return self
+			})
+
 
 		public_method.css = function(){
 
