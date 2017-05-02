@@ -318,17 +318,15 @@
 				}
 				return self
 			})
-			.args("string", "string", "boolean").use(function(selector, c, multiple){
-				self.elements(selector).forEach(function(ele){
+			.args({"0":"object", length:"number", forEach:"function"}, "string", "boolean").use(function(eles, c, multiple){
+				eles.forEach(function(ele){
 					self.removeClass(ele, c, multiple)
 				})
-				return self
 			})
-			.args("string", "string").use(function(selector, c){
-				self.elements(selector).forEach(function(ele){
+			.args({"0":"object", length:"number", forEach:"function"}, "string").use(function(eles, c){
+				eles.forEach(function(ele){
 					self.removeClass(ele, c, false)
 				})
-				return self
 			})
 			.args("string", "boolean").use(function(c, multiple){
 				self.removeClass(ele, c, multiple)
