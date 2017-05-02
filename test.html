@@ -18,25 +18,25 @@ var item = stateless.instantiate(id)
 
 step 3 - manipulate the item
 item.render() -> renders to body
-item.addClass(string[, multiple]) -> adds a class uniquely to the dom element, if multiple add it regardless
-item.removeClass(string[, multiple]) -> removes a class uniquely to the dom element, if multiple add it regardless
-item.hasClass(string) -> returns true/false based of if the dom element has the class
-item.css(string [, string]) -> query the css property or set it
-item.appendChild(item[, where]) -> append dom element to this dom element or at a specified CSS selected element's child
+item.addClass([element,] string[, multiple]) -> adds a class uniquely to the dom element, if multiple add it regardless
+item.removeClass([element,] string[, multiple]) -> removes a class uniquely to the dom element, if multiple add it regardless
+item.hasClass([element,] string) -> returns true/false based of if the dom element has the class
+item.css([element,] string [, string]) -> query the css property or set it
+item.appendChild = item.append([element,] item/domElement) -> alias for include or used to append another scope to this scope
 item.unlink() -> remove this dom element from it's parent
-item.on([selector,] "event", callback) -> attach an event listener to the top most dom element or the selected element
-item.off([selector,] "event", callback) -> remove an event listener from the top most dom element or the selected
-item.once([selector,] "event", callback) -> add a call once event listener to the top most dom element or the selected
-item.text([string[, where]]) -> no args = get inner string, 1 arg = replace inner string, 2 arg = replace inner string at element
-item.attr(string [, string]) -> get or set the attribute
-item.data(string [,string]) -> get or set the data- attribute
+item.on([element,] "event", callback) -> attach an event listener to the top most dom element or the selected element
+item.off([element,] "event", callback) -> remove an event listener from the top most dom element or the selected element
+item.once([element,] "event", callback) -> add a call once event listener to the top most dom element or the selected element
+item.text([element,] [string]) -> no args = get inner string, 1 arg = replace inner string, 2 arg = replace inner string at element
+item.attr([element,] string [, string]) -> get or set the attribute
+item.data([element,] string [,string]) -> get or set the data- attribute
 idem.property = item.define(property, options) -> define a peroperty for the object
 item.element([selector]) -> gets the one dom element or the first selected match
 item.elements([selector]) -> gets everything including the root or just everything that matches the selector
 item.children -> read only property that returns all child scopes
 item.parent -> read only property that returns the parent scope if it exists;
 item.root -> returns the root scope of the chain;
-item.include() -> inclode another html node into the currnet scope
+item.include([element,] anotherElement) -> inclode another html node into the currnet scope
 
 Other options:
 stateless.each(callback(item, index)) -> itterate through all the templates once
