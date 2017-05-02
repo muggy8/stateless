@@ -460,6 +460,26 @@
 				self.append(ele, subScope)
 				return self
 			})
+			.args({scope:{append:"function"}, appendChild:"function"}, "object").use(function(ele, addedEle){
+				if (ele.scope == self){
+					self.include(ele, addedEle)
+				}
+				else {
+					ele.scope.include(ele, addedEle)
+				}
+				return self
+			})
+			.args("object").use(function(addedEle){
+				if (ele.scope == self){
+					self.append(ele, addedEle)
+				}
+				return self
+			})
+			.args().use(function(){
+				console.warn("append/appendChild function inputs improperly formatted")
+				return self
+			})
+
 
 		public_method.unlink = function(){
 			if (ele.parentNode) {
