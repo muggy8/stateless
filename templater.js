@@ -444,13 +444,25 @@
 			}
 		}
 
-		public_method.append = public_method.appendChild = function(childScope, where){
+		public_method.append = public_method.appendChild = everload()
+			.args({scope:{append:"function"}, appendChild:"function"}, {children:"object", root:"object", element:"function", unlink:"function"}).use(function(ele, subScope){
+				if (ele.scope == scope){
+					subScope.unlink()
+					Object.setPrototypeOf(Object.getPrototypeOf(subScope), self)
+					ele.appendChild(subScope.element())
+				} 
+				else {
+					ele.scope.append(ele, subScope)
+				}
+			})
+		
+		/*function(childScope, where){
 			childScope.unlink()
 			Object.setPrototypeOf(Object.getPrototypeOf(childScope), self)
 			var insertAt = ele.querySelector(where) || ele
 			insertAt.appendChild(childScope.element())
 			return self
-		}
+		}*/
 
 		public_method.unlink = function(){
 			if (ele.parentNode) {
