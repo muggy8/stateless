@@ -379,6 +379,27 @@
 		public_method.css = overload()
 
 		public_method.data = overload()
+			.args({scope:"object", dataset:"object"}, "string").use(function(ele, attribute, value){
+				if (ele.scope == self){
+					if (typeof value !== "undefined"){
+						ele.dataset[attribute] = value
+						return self
+					}
+					else {
+						return ele.dataset[attribute]
+					}
+				}
+				else {
+					return ele.scope.data(ele, attribute)
+				}
+			})
+			.args("string").use(function(attribute, value){
+				return self.data(ele, attribute, value)
+			})
+			.args().use(function(){
+				console.warn("data function inputs improperly formatted")
+				return self
+			})
 
 		public_method.text = overload()
 
