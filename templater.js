@@ -444,9 +444,9 @@
 			}
 		}
 
-		public_method.append = public_method.appendChild = everload()
+		public_method.append = public_method.appendChild = overload()
 			.args({scope:{append:"function"}, appendChild:"function"}, {children:"object", root:"object", element:"function", unlink:"function"}).use(function(ele, subScope){
-				if (ele.scope == scope){
+				if (ele.scope == self){
 					subScope.unlink()
 					Object.setPrototypeOf(Object.getPrototypeOf(subScope), self)
 					ele.appendChild(subScope.element())
@@ -454,11 +454,13 @@
 				else {
 					ele.scope.append(ele, subScope)
 				}
+				return self
 			})
 			.args({children:"object", root:"object", element:"function", unlink:"function"}).use(function(subScope){
 				self.append(ele, subScope)
+				return self
 			})
-			
+
 		public_method.unlink = function(){
 			if (ele.parentNode) {
 				Object.setPrototypeOf(Object.getPrototypeOf(self), Object.prototype)
