@@ -167,7 +167,12 @@
 				}
 				return self
 			})
-			.args("string", "string", "function").use(function(where, type, callback){
+			.args({"0":"object", length:"number", forEach:"function"}, "string", "function").use(function(eles, type, callback){
+				eles.forEach(function(ele){
+					self.on(ele, type, callback)
+				})
+			})
+			/*.args("string", "string", "function").use(function(where, type, callback){
 				self.elements(where).forEach(function(subEle){
 					if (subEle.scope != self){
 						subEle.scope.on(subEle, type, callback)
@@ -177,7 +182,7 @@
 					}
 				})
 				return self
-			})
+			})*/
 			.args("string", "function").use(function(type, callback){
 				self.on(ele, type, callback)
 				return self
@@ -213,7 +218,12 @@
 				}
 				return self
 			})
-			.args("string", "string", "function").use(function(where, type, callback){
+			.args({"0":"object", length:"number", forEach:"function"}, "string", "function").use(function(eles, type, callback){
+				eles.forEach(function(ele){
+					self.off(ele, type, callback)
+				})
+			})
+			/*.args("string", "string", "function").use(function(where, type, callback){
 				self.elements(where).forEach(function(subEle){
 					if (subEle.scope != self){
 						subEle.scope.off(subEle, type, callback)
@@ -223,7 +233,7 @@
 					}
 				})
 				return self
-			})
+			})*/
 			.args("string", "function").use(function(type, callback){
 				self.off(ele, type, callback)
 				return self
@@ -247,7 +257,12 @@
 				}
 				return self
 			})
-			.args("string", "string", "function").use(function(where, type, callback){
+			.args({"0":"object", length:"number", forEach:"function"}, "string", "function").use(function(eles, type, callback){
+				eles.forEach(function(ele){
+					self.once(ele, type, callback)
+				})
+			})
+			/*.args("string", "string", "function").use(function(where, type, callback){
 				self.elements(where).forEach(function(subEle){
 					if (subEle.scope == self){
 						self.once(subEle, type, callback)
@@ -257,7 +272,7 @@
 					}
 				})
 				return self
-			})
+			})*/
 			.args("string", "function").use(function(type, callback){
 				self.once(ele, type, callback)
 				return self
