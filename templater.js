@@ -384,12 +384,28 @@
 
 		// functions for dom manip end
 
-		public_method.include = function(el, where){
-			var insertAt = ele.querySelector(where) || ele
-			insertAt.appendChild(el)
-			recursiveDefineScope(el, false)
-			return self
-		}
+		public_method.include = overload()
+			.args({scope:"object", appendChild:"function"}, "object").use(function(ele, subEle){
+				if (ele.scope == self && !subEle.scope){
+					recursiveDefineScope(subEle, false)
+					ele.appendChild(subEle)
+				}
+				else if (!subEle.scope){
+					ele.scope.include(ele, subEle)
+				}
+				else {
+					console.warn("The item you are trying to include into this scope is already part of another scope. Try to append that scope to the current scope instead")
+				}
+				return self
+			})
+			.args("object").use(function(subEle){
+				self.include(ele, subEle)
+				return self
+			})
+			.args().use(function(){
+				console.warn("include function inputs improperly formatted")
+				return self
+			})
 
 		// functions for module manip begin
 
