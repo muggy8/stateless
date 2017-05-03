@@ -198,6 +198,7 @@ instantiated_domobject.scope -> property that provides the templateInstance
 			console.log("if secondDiv->a has only 1 'link' class", (firstDiv.element("a").className == "link")? "passed" : "failed")
 			console.log("secondDiv.attr('$a', 'class') == 'link'", (secondDiv.attr('$a', 'class') == 'link')? "passed": "failed")
 			console.log(`secondDiv.attr("$a", "class") == "link"`, (secondDiv.attr("$a", "class") == "link")? "passed" : "failed")
+			console.log(`secondDiv.hasClass("$a", "link") === true`, (secondDiv.hasClass("$a", "link") === true)? "passed" : "failed")
 		</script>
 	</body>
 </html>

@@ -292,6 +292,16 @@
 			.args({className: "string"}, "string").use(function(ele, c){
 				return (ele.className.match(new RegExp("(^"+c+"$|\\s"+c+"\\s|^"+c+"\\s|\\s"+c+"$)")))? true : false
 			})
+			.args("string", "string").use(function(selector, c){
+				if(selector[0] == "$"){
+					selector = selector.replace(/^\$\s*/, "")
+					return self.hasClass(self.element(selector), c)
+				}
+				else {
+					console.warn("selector must begin with '$'")
+					return false
+				}
+			})
 			.args("string").use(function(c){
 				return self.hasClass(ele, c)
 			})
