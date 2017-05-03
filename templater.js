@@ -648,6 +648,17 @@
 				}
 				return self
 			})
+			// bootstrap off main method 1
+			.args("string", {children:"object", root:"object", element:"function", unlink:"function"}).use(function(selector, subScope){
+				if(selector[0] == "$"){
+					selector = selector.replace(/^\$\s*/, "")
+					self.append(self.element(selector), subScope)
+				}
+				else {
+					console.warn("selector must begin with '$'")
+				}
+				return self
+			})
 			// main method 2: alias for include
 			.args({scope:{append:"function"}, appendChild:"function"}, "object").use(function(ele, addedEle){
 				if (ele.scope == self){
@@ -658,15 +669,40 @@
 				}
 				return self
 			})
+			// main bootstrap off main metho 2
+			.args("string", "object").use(function(selector, addedEle){
+				if(selector[0] == "$"){
+					selector = selector.replace(/^\$\s*/, "")
+					self.append(self.element(selector), addedEle)
+				}
+				else {
+					console.warn("selector must begin with '$'")
+				}
+				return self
+			})
 			// bootstrap off main method 2
 			.args({scope:{append:"function"}, appendChild:"function"}, "string").use(function(ele, htmlString){
 				var converter = document.createElement("div")
 				converter.innerHTML = htmlString
-				console.log(converter.children)
 				Array.prototype.slice.call(converter.children, 0).forEach(function(addedEle){
-					console.log(addedEle)
 					self.append(ele, addedEle)
 				})
+				return self
+			})
+			// bootstrap off main method 2
+			.args("string", "string").use(function(selector, htmlString){
+				if(selector[0] == "$"){
+					var converter = document.createElement("div"),
+						ele = self.element(selector)
+					converter.innerHTML = htmlString
+
+					Array.prototype.slice.call(converter.children, 0).forEach(function(addedEle){
+						self.append(ele, addedEle)
+					})
+				}
+				else {
+					console.warn("selector must begin with '$'")
+				}
 				return self
 			})
 			// bootstrp off of main method 1

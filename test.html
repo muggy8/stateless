@@ -45,6 +45,7 @@ instantiated_domobject.scope -> property that provides the templateInstance
 		<div id="first-div" class="test1-div">
 			<strong>testing</strong>
 			<p>I am testing something bla bla</p>
+			<div class="first-div-subdiv"></div>
 		</div>
 		<div class="test2-div" >
 			<a href="javascript:void[0]" onclick="this.scope.fn()">Here is something to click on</a>
@@ -107,7 +108,7 @@ instantiated_domobject.scope -> property that provides the templateInstance
 				});
 
 			var firstDiv = stateless.instantiate("first-div")
-				.appendChild(stateless.instantiate(3))
+				.appendChild("$.first-div-subdiv", stateless.instantiate(3))
 				.render()
 
 			firstDiv.fn = function(){
@@ -187,7 +188,7 @@ instantiated_domobject.scope -> property that provides the templateInstance
 			console.log("firstDiv.data('mess', 'abcd1234') should set data-mess to abcd1234", (firstDiv.element().getAttribute("data-mess") == 'abcd1234')? "passed" : "failed")
 			console.log("firstDiv.data('mess') should retur 'abcd1234'", (firstDiv.data("mess") == 'abcd1234')? "passed":"failed")
 
-			secondDiv.append(firstDiv.element("a"), `<strong>ABC</strong><em>123</em>`)
+			secondDiv.append("$a", `<strong>ABC</strong><em>123</em>`)
 
 			firstDiv.on("$ a", "click", function(){alert("working")})
 			secondDiv.off("$ a", "click", function(){alert("working")})
