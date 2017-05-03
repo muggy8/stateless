@@ -305,6 +305,7 @@
 				if (ele.scope == self){
 					if (multiple || !self.hasClass(ele, c)){
 						ele.className += " " + c
+						ele.className = ele.className.replace(/(^\s+|\s+$)/g, "")
 					}
 				}
 				else {
@@ -323,7 +324,7 @@
 					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
 						self.addClass(ele, c, multiple)
 					})
-				} 
+				}
 				else {
 					console.warn("selector must begin with '$'")
 				}
@@ -344,7 +345,7 @@
 					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
 						self.addClass(ele, c, false)
 					})
-				} 
+				}
 				else {
 					console.warn("selector must begin with '$'")
 				}
@@ -390,7 +391,7 @@
 					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
 						self.removeClass(ele, c, multiple)
 					})
-				} 
+				}
 				else {
 					console.warn("selector must begin with '$'")
 				}
@@ -407,7 +408,7 @@
 					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
 						self.removeClass(ele, c, false)
 					})
-				} 
+				}
 				else {
 					console.warn("selector must begin with '$'")
 				}
@@ -458,10 +459,10 @@
 					var selector = v1.replace(/^\$\s*/, ""),
 						attribute = v2,
 						value = v3
-					
+
 					if (typeof value == "undefined"){
 						return self.attr(self.element(selector), attribute)
-					} 
+					}
 					else {
 						Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
 							self.attr(ele, attribute, value)
@@ -472,7 +473,7 @@
 				else{ // v1 is property name
 					var attribute = v1,
 						value = v2
-					
+
 					return self.attr(ele, attribute, value)
 				}
 			})
