@@ -16,15 +16,6 @@
 	// method-overload v0.0.1
 	var overload = (function(a){var b=function(a,c){var d=!0;for(var e in c)"object"==typeof a[e]&&"object"==typeof c[e]?d=b(a[e],c[e])&&d:typeof a[e]!==c[e]&&(d=!1);return d};a.overload=a.overload||function(){var a=this,c=arguments;1===arguments.length&&(c=arguments[0]);var d=[],e=function(){};e.use=e.args=function(){return e};var f=function(){for(var a in d){var c=d[a];if(b(arguments,c.a))return c.b.apply(this,arguments)}},g=function(){var g=arguments;return{use:function(h){if(!g.length)delete f.args;return d.push({a:g,b:h}),c.length&&b(c,g)?(h.apply(a,c),e):f}}};return f.args=g,f};return a.overload})({})
 
-	// unused right now but checks if an object is empty
-	function isEmpty(obj) {
-		for(var prop in obj) {
-			if(obj.hasOwnProperty(prop))
-				return false
-		}
-		return JSON.stringify(obj) === JSON.stringify({})
-	}
-
 	// make ajax calls (used in stateless.import)
 	function ajaxGet(url, successCallback, failCallback){
 		var request = new XMLHttpRequest()
@@ -43,11 +34,6 @@
 		request.send()
 	}
 
-	// exclusive or never a bad thing to have but unused right now
-	function xor(a,b) {
-		return ( a || b ) && !( a && b )
-	}
-
 	// make sure that only 1 of 2 or more variables are defined
 	var onlyOneIsDefined = function(){
 		var truthness = false;
@@ -60,6 +46,22 @@
 			}
 		}
 		return truthness // you can only get here if there was one truthful item in the array
+	}
+
+	// case converter from http://www.devcurry.com/2011/07/javascript-convert-camelcase-to-dashes.html
+	function camelToDash(str) {
+		return str
+			.replace(/\W+/g, '-')
+			.replace(/([a-z\d])([A-Z])/g, '$1-$2')
+			.replace(/-\w/, function(dashChar){
+				return "-"+dashChar[1].toLowerCase()
+			})
+	}
+
+	function dashToCamel(str) {
+		return str.replace(/\W+(.)/g, function (x, chr) {
+			return chr.toUpperCase()
+		})
 	}
 
 	// --------------------------------------------------------
@@ -497,6 +499,67 @@
 
 
 		public_method.css = overload()
+			.args({scope: "object", style:"object"}, "string").use(function(ele, rule, value){
+				if (ele.scope == self){
+					if (typeof value != "undefined"){
+						var elemStyles = self.attr(ele, "style") || "",
+							replaceRule = new RegExp(rule + ".*(;|$)", "gi"),
+							replaceWith = rule + ":" + value + ";"
+							newRules = elemStyles.replace(replaceRule, replaceWith)
+
+						if (newRules == elemStyles){
+							self.attr(ele, "style", elemStyles + replaceWith)
+						}
+						else {
+							self.attr(ele, "style", newRules)
+						}
+						return self
+					}
+					else {
+						return getComputedStyle(ele).getPropertyValue(rule)
+					}
+				}
+				else {
+					if (value){
+						ele.scope.css(ele, rule, value)
+						return self
+					}
+					else {
+						return ele.scope.css(ele, rule)
+					}
+				}
+			})
+			.args({"0":"object", length:"number", forEach:"function"}, "string").use(function(eles, rule, value){
+				eles.forEach(function(ele){
+					self.css(ele, rule, value)
+				})
+				return self
+			})
+			.args("string", "string").use(function(v1, v2, v3){
+				if (v1[0] == "$"){
+					var selector = v1.replace(/^\$\s*/, ""),
+						rule = v2,
+						value = v3
+
+					self.elements(selector).forEach(function(ele){
+						self.css(ele, rule, value)
+					})
+					return self
+				}
+				else {
+					var rule = v1,
+						value = v2
+
+					return self.css(ele, rule, value)
+				}
+			})
+			.args("string").use(function(rule){
+				return self.css(ele, rule)
+			})
+			.args().use(function(){
+				console.warn("css function inputs improperly formatted")
+				return self
+			})
 
 		public_method.data = overload()
 			.args({scope:"object", dataset:"object"}, "string").use(function(ele, attribute, value){
