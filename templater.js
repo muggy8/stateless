@@ -562,6 +562,16 @@
 				}
 				return self
 			})
+			.args("string", "object").use(function(selector, subEle){
+				if(selector[0] == "$"){
+					selector = selector.replace(/^\$\s*/, "")
+					self.include(self.element(selector), subEle)
+				}
+				else {
+					console.warn("selector must begin with '$'")
+				}
+				return self
+			})
 			.args("object").use(function(subEle){
 				self.include(ele, subEle)
 				return self
