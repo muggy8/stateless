@@ -267,6 +267,18 @@
 					self.once(ele, type, callback)
 				})
 			})
+			.args("string", "string", "function").use(function(selector, type, callback){
+				if(selector[0] == "$"){
+					selector = selector.replace(/^\$\s*/, "")
+					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+						self.once(ele, type, callback)
+					})
+				}
+				else {
+					console.warn("selector must begin with '$'")
+				}
+				return self
+			})
 			.args("string", "function").use(function(type, callback){
 				self.once(ele, type, callback)
 				return self
