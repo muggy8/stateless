@@ -513,6 +513,29 @@
 					return ele.scope.data(ele, attribute)
 				}
 			})
+			.args("string", "string").use(function(v1, v2, v3){
+				if (v1[0] == "$"){ //v1 is selector
+					var selector = v1.replace(/^\$\s*/, ""),
+						attribute = v2,
+						value = v3
+
+					if (typeof value == "undefined"){
+						return self.data(self.element(selector), attribute)
+					}
+					else {
+						Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+							self.data(ele, attribute, value)
+						})
+						return self
+					}
+				}
+				else{ // v1 is property name
+					var attribute = v1,
+						value = v2
+
+					return self.data(ele, attribute, value)
+				}
+			})
 			.args("string").use(function(attribute, value){
 				return self.data(ele, attribute, value)
 			})
@@ -585,11 +608,22 @@
 		}
 
 		public_method.element = function(selector){
-			return (selector)? ele.querySelector(selector) : ele
+			if (selector){
+				if(selector[0] == "$"){
+					selector = selector.replace(/^\$\s*/, "")
+				}
+				return ele.querySelector(selector)
+			}
+			else {
+				return ele
+			}
 		}
 
 		public_method.elements = function(selector){
 			if (selector){
+				if(selector[0] == "$"){
+					selector = selector.replace(/^\$\s*/, "")
+				}
 				return Array.prototype.slice.call(ele.querySelectorAll(selector), 0)
 			}
 			else{
