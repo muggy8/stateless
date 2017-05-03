@@ -384,10 +384,34 @@
 					self.removeClass(ele, c, multiple)
 				})
 			})
+			.args("string", "string", "boolean").use(function(selector, c, multiple){
+				if(selector[0] == "$"){
+					selector = selector.replace(/^\$\s*/, "")
+					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+						self.removeClass(ele, c, multiple)
+					})
+				} 
+				else {
+					console.warn("selector must begin with '$'")
+				}
+				return self
+			})
 			.args({"0":"object", length:"number", forEach:"function"}, "string").use(function(eles, c){
 				eles.forEach(function(ele){
 					self.removeClass(ele, c, false)
 				})
+			})
+			.args("string", "string").use(function(selector, c){
+				if(selector[0] == "$"){
+					selector = selector.replace(/^\$\s*/, "")
+					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+						self.removeClass(ele, c, false)
+					})
+				} 
+				else {
+					console.warn("selector must begin with '$'")
+				}
+				return self
 			})
 			.args("string", "boolean").use(function(c, multiple){
 				self.removeClass(ele, c, multiple)
