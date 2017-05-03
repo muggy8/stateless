@@ -173,6 +173,19 @@
 				eles.forEach(function(ele){
 					self.on(ele, type, callback)
 				})
+				return self
+			})
+			.args("string", "string", "function").use(function(selector, type, callback){
+				if(selector[0] == "$"){
+					selector = selector.replace(/^\$\s*/, "")
+					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+						self.on(ele, type, callback)
+					})
+				}
+				else {
+					console.warn("selector must begin with '$'")
+				}
+				return self
 			})
 			.args("string", "function").use(function(type, callback){
 				self.on(ele, type, callback)
@@ -213,6 +226,18 @@
 				eles.forEach(function(ele){
 					self.off(ele, type, callback)
 				})
+			})
+			.args("string", "string", "function").use(function(selector, type, callback){
+				if(selector[0] == "$"){
+					selector = selector.replace(/^\$\s*/, "")
+					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+						self.off(ele, type, callback)
+					})
+				}
+				else {
+					console.warn("selector must begin with '$'")
+				}
+				return self
 			})
 			.args("string", "function").use(function(type, callback){
 				self.off(ele, type, callback)
