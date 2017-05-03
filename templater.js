@@ -317,6 +317,18 @@
 					self.addClass(ele, c, multiple)
 				})
 			})
+			.args("string", "string", "boolean").use(function(selector, c, multiple){
+				if(selector[0] == "$"){
+					selector = selector.replace(/^\$\s*/, "")
+					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+						self.addClass(ele, c, multiple)
+					})
+				} 
+				else {
+					console.warn("selector must begin with '$'")
+				}
+				return self
+			})
 			.args({"0":"object", length:"number", forEach:"function"}, "string").use(function(eles, c){
 				eles.forEach(function(ele){
 					self.addClass(ele, c, false)
@@ -324,6 +336,18 @@
 			})
 			.args({scope:"object", className:"string"}, "string").use(function(ele, c){
 				self.addClass(ele, c, false)
+				return self
+			})
+			.args("string", "string").use(function(selector, c){
+				if(selector[0] == "$"){
+					selector = selector.replace(/^\$\s*/, "")
+					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+						self.addClass(ele, c, false)
+					})
+				} 
+				else {
+					console.warn("selector must begin with '$'")
+				}
 				return self
 			})
 			.args("string", "boolean").use(function(c, multiple){
@@ -394,6 +418,7 @@
 						return ele.scope.attr(ele, attribute)
 					}
 					else {
+						ele.scope.attr(ele, attribute, value)
 						return self
 					}
 				}
