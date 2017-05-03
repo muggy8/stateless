@@ -404,6 +404,29 @@
 				})
 				return self
 			})
+			.args("string", "string").use(function(v1, v2, v3){
+				if (v1[0] == "$"){ //v1 is selector
+					var selector = v1.replace(/^\$\s*/, ""),
+						attribute = v2,
+						value = v3
+					
+					if (typeof value == "undefined"){
+						return self.attr(self.element(selector), attribute)
+					} 
+					else {
+						Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+							self.attr(ele, attribute, value)
+						})
+						return self
+					}
+				}
+				else{ // v1 is property name
+					var attribute = v1,
+						value = v2
+					
+					return self.attr(ele, attribute, value)
+				}
+			})
 			.args("string").use(function(attribute, value){
 				return self.attr(ele, attribute, value)
 			})
