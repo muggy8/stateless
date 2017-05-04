@@ -63,6 +63,8 @@
 			return chr.toUpperCase()
 		})
 	}
+	
+	var converter = document.createElement("div")
 
 	// --------------------------------------------------------
 	// The templater that does the heavy lifting kinda
@@ -599,7 +601,14 @@
 				return self
 			})
 
-		public_method.text = overload()
+		public_method.html = function(htmlString){
+			if (!htmlString){
+				return ele.innerHTML
+			}
+			else {
+				
+			}
+		}
 
 		// functions for dom manip end
 
@@ -744,7 +753,6 @@
 			})
 			// bootstrap off main method 2
 			.args({scope:{append:"function"}, appendChild:"function"}, "string").use(function(ele, htmlString){
-				var converter = document.createElement("div")
 				converter.innerHTML = htmlString
 				Array.prototype.slice.call(converter.children, 0).forEach(function(addedEle){
 					self.append(ele, addedEle)
@@ -754,8 +762,7 @@
 			// bootstrap off main method 2
 			.args("string", "string").use(function(selector, htmlString){
 				if(selector[0] == "$"){
-					var converter = document.createElement("div"),
-						ele = self.element(selector)
+					var ele = self.element(selector)
 					converter.innerHTML = htmlString
 
 					Array.prototype.slice.call(converter.children, 0).forEach(function(addedEle){
@@ -781,7 +788,6 @@
 			})
 			// bootstrap off main method 2
 			.args("string").use(function(htmlString){
-				var converter = document.createElement("div")
 				converter.innerHTML = htmlString
 				Array.prototype.slice.call(converter.children, 0).forEach.call(converter.children, function(addedEle){
 					self.append(ele, addedEle)
@@ -872,7 +878,6 @@
 				pushEle(ele)
 			}
 			else if (typeof ele === "string"){
-				var converter = document.createElement("div")
 				converter.innerHTML = ele
 				stateless.consume(converter.children)
 			}
