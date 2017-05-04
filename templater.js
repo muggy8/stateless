@@ -48,22 +48,6 @@
 		return truthness // you can only get here if there was one truthful item in the array
 	}
 
-	// case converter from http://www.devcurry.com/2011/07/javascript-convert-camelcase-to-dashes.html
-	function camelToDash(str) {
-		return str
-			.replace(/\W+/g, '-')
-			.replace(/([a-z\d])([A-Z])/g, '$1-$2')
-			.replace(/-\w/, function(dashChar){
-				return "-"+dashChar[1].toLowerCase()
-			})
-	}
-
-	function dashToCamel(str) {
-		return str.replace(/\W+(.)/g, function (x, chr) {
-			return chr.toUpperCase()
-		})
-	}
-	
 	var converter = document.createElement("div")
 
 	// --------------------------------------------------------
@@ -601,14 +585,48 @@
 				return self
 			})
 
-		public_method.html = function(htmlString){
-			if (!htmlString){
-				return ele.innerHTML
-			}
-			else {
-				
-			}
-		}
+		public_method.html = overload()
+			.args({scope:"object", appendChild:"function"}, "string").use(function(ele, htmlString){
+				if (ele.scope == self){
+					self.children.forEach(function(subScope){
+						subScope.unlink()
+					})
+					ele.innerHTML = htmlString
+					ele.scope.include()
+				}
+				else {
+					ele.scope.html(ele, htmlString)
+				}
+				return self
+			})
+			.args("string", "string").use(function(selector, htmlString){
+				if (selector[0] == "$"){
+					self.html(self.element(selector), htmlString)
+				}
+				return self
+			})
+			.args({scope:"object", appendChild:"function"}).use(function(ele){
+				if (ele.scope == self) {
+					return ele.innerHTML
+				}
+				else {
+					return ele.scope.html(ele)
+				}
+			})
+			.args("string").use(function(v){
+				if (v[0] == "$"){
+					var selector = v
+					return self.html(self.element(elector))
+				}
+				else {
+					var htmlString = v
+					self.html(ele, htmlString)
+					return self
+				}
+			})
+			.args().use(function(){
+				return self.html(self.element())
+			})
 
 		// functions for dom manip end
 
@@ -640,7 +658,14 @@
 				return self
 			})
 			.args().use(function(){
-				console.warn("include function inputs improperly formatted")
+				self.children.forEach(function(subScope){
+					subScope.include()
+				})
+				self.elements().forEach(function(ele){
+					if (!ele.scope){
+						self.include(self.element(), ele)
+					}
+				})
 				return self
 			})
 
