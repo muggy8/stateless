@@ -135,8 +135,8 @@
 		// begin dom manip functions
 
 		var listeners = {}
-		var cl = context.listeners = context.listeners || []
-		cl.push(listeners)
+		// var cl = context.listeners = context.listeners || []
+		// cl.push(listeners)
 
 		// public methods (kept in the prototype) for others to access
 		public_method.on = overload()
@@ -179,8 +179,7 @@
 			})
 			.args("string", "string", "function").use(function(selector, type, callback){
 				if(selector[0] == "$"){
-					selector = selector.replace(/^\$\s*/, "")
-					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+					self.elements(selector).forEach( function(ele){
 						self.on(ele, type, callback)
 					})
 				}
@@ -231,8 +230,7 @@
 			})
 			.args("string", "string", "function").use(function(selector, type, callback){
 				if(selector[0] == "$"){
-					selector = selector.replace(/^\$\s*/, "")
-					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+					self.elements(selector).forEach( function(ele){
 						self.off(ele, type, callback)
 					})
 				}
@@ -271,8 +269,7 @@
 			})
 			.args("string", "string", "function").use(function(selector, type, callback){
 				if(selector[0] == "$"){
-					selector = selector.replace(/^\$\s*/, "")
-					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+					self.elements(selector).forEach( function(ele){
 						self.once(ele, type, callback)
 					})
 				}
@@ -296,7 +293,6 @@
 			})
 			.args("string", "string").use(function(selector, c){
 				if(selector[0] == "$"){
-					selector = selector.replace(/^\$\s*/, "")
 					return self.hasClass(self.element(selector), c)
 				}
 				else {
@@ -332,8 +328,7 @@
 			})
 			.args("string", "string", "boolean").use(function(selector, c, multiple){
 				if(selector[0] == "$"){
-					selector = selector.replace(/^\$\s*/, "")
-					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+					self.elements(selector).forEach( function(ele){
 						self.addClass(ele, c, multiple)
 					})
 				}
@@ -353,8 +348,7 @@
 			})
 			.args("string", "string").use(function(selector, c){
 				if(selector[0] == "$"){
-					selector = selector.replace(/^\$\s*/, "")
-					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+					self.elements(selector).forEach( function(ele){
 						self.addClass(ele, c, false)
 					})
 				}
@@ -399,8 +393,7 @@
 			})
 			.args("string", "string", "boolean").use(function(selector, c, multiple){
 				if(selector[0] == "$"){
-					selector = selector.replace(/^\$\s*/, "")
-					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+					self.elements(selector).forEach( function(ele){
 						self.removeClass(ele, c, multiple)
 					})
 				}
@@ -416,8 +409,7 @@
 			})
 			.args("string", "string").use(function(selector, c){
 				if(selector[0] == "$"){
-					selector = selector.replace(/^\$\s*/, "")
-					Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+					self.elements(selector).forEach( function(ele){
 						self.removeClass(ele, c, false)
 					})
 				}
@@ -468,7 +460,7 @@
 			})
 			.args("string", "string").use(function(v1, v2, v3){
 				if (v1[0] == "$"){ //v1 is selector
-					var selector = v1.replace(/^\$\s*/, ""),
+					var selector = v1,
 						attribute = v2,
 						value = v3
 
@@ -476,7 +468,7 @@
 						return self.attr(self.element(selector), attribute)
 					}
 					else {
-						Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+						self.elements(selector).forEach( function(ele){
 							self.attr(ele, attribute, value)
 						})
 						return self
@@ -537,7 +529,7 @@
 			})
 			.args("string", "string").use(function(v1, v2, v3){
 				if (v1[0] == "$"){
-					var selector = v1.replace(/^\$\s*/, ""),
+					var selector = v1,
 						rule = v2,
 						value = v3
 
@@ -578,7 +570,7 @@
 			})
 			.args("string", "string").use(function(v1, v2, v3){
 				if (v1[0] == "$"){ //v1 is selector
-					var selector = v1.replace(/^\$\s*/, ""),
+					var selector = v1,
 						attribute = v2,
 						value = v3
 
@@ -586,7 +578,7 @@
 						return self.data(self.element(selector), attribute)
 					}
 					else {
-						Array.prototype.forEach.call(ele.querySelectorAll(selector), function(ele){
+						self.elements(selector).forEach( function(ele){
 							self.data(ele, attribute, value)
 						})
 						return self
@@ -627,7 +619,6 @@
 			})
 			.args("string", "object").use(function(selector, subEle){
 				if(selector[0] == "$"){
-					selector = selector.replace(/^\$\s*/, "")
 					self.include(self.element(selector), subEle)
 				}
 				else {
@@ -724,7 +715,6 @@
 			// bootstrap off main method 1
 			.args("string", {children:"object", root:"object", element:"function", unlink:"function"}).use(function(selector, subScope){
 				if(selector[0] == "$"){
-					selector = selector.replace(/^\$\s*/, "")
 					self.append(self.element(selector), subScope)
 				}
 				else {
@@ -745,7 +735,6 @@
 			// main bootstrap off main metho 2
 			.args("string", "object").use(function(selector, addedEle){
 				if(selector[0] == "$"){
-					selector = selector.replace(/^\$\s*/, "")
 					self.append(self.element(selector), addedEle)
 				}
 				else {
