@@ -616,7 +616,7 @@
 			.args("string").use(function(v){
 				if (v[0] == "$"){
 					var selector = v
-					return self.html(self.element(elector))
+					return self.html(self.element(selector))
 				}
 				else {
 					var htmlString = v
