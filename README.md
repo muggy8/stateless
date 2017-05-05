@@ -9,7 +9,7 @@ Additionally the system also tries to force as few changes as it can on your alr
 ## Usage
 To use stateless, all you have to do is include the stateless js build into your app with `<script src="path/to/stateless.js"></script>`
 
-After you have added stateless to your app, you need to add some elements into stateless's template library. to do this you call either `stateless.import(templateUrl)`, `stateless.register(htmlString)` or `stateless.register(domElement)`
+After you have added stateless to your app, you need to add some elements into stateless's template library. to do this you call either `stateless.register(htmlString)` or `stateless.register(domElement)`
 
 your dom elements are then indexed in the stateless template library and if the root of the template elements has an ID attribute, that will be moved into the class attribute and will also be indexable via the string in the attribute. This is probably the easiest way of instantiating the template in the future so you may want to give all of your templates an ID,
 

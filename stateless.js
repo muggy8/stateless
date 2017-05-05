@@ -16,24 +16,6 @@
 	// method-overload v0.0.1
 	var overload = (function(a){var b=function(a,c){var d=!0;for(var e in c)"object"==typeof a[e]&&"object"==typeof c[e]?d=b(a[e],c[e])&&d:typeof a[e]!==c[e]&&(d=!1);return d};a.overload=a.overload||function(){var a=this,c=arguments;1===arguments.length&&(c=arguments[0]);var d=[],e=function(){};e.use=e.args=function(){return e};var f=function(){for(var a in d){var c=d[a];if(b(arguments,c.a))return c.b.apply(this,arguments)}},g=function(){var g=arguments;return{use:function(h){if(!g.length)delete f.args;return d.push({a:g,b:h}),c.length&&b(c,g)?(h.apply(a,c),e):f}}};return f.args=g,f};return a.overload})({})
 
-	// make ajax calls (used in stateless.import)
-	function ajaxGet(url, successCallback, failCallback){
-		var request = new XMLHttpRequest()
-
-		successCallback = successCallback || function (data){/*console.log(data)*/}
-		failCallback = failCallback || function (data){/*console.log(data)*/}
-
-		request.onload = function(){
-			successCallback(request)
-		}
-		request.onerror = function(){
-			failCallback(request)
-		}
-
-		request.open('GET', url, true)
-		request.send()
-	}
-
 	// make sure that only 1 of 2 or more variables are defined
 	var onlyOneIsDefined = function(){
 		var truthness = false;
@@ -914,20 +896,6 @@
 			else {
 				throw new Error("Invalid inputs")
 			}
-			return context.stateless
-		}
-	})
-
-	Object.defineProperty(statelessOpps, "import", {
-		enumerable: false,
-		configurable: false,
-		writable: false,
-		value: function(url){
-			ajaxGet(url, function(xmlhttp){
-				stateless.consume(xmlhttp.responseText)
-			}, function(xmlhttp){
-				throw new Error("The URL failed to load")
-			})
 			return context.stateless
 		}
 	})
