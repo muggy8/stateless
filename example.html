@@ -9,26 +9,157 @@
 				margin-right: auto;
 				padding: 1em;
 			}
+			.screen {
+				border: 1px solid #000;
+				height: 2em;
+				display: flex;
+				margin-bottom: 1em;
+			}
+			.btn {
+				width: 33.33%;
+				height: 3em;
+				float: left;
+			}
+			.number-pad {
+				float:left;
+				width: 66.67%
+			}
+			.float-wrap:after {
+				display: block;
+				content: " ";
+				clear: both;
+			}
 		</style>
 	</head>
 	<body>
-		<div id="block"></div>
-		
 		<script>
 			stateless
-				.register("#block")
-				.register("<button onclick='this.scope.execute(this.scope.command)'></button>")
-			stateless.instantiate("block")
+				.register("<div id='block'></div>")
+				.register("<button id='btn' onclick='this.scope.execute(this.scope.command)'></button>")
+			var calculator = stateless.instantiate("block")
 				.render()
 				.addClass("calc-body")
+				.define("execute", {
+					static: function(fn){
+						return fn()
+					}
+				})
 				.append(
 					stateless.instantiate("block")
 						.addClass("screen")
-				)
+				).define("display", {
+					get: function(){
+						return calculator.html("$ .block.screen") || ""
+					},
+					set: function(input){
+						calculator.html("$ .block.screen", input.toString())
+					}
+				})
 				.append(
-					stateless.instantiate("btn")
-						.addClass
+					stateless.instantiate("block")
+						.addClass("number-pad")
+						.addClass("float-wrap")
 				)
+
+			;['9','8','7','6','5','4','3','2','1'].forEach(function(numberKey){
+				calculator.append(
+					"$ .number-pad",
+					stateless.instantiate("btn")
+						.html(numberKey)
+						.define("command", {
+							static: function(){
+								calculator.display += numberKey
+							}
+						})
+				)
+			})
+
+			calculator.append(
+				"$ .number-pad",
+				stateless.instantiate("btn")
+					.html("0")
+					.css("width", "100%")
+					.define("command", {
+						static: function(){
+							calculator.display += "0"
+						}
+					})
+			)
+			.append(
+				stateless.instantiate("block")
+					.css("float", "left")
+					.css("width", "33.33%")
+					.append(
+						stateless.instantiate("btn")
+							.html("+")
+							.css("width", "50%")
+							.define("command", {
+								static: function(){
+									calculator.display += "+"
+								}
+							})
+					)
+					.append(
+						stateless.instantiate("btn")
+							.html("-")
+							.css("width", "50%")
+							.define("command", {
+								static: function(){
+									calculator.display += "-"
+								}
+							})
+					)
+					.append(
+						stateless.instantiate("btn")
+							.html("/")
+							.css("width", "50%")
+							.define("command", {
+								static: function(){
+									calculator.display += "/"
+								}
+							})
+					)
+					.append(
+						stateless.instantiate("btn")
+							.html("%")
+							.css("width", "50%")
+							.define("command", {
+								static: function(){
+									calculator.display += "%"
+								}
+							})
+					)
+					.append(
+						stateless.instantiate("btn")
+							.html("*")
+							.css("width", "50%")
+							.define("command", {
+								static: function(){
+									calculator.display += "*"
+								}
+							})
+					)
+					.append(
+						stateless.instantiate("btn")
+							.html("=")
+							.css("width", "50%")
+							.define("command", {
+								static: function(){
+									calculator.display = eval(calculator.display)
+								}
+							})
+					)
+					.append(
+						stateless.instantiate("btn")
+							.html("c")
+							.css("width", "100%")
+							.define("command", {
+								static: function(){
+									calculator.display = ""
+								}
+							})
+					)
+			)
 		</script>
 	</body>
 </html>
