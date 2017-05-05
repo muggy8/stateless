@@ -624,8 +624,15 @@
 					return self
 				}
 			})
-			.args().use(function(){
-				return self.html(self.element())
+			.args().use(function(v){
+				if (!v){
+					return self.html(self.element())
+				}
+				if (v){
+					var htmlString = v
+					self.html(ele, htmlString)
+					return self
+				}
 			})
 
 		// functions for dom manip end
