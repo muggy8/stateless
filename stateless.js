@@ -961,7 +961,7 @@
 				return instance
 			}
 			else {
-				throw new Error( identifyer + " cannot be found in the template librare")
+				throw new Error( identifyer + " cannot be found in the template library")
 			}
 		}
 	})
