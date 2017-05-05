@@ -208,7 +208,19 @@ instantiated_domobject.scope -> property that provides the templateInstance
 			console.log(`secondDiv.hasClass("$a", "link") === true`, (secondDiv.hasClass("$a", "link") === true)? "passed" : "failed")
 			console.log(`secondDiv.css("display") == "block"`, (secondDiv.css("display") == "block")? "passed" : "failed")
 			secondDiv.css("background-color", "blue")
-			console.log(`secondDiv.css("background-color") == "rgb(0, 0, 255)"`, (secondDiv.css("backgroundColor") == "rgb(0, 0, 255)")? "passed" : "failed")
+			console.log(`secondDiv.css("background-color") == "rgb(0, 0, 255)"`, (secondDiv.css("backgroundColor") == "rgb(0, 0, 255)")? "passed" : `failed, ${secondDiv.css("background-color")}`)
+
+			secondDiv.define("color", {
+				get: function(){
+					return secondDiv.css("background-color")
+				},
+				set: function(color){
+					secondDiv.css("background-color", color)
+				}
+			})
+			secondDiv.color = "orange"
+
+			console.log(`secondDiv.color == "rgb(255, 165, 0)"`, (secondDiv.color == "rgb(255, 165, 0)")? "passed" : "failed")
 		</script>
 	</body>
 </html>
