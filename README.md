@@ -183,4 +183,4 @@ Lastly we want to look at our simple logic within the function: `calculator.disp
 
 This is the final block of our execution where we add a floating div to the left of the number pad that contains all of our controls. You'll notice that the stuff is all pretty much the same but you'll also notice that there are append calls within append calls. There's absolutely nothing stopping you from making these calls. Finally, we have the 2 different buttons at the bottom. the `=` button and the `c` button. Both of them are extremely simple and operates on the display variable without the need of directly going into the HTML or fancy expressions.
 
-And that's about it. There's alot more functions that you can call from the scope and you can feel free to check out the [api.md](./api.md) for a full list of all the functions that you can use as well as what they do
+And that's about it. There's alot more functions that you can call from the scope and you can feel free to check out the [API docs](./api.md) for a full list of all the functions that you can use as well as what they do
