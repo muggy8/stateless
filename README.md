@@ -16,7 +16,7 @@ your dom elements are then indexed in the stateless template library and if the 
 The next step in building a dom out of the data is to instantiate the template element. Do this, we call `stateless.instantiate(templateIndex)` and this will return an instantiated copy of the registered element. you are now free to do with it as you wish.
 
 ## Simple Example Explnanation:
-For a better understanding of the framework. lets take a look at the example and find out more about it. Feel free to open [example.html](./example.html) in a new tab and lets continue
+For a better understanding of the framework. lets take a look at the example and find out more about it. Feel free to open [example.html](./example.html) in a new tab or view it in [jsFiddle](https://jsfiddle.net/ks6e2ade/) and lets continue
 
 First at the top we have some styles that we'll get into later but bare with me here trust me on these and keep them in mind as we will likely need them later. Lets by looking below at our first lines of javascript
 ```javascript
@@ -34,7 +34,7 @@ var calculator = stateless.instantiate("block")
 	.addClass("calc-body")
 ```
 
- seems normal... wait whta's that .render()? You see when you instantiate a template, you dont actually render it to the view. the `.render()` function will insert the element into the `body` element of the page. and we of course add a "calc-body" class to our nice div. next up,
+ seems normal... wait what's that .render()? You see when you instantiate a template, you dont actually render it to the view. the `.render()` function will insert the element into the `body` element of the page. and we of course add a "calc-body" class to our nice div. next up,
 
 ```javascript
 .define("execute", {
@@ -44,7 +44,7 @@ var calculator = stateless.instantiate("block")
 })
 ```
 
-right here we are of course continuing our javascript chain as per normal but what does the define function do? well in this case it acts very much like the the "=" operator in javascript and assignes a value to the scope it's called on. however it gives you a bit more control over how you want to define your variables since it can also be used to define get and set methods so your variables can be change / updated via variable = value. continueing along we have our first append call followed by another define
+right here we are of course continuing our javascript chain as per normal but what does the define function do? well in this case it acts very much like the the "=" operator in javascript and assigns a value to the scope it's called on. however it gives you a bit more control over how you want to define your variables since it can also be used to define get and set methods so your variables can be change / updated via variable = value. continuing along we have our first append call followed by another define
 
 ```javascript
 .append(
