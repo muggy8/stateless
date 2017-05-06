@@ -6,6 +6,7 @@ stateless
 -   [stateless](#stateless)
 -   [.consume()](#stateless.consume())
 -   [.register()](#stateless.register())
+-   [.instantiate()](#stateless.instantiate())
 -   [.each()](#stateless.each())
 
 _scope
@@ -64,4 +65,37 @@ stateless.consume(`<input id="number-input" type="number">`)
 var myDiv = document.createElement("div")
 myDiv.id = "my-div"
 stateless.consume(myDiv)
+stateless.consume(document.querySelector("#element-id"))
+```
+
+## stateless.register()
+This is an alias for [.consume()](#stateless.consume())
+
+## sthteless.instantiate()
+Usage:
+```javascript
+stateless.instantiate(selectionIndex)
+```
+
+The instantiate function returns a _scope object that contains a copy of the html element which can be mainpulated either directly or by the number of functions provided by the _scope object.
+
+Example:
+```javascript
+var element = stateless.instantiate("my-element-id-attribute") //instantiates the item initiated with the id when regestered
+var otherElement = stateless.instantiate(0) //instantiates the first item to have been registered with stateless
+```
+
+## statelssts.each()
+Usage: 
+```javascript
+stateless.each(callback)
+```
+
+The each function in stateless allows you to itterate through each item in the library. The function is a wrapper for the [forEach](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) function of standard javascript without the last property
+
+Example:
+```javascript
+stateless.each(function(template, index){
+	console.log(`template ${index} registered in stateless is:`, template)
+})
 ```
