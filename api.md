@@ -6,10 +6,10 @@ stateless
 -   [stateless](#stateless)
 -   [.consume()](#statelessconsume)
 -   [.register()](#statelessregister)
--   [.instantiate()](#sthtelessinstantiate)
+-   [.instantiate()](#statelessinstantiate)
 -   [.each()](#statelesseach)
 
-Scope
+[Scope](#scope)
 -   [.parent](#.parent)
 -   [.children](#.children)
 -   [.root](#.root)
@@ -98,4 +98,40 @@ Example:
 stateless.each(function(template, index){
 	console.log(`template ${index} registered in stateless is:`, template)
 })
+```
+
+## Scope
+The Scope object is returned by the [instantiate()](#statelessinstantiate) function. This object contains a number of useful functions that you can use to manipulate the DOM element that is a part of the object. You can directly manipulate the DOM element that is attached to this object but often time, it's better to use the provided functions to do that. If there's a particular feature that you feel should be part of this object for manipulating the element feel free to (open an issue)[issues] or fork this project.
+
+Functions implemented under Scope uses [querySelector()](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector) and [querySelectorAll()](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll) for selecting elements. However to disambiguate selectors from data values, any function that allows a selector to be passed into the function will require that you prefix the selector with the "$" character followed by 0 or more spaces before the actual selector string.
+
+Please note as stated earlier, objects instantiated via the instantiate function is not automatically added to the page and you need to manually add it to the page via a another State object's [append() / appendChild()](#scopeappend) function or via this object's [render()](#scoperender) function. As such it is best to save a reference to this object so you can use it later.
+
+Unless otherwise specified functions within the scope function will return the Scope object it belongs to when it has finished executing it's logic. As such you you can chain most Scope methods.
+
+## Scope.element()
+Usage:
+```javascript
+ScopeInstance.element()
+ScopeInstance.element(selector)
+```
+
+The element function will return the HTML element that is associated with this instance of Scope. However you can use a selector to select an element that is a chiled of the scope element. If you do, that element is returned instead.
+
+Example
+```javaScript
+// register an element
+stateless.register(`
+	<div id="image-gallery">
+		<img src="1.jpg"/>
+		<img src="2.jpg"/>
+		<img src="3.jpg"/>
+	</div>
+`)
+
+// extract the element for whatever reason
+var gallery = stateless.instantiate("image-gallery"),
+	galleryDiv = gallery.element(), // the root element
+	galleryFirstImgTag = gallery.element("$img"), // the first img element
+	galleryStillFirstImgTag = gallery.element("$img") // still the first img element
 ```
