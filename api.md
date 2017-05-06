@@ -105,9 +105,34 @@ The Scope object is returned by the [instantiate()](#statelessinstantiate) funct
 
 Functions implemented under Scope uses [querySelector()](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector) and [querySelectorAll()](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll) for selecting elements. However to disambiguate selectors from data values, any function that allows a selector to be passed into the function will require that you prefix the selector with the "$" character followed by 0 or more spaces before the actual selector string.
 
-Please note as stated earlier, objects instantiated via the instantiate function is not automatically added to the page and you need to manually add it to the page via a another State object's [append() / appendChild()](#scopeappend) function or via this object's [render()](#scoperender) function. As such it is best to save a reference to this object so you can use it later.
+Please note as stated earlier, objects instantiated via the instantiate function is not automatically added to the page and you need to manually add it to the page via a another State object's [append() / appendChild()](#scopeappend) function or via this object's [render()](#scoperender) function. As such it is best to save a reference to this object so you can use it later. Scopes that are attached to other scopes inherit via prototype inheritance from the scope that parents the current scope. as such any method and properties uniquely available to a parent's scope is also available in a child scope.
 
 Unless otherwise specified functions within the scope function will return the Scope object it belongs to when it has finished executing it's logic. As such you you can chain most Scope methods.
+
+## Scope.parent
+Usage:
+```javascript
+ScopeInstance.parent
+```
+
+The parent property references the ScopeInstance that is a parent to the current ScopeInstance. If there's no parent ScopeInstance then this value will hold the value of undefined.
+
+## Scope.children
+Usage:
+```javascript
+ScopeInstance.children
+```
+
+The children property is an array of the ScopeInstance that is a child to the current ScopeInstance. If there's no children ScopeInstance then this value will be an empty array.
+
+
+## Scope.root
+Usage:
+```javascript
+ScopeInstance.root
+```
+
+The root property references the ScopeInstance that is at the root to the current ScopeInstance parent-child tree. If the current ScopeInstance is the root then this property will hold a reference to itself.
 
 ## Scope.element()
 Usage:
