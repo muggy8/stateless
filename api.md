@@ -36,7 +36,7 @@ _scope
 HTMLElement
 -   [.scope](#scope)
 
-(## Stateless)
+## Sateless
 Usage:
 ```javascript
 stateless[indexOrIdKey]
@@ -49,7 +49,7 @@ Example:
 stateless.register("<div>this is a div</div>")
 stateless[0] // returns the the first item registereg in this case, the empty div as an HTMLElement object
 ```
-(## stateless.consume())
+## stateless.consume()
 Usage:
 ```javascript
 stateless.consume(htmlString)
@@ -68,10 +68,10 @@ stateless.consume(myDiv)
 stateless.consume(document.querySelector("#element-id"))
 ```
 
-(## stateless.register())
+## stateless.register()
 This is an alias for [.consume()](#stateless.consume())
 
-(## sthteless.instantiate())
+## sthteless.instantiate()
 Usage:
 ```javascript
 stateless.instantiate(selectionIndex)
@@ -85,7 +85,7 @@ var element = stateless.instantiate("my-element-id-attribute") //instantiates th
 var otherElement = stateless.instantiate(0) //instantiates the first item to have been registered with stateless
 ```
 
-(## statelssts.each())
+## statelssts.each()
 Usage:
 ```javascript
 stateless.each(callback)
