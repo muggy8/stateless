@@ -3,11 +3,11 @@
 #table of contents
 
 stateless
--   [stateless](##stateless)
--   [.consume()](##stateless.consume())
--   [.register()](##stateless.register())
--   [.instantiate()](##stateless.instantiate())
--   [.each()](##stateless.each())
+-   [stateless](#stateless)
+-   [.consume()](#statelessconsume)
+-   [.register()](#statelessregister)
+-   [.instantiate()](#sthtelessinstantiate)
+-   [.each()](#statelesseach)
 
 _scope
 -   [.parent](#.parent)
@@ -71,21 +71,21 @@ stateless.consume(document.querySelector("#element-id"))
 ## stateless.register()
 This is an alias for [.consume()](#stateless.consume())
 
-## sthteless.instantiate()
+## stateless.instantiate()
 Usage:
 ```javascript
 stateless.instantiate(selectionIndex)
 ```
 
-The instantiate function returns a _scope object that contains a copy of the html element which can be mainpulated either directly or by the number of functions provided by the _scope object.
+The instantiate function returns a _scope object that contains a copy of the html element which can be manipulated either directly or by the number of functions provided by the _scope object.
 
 Example:
 ```javascript
-var element = stateless.instantiate("my-element-id-attribute") //instantiates the item initiated with the id when regestered
+var element = stateless.instantiate("my-element-id-attribute") //instantiates the item initiated with the id when registered
 var otherElement = stateless.instantiate(0) //instantiates the first item to have been registered with stateless
 ```
 
-## statelssts.each()
+## stateless.each()
 Usage:
 ```javascript
 stateless.each(callback)
