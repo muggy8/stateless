@@ -36,7 +36,7 @@ _scope
 HTMLElement
 -   [.scope](#scope)
 
-## Sateless
+## Stateless
 Usage:
 ```javascript
 stateless[indexOrIdKey]
