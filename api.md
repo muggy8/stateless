@@ -9,7 +9,7 @@ stateless
 -   [.instantiate()](#sthtelessinstantiate)
 -   [.each()](#statelesseach)
 
-_scope
+Scope
 -   [.parent](#.parent)
 -   [.children](#.children)
 -   [.root](#.root)
@@ -77,7 +77,7 @@ Usage:
 stateless.instantiate(selectionIndex)
 ```
 
-The instantiate function returns a _scope object that contains a copy of the html element which can be manipulated either directly or by the number of functions provided by the _scope object.
+The instantiate function returns a Scope object that contains a copy of the html element which can be manipulated either directly or by the number of functions provided by the Scope object.
 
 Example:
 ```javascript

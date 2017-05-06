@@ -35,7 +35,7 @@
 	// --------------------------------------------------------
 	// The templater that does the heavy lifting kinda
 	// --------------------------------------------------------
-	var _scope = function(ele){
+	var Scope = function(ele){
 		// detect if new or just calling it
 		var self = {}
 
@@ -925,7 +925,7 @@
 		writable: false,
 		value: function(identifyer){ // public static function
 			if (stateless[identifyer]) {
-				var instance = _scope(stateless[identifyer].cloneNode(true))
+				var instance = Scope(stateless[identifyer].cloneNode(true))
 				return instance
 			}
 			else {
