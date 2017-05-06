@@ -3,11 +3,11 @@
 #table of contents
 
 stateless
--   [stateless](#stateless)
--   [.consume()](#stateless.consume())
--   [.register()](#stateless.register())
--   [.instantiate()](#stateless.instantiate())
--   [.each()](#stateless.each())
+-   [stateless](## stateless)
+-   [.consume()](## stateless.consume())
+-   [.register()](## stateless.register())
+-   [.instantiate()](## stateless.instantiate())
+-   [.each()](## stateless.each())
 
 _scope
 -   [.parent](#.parent)
