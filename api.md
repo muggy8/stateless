@@ -101,7 +101,7 @@ stateless.each(function(template, index){
 ```
 
 ## Scope
-The Scope object is returned by the [instantiate()](#statelessinstantiate) function. This object contains a number of useful functions that you can use to manipulate the DOM element that is a part of the object. You can directly manipulate the DOM element that is attached to this object but often time, it's better to use the provided functions to do that. If there's a particular feature that you feel should be part of this object for manipulating the element feel free to [open an issue](/muggy8/stateless/issues) or fork this project.
+The Scope object is returned by the [instantiate()](#statelessinstantiate) function. This object contains a number of useful functions that you can use to manipulate the DOM element that is a part of the object. You can directly manipulate the DOM element that is attached to this object but often time, it's better to use the provided functions to do that. If there's a particular feature that you feel should be part of this object for manipulating the element feel free to open an issue or fork this project.
 
 Functions implemented under Scope uses [querySelector()](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector) and [querySelectorAll()](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll) for selecting elements. However to disambiguate selectors from data values, any function that allows a selector to be passed into the function will require that you prefix the selector with the "$" character followed by 0 or more spaces before the actual selector string.
 
