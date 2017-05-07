@@ -287,3 +287,31 @@ var btn = stateless.instantiate("btn")
 		alert("what you are about to do is potentially dangerous. You have been warned")
 	})
 ```
+
+## Scope.hasClass()
+
+## Scope.addClass()
+
+## Scope.removeClass()
+
+## Scope.attr()
+
+## Scope.css()
+
+## Scope.data()
+
+## Scope.html()
+
+## Scope.include()
+
+## Scope.property()
+
+## Scope.define()
+
+## Scope.append()
+
+## Scope.appendChild()
+
+## Scope.unlink()
+
+## Scope.render()
