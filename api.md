@@ -294,7 +294,27 @@ Usage:
 ScopeInstance.hasClass("class")
 ScopeInstance.hasClass(selector, "class")
 ScopeInstance.hasClass(ScopeInstance.element(), "class")
-ScopeInstance.hasClass(ScopeInstance.elements(), "class")
+```
+
+returs true or false based on if the element (or base element if no element selected) has the specified class
+
+Example
+```javascript
+stateless.register(`
+	<div id="image-gallery">
+		<img src="1.jpg"/>
+		<img src="2.jpg" class="middle"/>
+		<img src="3.jpg"/>
+	</div>
+`)
+
+var gallery = stateless.instantiate("image-gallery")
+
+gallery.hasClass("image-gallery") // true 
+gallery.hasClass("$img", "middle") // false
+gallery.elements("$img").forEach(function(imgEle){
+	console.log(gallery.hasClass(imgEle, "middle"))
+}) // false, true, false
 ```
 
 ## Scope.addClass()
