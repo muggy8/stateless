@@ -141,7 +141,7 @@ ScopeInstance.element()
 ScopeInstance.element(selector)
 ```
 
-The element function will return the HTML element that is associated with this instance of Scope. However you can use a selector to select an element that is a chiled of the scope element. If you do, that element is returned instead.
+The element function will return the HTML element that is associated with this instance of Scope. However you can use a selector to select an element that is a child of the scope element. If you do, that element is returned instead.
 
 Example
 ```javaScript
@@ -190,7 +190,100 @@ var gallery = stateless.instantiate("image-gallery")
 var randomImage = stateless.instantiate("random-image")
 
 gallery.append(randomImage)
+
 var allGalleryElements = gallery.elements() // this will not include `<img id="random-image" src="./random"/>`
 var allImageTags = gallery.elements("$img") // this will include `<img id="random-image" src="./random"/>`
 var allElements = gallery.elements("$*").unshift(gallery.element()) // the * selector will select everything including elements belonging to Scope objects that are a child and you can append on the root element after with unshift
+```
+
+## Scope.on()
+Usage
+```javascript
+ScopeInstance.on(type, callback)
+ScopeInstance.on(selector, type, callback)
+ScopeInstance.on(element, type, callback)
+ScopeInstance.on([elements], type, callback)
+```
+
+The on function attaches an event listener to the HTML element that is at the root of the template or if a selector, child element or array of child elements are selected, to the selected element. this callback is directly attached to the HTML element in question via [addEventListener](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener) and the callback should be specified accordingly. the options parameter is not available. The callback is saved internally for validation with the (.off)[#scopeoff] function.
+
+Example:
+```javascript
+stateless.register(`
+	<div id="image-gallery">
+		<img src="1.jpg"/>
+		<img src="2.jpg"/>
+		<img src="3.jpg"/>
+	</div>
+`)
+
+var gallery = stateless.instantiate("image-gallery")
+gallery.on("$img", "click", function(ev){
+	document.lcoation.href = ev.target.getAttribute("src")
+})
+gallery.on(gallery.elements(), "mouseenter", function(){
+	gallery.css("border", "solid 1px #000")
+})
+gallery.on("mouseout", function(){
+	gallery.css("border", "none")
+})
+```
+
+## Scope.off()
+Usage
+```javascript
+ScopeInstance.off(type, callback)
+ScopeInstance.off(selector, type, callback)
+ScopeInstance.off(element, type, callback)
+ScopeInstance.off([elements], type, callback)
+```
+
+The off function attaches an event listener to the HTML element that is at the root of the template or if a selector, child element or array of child elements are selected, to the selected element. this callback is directly attached to the HTML element in question via [removeEventListener](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener) and the callback should be specified accordingly. the options parameter is not available. It will match the callback to the saved callback list and remove the callback accordingly to deal with anonymous functions. If you intend to remove the callback, please use a reference function instead of declaring it on the spot.
+
+Example:
+```javascript
+stateless.register(`
+	<div id="my-div">Meow</div>
+`)
+stateless.register(`
+	<button id="btn"></button>
+`)
+
+var divScope = stateless.instantiate("my-div")
+
+var appendTimes = 0,
+	addBtnToDiv3Times = function(){
+		divScope.append(stateless.instantiate("btn"))
+		appendTimes++
+		if (appendTimes <= 0){
+			divScope.off("click", addBtnToDiv3Times)
+		}
+	}
+
+divScope.on("click", addBtnToDiv3Times)
+```
+
+
+## Scope.once()
+Usage
+```javascript
+ScopeInstance.once(type, callback)
+ScopeInstance.once(selector, type, callback)
+ScopeInstance.once(element, type, callback)
+ScopeInstance.once([elements], type, callback)
+```
+
+The once function attaches an event listener to the HTML element that is at the root of the template or if a selector, child element or array of child elements are selected, to the selected element. This callback is modified wrapped by a function that calls the [off](#scopeoff) function on execute and the callback is added to the target via the [on](#scopeon) function. As such, you cannot remove a event listener attached via once with the [off](scopeoff) function
+
+Example:
+```javascript
+stateless.register(`
+	<button id="btn"></button>
+`)
+
+var btn = stateless.instantiate("btn")
+	.html("sudo")
+	.once("click", function(){
+		alert("what you are about to do is potentially dangerous. You have been warned")
+	})
 ```
