@@ -201,8 +201,8 @@ Usage
 ```javascript
 ScopeInstance.on(type, callback)
 ScopeInstance.on(selector, type, callback)
-ScopeInstance.on(element, type, callback)
-ScopeInstance.on([elements], type, callback)
+ScopeInstance.on(ScopeInstance.element(), type, callback)
+ScopeInstance.on(ScopeInstance.elements(), type, callback)
 ```
 
 The on function attaches an event listener to the HTML element that is at the root of the template or if a selector, child element or array of child elements are selected, to the selected element. this callback is directly attached to the HTML element in question via [addEventListener](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener) and the callback should be specified accordingly. the options parameter is not available. The callback is saved internally for validation with the (.off)[#scopeoff] function.
@@ -234,8 +234,8 @@ Usage
 ```javascript
 ScopeInstance.off(type, callback)
 ScopeInstance.off(selector, type, callback)
-ScopeInstance.off(element, type, callback)
-ScopeInstance.off([elements], type, callback)
+ScopeInstance.off(ScopeInstance.element(), type, callback)
+ScopeInstance.off(ScopeInstaice.elements(), type, callback)
 ```
 
 The off function attaches an event listener to the HTML element that is at the root of the template or if a selector, child element or array of child elements are selected, to the selected element. this callback is directly attached to the HTML element in question via [removeEventListener](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener) and the callback should be specified accordingly. the options parameter is not available. It will match the callback to the saved callback list and remove the callback accordingly to deal with anonymous functions. If you intend to remove the callback, please use a reference function instead of declaring it on the spot.
@@ -269,8 +269,8 @@ Usage
 ```javascript
 ScopeInstance.once(type, callback)
 ScopeInstance.once(selector, type, callback)
-ScopeInstance.once(element, type, callback)
-ScopeInstance.once([elements], type, callback)
+ScopeInstance.once(ScopeInstance.element(), type, callback)
+ScopeInstance.once(ScopeInstance.elements(), type, callback)
 ```
 
 The once function attaches an event listener to the HTML element that is at the root of the template or if a selector, child element or array of child elements are selected, to the selected element. This callback is modified wrapped by a function that calls the [off](#scopeoff) function on execute and the callback is added to the target via the [on](#scopeon) function. As such, you cannot remove a event listener attached via once with the [off](scopeoff) function
@@ -289,6 +289,13 @@ var btn = stateless.instantiate("btn")
 ```
 
 ## Scope.hasClass()
+Usage: 
+```javascript
+ScopeInstance.hasClass("class")
+ScopeInstance.hasClass(selector, "class")
+ScopeInstance.hasClass(ScopeInstance.element(), "class")
+ScopeInstance.hasClass(ScopeInstance.elements(), "class")
+```
 
 ## Scope.addClass()
 
