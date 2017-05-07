@@ -105,7 +105,7 @@ The Scope object is returned by the [instantiate()](#statelessinstantiate) funct
 
 Functions implemented under Scope uses [querySelector()](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector) and [querySelectorAll()](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll) for selecting elements. However to disambiguate selectors from data values, any function that allows a selector to be passed into the function will require that you prefix the selector with the "$" character followed by 0 or more spaces before the actual selector string.
 
-Please note as stated earlier, objects instantiated via the instantiate function is not automatically added to the page and you need to manually add it to the page via a another State object's [append() / appendChild()](#scopeappend) function or via this object's [render()](#scoperender) function. As such it is best to save a reference to this object so you can use it later. Scopes that are attached to other scopes inherit via prototype inheritance from the scope that parents the current scope. as such any method and properties uniquely available to a parent's scope is also available in a child scope.
+Please note as stated earlier, objects instantiated via the instantiate function is not automatically added to the page and you need to manually add it to the page via a another State object's [append() / appendChild()](#scopeappend) function as long as said other State object is already in the DOM or via this object's [render()](#scoperender) function. As such it is best to save a reference to this object so you can use it later. Scopes that are attached to other scopes inherit via prototype inheritance from the scope that parents the current scope. as such any method and properties uniquely available to a parent's scope is also available in a child scope.
 
 Unless otherwise specified functions within the scope function will return the Scope object it belongs to when it has finished executing it's logic. As such you you can chain most Scope methods.
 
@@ -159,4 +159,38 @@ var gallery = stateless.instantiate("image-gallery"),
 	galleryDiv = gallery.element(), // the root element
 	galleryFirstImgTag = gallery.element("$img"), // the first img element
 	galleryStillFirstImgTag = gallery.element("$img") // still the first img element
+```
+
+## Scope.elements()
+Usage:
+```javascript
+ScopeInstance.elements()
+ScopeInstance.elements(selector)
+```
+
+The elements function will return an array of elements that belong to the current scope in one of two ways. If the function is called without any selectors it will return all elements including the root element of the object. However, it will not return any elements that belong to a Scope that's not the current scope. Passing a selector to the function will bypass this limitation and the returned array will include any and all matching HTML elements even those that belong to a differed Scope but is a child of the root element.
+
+Example
+```javaScript
+// register an element
+stateless.register(`
+	<div id="image-gallery">
+		<img src="1.jpg"/>
+		<img src="2.jpg"/>
+		<img src="3.jpg"/>
+	</div>
+`)
+
+stateless.register(`
+	<img id="random-image" src="./random"/>
+`)
+
+// extract the element for whatever reason
+var gallery = stateless.instantiate("image-gallery")
+var randomImage = stateless.instantiate("random-image")
+
+gallery.append(randomImage)
+var allGalleryElements = gallery.elements() // this will not include `<img id="random-image" src="./random"/>`
+var allImageTags = gallery.elements("$img") // this will include `<img id="random-image" src="./random"/>`
+var allElements = gallery.elements("$*").unshift(gallery.element()) // the * selector will select everything including elements belonging to Scope objects that are a child and you can append on the root element after with unshift
 ```
