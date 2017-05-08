@@ -289,14 +289,14 @@ var btn = stateless.instantiate("btn")
 ```
 
 ## Scope.hasClass()
-Usage: 
+Usage:
 ```javascript
 ScopeInstance.hasClass("class")
 ScopeInstance.hasClass(selector, "class")
 ScopeInstance.hasClass(ScopeInstance.element(), "class")
 ```
 
-returs true or false based on if the element (or base element if no element selected) has the specified class
+returns true or false based on if the selected element (or base element if no element selected) has the specified class
 
 Example
 ```javascript
@@ -310,7 +310,7 @@ stateless.register(`
 
 var gallery = stateless.instantiate("image-gallery")
 
-gallery.hasClass("image-gallery") // true 
+gallery.hasClass("image-gallery") // true
 gallery.hasClass("$img", "middle") // false
 gallery.elements("$img").forEach(function(imgEle){
 	console.log(gallery.hasClass(imgEle, "middle"))
@@ -321,16 +321,18 @@ gallery.elements("$img").forEach(function(imgEle){
 Usage:
 ```javascript
 ScopeInstance.addClass("class")
-ScopeInstance.addClass(selector, "class")
-ScopeInstance.addClass(ScopeInstance.element(), "class")
-ScopeInstance.addClass(ScopeInstance.elements(), "class")
-
 ScopeInstance.addClass("class", multiple)
+
+ScopeInstance.addClass(selector, "class")
 ScopeInstance.addClass(selector, "class", multiple)
+
+ScopeInstance.addClass(ScopeInstance.element(), "class")
 ScopeInstance.addClass(ScopeInstance.element(), "class", multiple)
+
+ScopeInstance.addClass(ScopeInstance.elements(), "class")
 ScopeInstance.addClass(ScopeInstance.elements(), "class", multiple)
 ```
-addclass adds a class to the root of the template or the selected elements uniquely meaning it will only add the class once. if you have a need to add the same class multiple times then you can specify multiple to be true. 
+addclass adds a class to the root of the template or the selected elements uniquely meaning it will only add the class once. if you have a need to add the same class multiple times then you can specify multiple to be true.
 
 Example:
 ```javascript
@@ -345,12 +347,12 @@ stateless.register(`
 var gallery = stateless.instantiate("image-gallery")
 
 gallery.on("$img", "click", function(ev){
-	gallery.addClass(ev.target, "favorite") 
+	gallery.addClass(ev.target, "favorite")
 })
 
 gallery.on("click", function(ev){
 	gallery.addClass("intrest", true)
-	
+
 	setTimeout(function(){
 		gallery.removeClass("intrest")
 	}, 1000)
@@ -358,6 +360,46 @@ gallery.on("click", function(ev){
 ```
 
 ## Scope.removeClass()
+Usage:
+```javascript
+ScopeInstance.removeClass("class")
+ScopeInstance.removeClass("class", multiple)
+
+ScopeInstance.removeClass(selector, "class")
+ScopeInstance.removeClass(selector, "class", multiple)
+
+ScopeInstance.removeClass(ScopeInstance.element(), "class")
+ScopeInstance.removeClass(ScopeInstance.element(), "class", multiple)
+
+ScopeInstance.removeClass(ScopeInstance.elements(), "class")
+ScopeInstance.removeClass(ScopeInstance.elements(), "class", multiple)
+```
+removeClass removes one instance of a class to the root of the template or the selected elements. If you want to remove all instance of a class from the selected elements you can declare multiple to be true and all instances of the class will be removed from the target elements
+
+Example:
+```javascript
+stateless.register(`
+	<div id="image-gallery">
+		<img src="1.jpg"/>
+		<img src="2.jpg" class="middle"/>
+		<img src="3.jpg"/>
+	</div>
+`)
+
+var gallery = stateless.instantiate("image-gallery")
+
+gallery.removeClass("$img", "middle")
+
+gallery.on("click", function(){
+	gallery
+		.addClass("animating")
+		.addClass("expand")
+
+	gallery.once("transitionend", function(){
+		gallery.removeClass("animating")
+	})
+})
+```
 
 ## Scope.attr()
 
