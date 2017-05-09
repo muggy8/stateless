@@ -473,6 +473,19 @@ gallery.elements("$img").forEach(function(element){
 ```
 
 ## Scope.data()
+Usage: 
+```javascript
+ScopeInstance.data()
+ScopeInstance.data(name)
+
+ScopeInstance.data(selector, name)
+ScopeInstance.data(ScopeInstance.element(), name)
+ScopeInstance.data(ScopeInstance.elements(), name)
+
+ScopeInstance.data(selector, name, value)
+ScopeInstance.data(ScopeInstance.element(), name, value)
+ScopeInstance.data(ScopeInstance.elements(), name, value)
+```
 
 ## Scope.html()
 
