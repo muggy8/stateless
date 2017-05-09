@@ -402,6 +402,39 @@ gallery.on("click", function(){
 ```
 
 ## Scope.attr()
+Usage:
+```javascript
+ScopeInstance.attr(attribute)
+ScopeInstance.attr(attribute, value)
+
+ScopeInstance.attr(selector, attribute)
+ScopeInstance.attr(ScopeInstance.element(), attribute)
+ScopeInstance.attr(ScopeInstance.elements(), attribute)
+
+ScopeInstance.attr(selector, attribute, value)
+ScopeInstance.attr(ScopeInstance.element(), attribute, value)
+ScopeInstance.attr(ScopeInstance.elements(), attribute, value)
+```
+
+the attr function returns the attribute of the selected element(s) or sets it if a value is provided. 
+
+Example:
+```javascript
+stateless.register(`
+	<div id="image-gallery">
+		<img src="1.jpg"/>
+		<img src="2.jpg" class="middle"/>
+		<img src="3.jpg"/>
+	</div>
+`)
+
+var gallery = stateless.instantiate("image-gallery")
+
+gallery.attr("title", "image gallery")
+gallery.elements("$ img").forEach(function(element, index){
+	gallery.attr(element, "alt", `image number ${index + 1}`)
+})
+```
 
 ## Scope.css()
 
