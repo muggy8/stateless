@@ -432,11 +432,45 @@ var gallery = stateless.instantiate("image-gallery")
 
 gallery.attr("title", "image gallery")
 gallery.elements("$ img").forEach(function(element, index){
+	if (gallery.attr(element, alt)) return // do not overwrite existing alts
 	gallery.attr(element, "alt", `image number ${index + 1}`)
 })
 ```
 
 ## Scope.css()
+Usage:
+```javascript
+ScopeInstance.css(styleName)
+ScopeInstance.css(styleName, value)
+
+ScopeInstance.css(selector, styleName)
+ScopeInstance.css(ScopeInstance.element(), styleName)
+ScopeInstance.css(ScopeInstance.elements(), styleName)
+
+ScopeInstance.css(selector, styleName, value)
+ScopeInstance.css(ScopeInstance.element(), styleName, value)
+ScopeInstance.css(ScopeInstance.elements(), styleName, value)
+```
+
+the css function returns the value of the style property of the requested element or the root element of the template using [getComputeStyles](https://developer.mozilla.org/en/docs/Web/API/Window/getComputedStyle). if a value is defined, it will instead set that value to the chosen rule using setAttribute.
+
+Usage: 
+```javascript
+stateless.register(`
+	<div id="image-gallery">
+		<img src="1.jpg"/>
+		<img src="2.jpg" class="middle"/>
+		<img src="3.jpg"/>
+	</div>
+`)
+
+var gallery = stateless.instantiate("image-gallery")
+
+gallery.elements("$img").forEach(function(element){
+	if (gallery.css(element, "background-color")) return
+	gallery.css(element, "background-color", "orange")
+})
+```
 
 ## Scope.data()
 
