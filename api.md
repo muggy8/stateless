@@ -561,8 +561,60 @@ gallery.include(document.createElement("button")) // add a button to the gallery
 ```
 
 ## Scope.property()
+Usage: 
+```javascript
+ScopeInstance.property(attribute, {static: value})
+ScopeInstance.property(attribute, {get: getterFunction})
+ScopeInstance.property(attribute, {get: getterFunction, set: setterFunction})
+ScopeInstance.property(attribute, {asVar: value})
+```
+
+the property function sets a value with the scope using [Object.defineProperty](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty). many of the goals you would want to achieve with this function can also be done with ScopeInstance[property] = value however, that would require you to break the chain. you can also make a relitively simple 2 way data binding by using the getters and setters and binding variables to user input. 
+
+Example:
+```javascript
+stateless.register(`
+	<div id="image-gallery">
+		<img src="1.jpg"/>
+		<img src="2.jpg" class="middle"/>
+		<img src="3.jpg"/>
+	</div>
+`)
+
+var gallery = stateless.instantiate("image-gallery")
+	.on("$ img", "click", function(ev){
+		if (gallery.hasClass(ev.target, "like")){
+			gallery.removeClass(ev.target, "like")
+		}
+		else {
+			gallery.addClass(ev.target, "like")
+		}
+	})
+	.on("$ img", "contextmenu" function(ev){
+		gallery.favorite(ev.target)
+	})
+	.property("liked", {
+		get: function(){
+			return gallery.elements("$ .liked, .favorited")
+		}
+	})
+	.property("favorite", {
+		static: function(image){
+			gallery.addClass(image, "favorited")
+		}
+	})
+	.property("exportLikes", {
+		static: function(){
+			return gallery.liked.map(function(image){
+				return gallery.attr(image, "src")
+			})
+		}
+	})
+
+```
 
 ## Scope.define()
+an alius for [Scope.Property()](#scopeproperty)
 
 ## Scope.append()
 
