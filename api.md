@@ -636,6 +636,23 @@ The append function acts partly as an alius for include while also providing a m
 
 When a element or an html string is provided the the object to append, the object is added to the Scope's template in the same way that [include()](#scopeinclude) adds an element to the selected target. If another scope is provided, that Scope is made a child of the current scope and the html elements that the appended Scope references is then added to the parent Scope's DOM Element's as the child of the selected element. 
 
+Example:
+```javascript
+stateless.register(`
+	<div id="image-gallery">
+		<img src="1.jpg"/>
+		<img src="2.jpg" class="middle"/>
+		<img src="3.jpg"/>
+	</div>
+`)
+
+stateless.register(`<button id="btn"></button>`)
+
+gallery = stateless.instantiate("image-gallery")
+likeButton = stateless.instantiate("btn")
+dislikeButton = stateless.instantiate("btn")
+```
+
 ## Scope.appendChild()
 
 ## Scope.unlink()
