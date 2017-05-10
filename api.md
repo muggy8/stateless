@@ -454,7 +454,7 @@ ScopeInstance.css(ScopeInstance.elements(), styleName, value)
 
 the css function returns the value of the style property of the requested element or the root element of the template using [getComputeStyles](https://developer.mozilla.org/en/docs/Web/API/Window/getComputedStyle). if a value is defined, it will instead set that value to the chosen rule using setAttribute.
 
-Usage: 
+Example: 
 ```javascript
 stateless.register(`
 	<div id="image-gallery">
@@ -475,18 +475,37 @@ gallery.elements("$img").forEach(function(element){
 ## Scope.data()
 Usage: 
 ```javascript
-ScopeInstance.data()
 ScopeInstance.data(name)
 
 ScopeInstance.data(selector, name)
 ScopeInstance.data(ScopeInstance.element(), name)
 ScopeInstance.data(ScopeInstance.elements(), name)
 
-ScopeInstance.data(selector, name, value)
+ScopeInstance.data(selector!, name, value)
 ScopeInstance.data(ScopeInstance.element(), name, value)
 ScopeInstance.data(ScopeInstance.elements(), name, value)
 ```
 
+the data function returns the data-* attribute found in the selected element or the root element of the template for the current Scope instence. If a value is defined, the function sets that value instead. This function uses the dataset variable so support may vary across different browsers.
+
+Example:
+```javascript
+stateless.register(`
+	<div id="image-gallery">
+		<img src="1.jpg"/>
+		<img src="2.jpg" class="middle"/>
+		<img src="3.jpg"/>
+	</div>
+`)
+
+var gallery = stateless.instantiate("image-gallery")
+
+
+gallery.on("$img", "click", function(ev){
+	var clicks = gallery.data(ev.target, "clickTimes") || 0
+	gallery.data(ev.target, "clickTimes", clicks +1)
+})
+```
 ## Scope.html()
 
 ## Scope.include()
