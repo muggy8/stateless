@@ -617,6 +617,24 @@ var gallery = stateless.instantiate("image-gallery")
 an alius for [Scope.Property()](#scopeproperty)
 
 ## Scope.append()
+Usage: 
+```javascript
+ScopeInstance.append(AnotherScopeInstance)
+ScopeInstance.append(selector, AnotherScopeInstance)
+ScopeInstance.append(ScopeInstance.element(), AnotherScopeInstance)
+
+ScopeInstance.append(htmlString)
+ScopeInstance.append(selector, htmlString)
+ScopeInstance.append(ScopeInstance.element(), htmlString)
+
+ScopeInstance.append(DOMelement)
+ScopeInstance.append(selector, DOMelement)
+ScopeInstance.append(ScopeInstance.element(), DOMelement)
+```
+
+The append function acts partly as an alius for include while also providing a method of adding another Scope instance as a child of the current Scope. When a Scope is added as a child of the current scope, the child scope will inherit via prototypal inheritance from the parent Scope from the javascript level. this means that if a parent has a function defined in it's scope, all child Scopes will have access to the function. This doesn't mean that event listeners are transfered over as those are attached to the element rather than the Javascript object.
+
+When a element or an html string is provided the the object to append, the object is added to the Scope's template in the same way that [include()](#scopeinclude) adds an element to the selected target. If another scope is provided, that Scope is made a child of the current scope and the html elements that the appended Scope references is then added to the parent Scope's DOM Element's as the child of the selected element. 
 
 ## Scope.appendChild()
 
