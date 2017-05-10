@@ -520,7 +520,7 @@ ScopeInstance.html(ScopeInstance.element(), innerHtmlText)
 
 the html function returns the innerHTML of the selected element or the root element of the template if none selected. if a string is provided the string is inserted into that element's innerhtml instead. 
 
-Usage:
+Example:
 ```javascript
 stateless.register(`
 	<button id="btn"></button>
@@ -532,6 +532,33 @@ button.html("Click me!")
 ```
 
 ## Scope.include()
+Usage: 
+```javascript
+ScopeInstance.include()
+ScopeInstance.include(DOMelement)
+ScopeInstance.include(selector, DOMelement)
+ScopeInstance.include(ScopeInstance.element(), DOMelement)
+```
+
+the include function will include an html element into the current Scope instance as part of it's template. you will not be able to include parts of other Scopes with this function. If you need to append another Scope as a part of the current scope, us the [append](#scopeappend) or [appendChild](#scopeappendchild) functions. if include called with no arguements, then include will recursively add all elements that are not already a part of the currnet Scope instance (or a child Scope of the current Scope) but is part of the currnet scope's DOM heiarchy and add them to the appropriate Scope instance. 
+
+Example:
+```javascript
+stateless.register(`
+	<div id="image-gallery">
+		<img src="1.jpg"/>
+		<img src="2.jpg" class="middle"/>
+		<img src="3.jpg"/>
+	</div>
+`)
+
+var gallery = stateless.instantiate("image-gallery")
+
+gallery.element().appendChild(document.createElement("img"))
+gallery.include() // addes the newly created element to the gallery's scope
+
+gallery.include(document.createElement("button")) // add a button to the gallery's scope
+```
 
 ## Scope.property()
 
