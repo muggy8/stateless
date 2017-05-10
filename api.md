@@ -507,6 +507,29 @@ gallery.on("$img", "click", function(ev){
 })
 ```
 ## Scope.html()
+Usage: 
+```javascript
+ScopeInstance.html()
+ScopeInstance.html(selector)
+ScopeInstance.html(ScopeInstance.element())
+
+ScopeInstance.html(innerHtmlText)
+ScopeInstance.html(selector, innerHtmlText)
+ScopeInstance.html(ScopeInstance.element(), innerHtmlText)
+```
+
+the html function returns the innerHTML of the selected element or the root element of the template if none selected. if a string is provided the string is inserted into that element's innerhtml instead. 
+
+Usage:
+```javascript
+stateless.register(`
+	<button id="btn"></button>
+`)
+
+var button = stateless.instantiate("btn")
+
+button.html("Click me!")
+```
 
 ## Scope.include()
 
