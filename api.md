@@ -481,7 +481,7 @@ ScopeInstance.data(selector, name)
 ScopeInstance.data(ScopeInstance.element(), name)
 ScopeInstance.data(ScopeInstance.elements(), name)
 
-ScopeInstance.data(selector!, name, value)
+ScopeInstance.data(selector, name, value)
 ScopeInstance.data(ScopeInstance.element(), name, value)
 ScopeInstance.data(ScopeInstance.elements(), name, value)
 ```
