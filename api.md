@@ -670,7 +670,64 @@ gallery.children.forEach(function(imageScope){
 ```
 
 ## Scope.appendChild()
+alius for [append()](#scopeappend)
 
 ## Scope.unlink()
+Usage:
+```javascript
+ScopeInstance.unlink()
+```
+
+The unlink function removes the Scope Instance from the tree and removes any inheritance based links as well as removes the DOM elements associated with the scope from the DOM. If the references to this object is preserved, then the element can be re-inserted at a later time.
+
+Example:
+```javascript
+stateless.register(`
+	<div id="image-gallery">
+
+	</div>
+`)
+stateless.register(`
+    <div id="image">
+        <img>
+    </div>
+`)
+
+gallery = stateless.instantiate("image-gallery")
+gallery.append("<span>Welcome to our gallery. Below are our pictures for you viewing</span>")
+
+;["1.jpg", "2.jpg", "3.jpg"].forEach(function(imgLink){
+    gallery.append(
+        stateless.instantiate("image") // this returns a new Scope instance
+    )
+})
+
+gallery.children.forEach(function(imageScope){
+    imageScope.on("click", function(ev){
+        imageScope.unlink()
+    })
+})
+```
 
 ## Scope.render()
+Usage:
+```javascript
+ScopeInstance.render()
+```
+
+The render function inserts the Scope instance's DOM elements into the Body of the document.
+
+Example:
+```javascript
+
+stateless.register(`
+	<div id="image-gallery">
+		<img src="1.jpg"/>
+		<img src="2.jpg" class="middle"/>
+		<img src="3.jpg"/>
+	</div>
+`)
+
+var gallery = stateless.instantiate("image-gallery")
+    .render()
+```
