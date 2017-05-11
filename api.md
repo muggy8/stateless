@@ -416,7 +416,7 @@ ScopeInstance.attr(ScopeInstance.element(), attribute, value)
 ScopeInstance.attr(ScopeInstance.elements(), attribute, value)
 ```
 
-the attr function returns the attribute of the selected element(s) or sets it if a value is provided. 
+the attr function returns the attribute of the selected element(s) or sets it if a value is provided.
 
 Example:
 ```javascript
@@ -454,7 +454,7 @@ ScopeInstance.css(ScopeInstance.elements(), styleName, value)
 
 the css function returns the value of the style property of the requested element or the root element of the template using [getComputeStyles](https://developer.mozilla.org/en/docs/Web/API/Window/getComputedStyle). if a value is defined, it will instead set that value to the chosen rule using setAttribute.
 
-Example: 
+Example:
 ```javascript
 stateless.register(`
 	<div id="image-gallery">
@@ -473,7 +473,7 @@ gallery.elements("$img").forEach(function(element){
 ```
 
 ## Scope.data()
-Usage: 
+Usage:
 ```javascript
 ScopeInstance.data(name)
 
@@ -507,7 +507,7 @@ gallery.on("$img", "click", function(ev){
 })
 ```
 ## Scope.html()
-Usage: 
+Usage:
 ```javascript
 ScopeInstance.html()
 ScopeInstance.html(selector)
@@ -518,7 +518,7 @@ ScopeInstance.html(selector, innerHtmlText)
 ScopeInstance.html(ScopeInstance.element(), innerHtmlText)
 ```
 
-the html function returns the innerHTML of the selected element or the root element of the template if none selected. if a string is provided the string is inserted into that element's innerhtml instead. 
+the html function returns the innerHTML of the selected element or the root element of the template if none selected. if a string is provided the string is inserted into that element's innerhtml instead.
 
 Example:
 ```javascript
@@ -532,7 +532,7 @@ button.html("Click me!")
 ```
 
 ## Scope.include()
-Usage: 
+Usage:
 ```javascript
 ScopeInstance.include()
 ScopeInstance.include(DOMelement)
@@ -540,7 +540,7 @@ ScopeInstance.include(selector, DOMelement)
 ScopeInstance.include(ScopeInstance.element(), DOMelement)
 ```
 
-the include function will include an html element into the current Scope instance as part of it's template. you will not be able to include parts of other Scopes with this function. If you need to append another Scope as a part of the current scope, us the [append](#scopeappend) or [appendChild](#scopeappendchild) functions. if include called with no arguements, then include will recursively add all elements that are not already a part of the currnet Scope instance (or a child Scope of the current Scope) but is part of the currnet scope's DOM heiarchy and add them to the appropriate Scope instance. 
+the include function will include an html element into the current Scope instance as part of it's template. you will not be able to include parts of other Scopes with this function. If you need to append another Scope as a part of the current scope, us the [append](#scopeappend) or [appendChild](#scopeappendchild) functions. if include called with no arguements, then include will recursively add all elements that are not already a part of the currnet Scope instance (or a child Scope of the current Scope) but is part of the currnet scope's DOM heiarchy and add them to the appropriate Scope instance.
 
 Example:
 ```javascript
@@ -561,7 +561,7 @@ gallery.include(document.createElement("button")) // add a button to the gallery
 ```
 
 ## Scope.property()
-Usage: 
+Usage:
 ```javascript
 ScopeInstance.property(attribute, {static: value})
 ScopeInstance.property(attribute, {get: getterFunction})
@@ -569,7 +569,7 @@ ScopeInstance.property(attribute, {get: getterFunction, set: setterFunction})
 ScopeInstance.property(attribute, {asVar: value})
 ```
 
-the property function sets a value with the scope using [Object.defineProperty](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty). many of the goals you would want to achieve with this function can also be done with ScopeInstance[property] = value however, that would require you to break the chain. you can also make a relitively simple 2 way data binding by using the getters and setters and binding variables to user input. 
+the property function sets a value with the scope using [Object.defineProperty](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty). many of the goals you would want to achieve with this function can also be done with ScopeInstance[property] = value however, that would require you to break the chain. you can also make a relitively simple 2 way data binding by using the getters and setters and binding variables to user input.
 
 Example:
 ```javascript
@@ -617,7 +617,7 @@ var gallery = stateless.instantiate("image-gallery")
 an alius for [Scope.Property()](#scopeproperty)
 
 ## Scope.append()
-Usage: 
+Usage:
 ```javascript
 ScopeInstance.append(AnotherScopeInstance)
 ScopeInstance.append(selector, AnotherScopeInstance)
@@ -634,23 +634,39 @@ ScopeInstance.append(ScopeInstance.element(), DOMelement)
 
 The append function acts partly as an alius for include while also providing a method of adding another Scope instance as a child of the current Scope. When a Scope is added as a child of the current scope, the child scope will inherit via prototypal inheritance from the parent Scope from the javascript level. this means that if a parent has a function defined in it's scope, all child Scopes will have access to the function. This doesn't mean that event listeners are transfered over as those are attached to the element rather than the Javascript object.
 
-When a element or an html string is provided the the object to append, the object is added to the Scope's template in the same way that [include()](#scopeinclude) adds an element to the selected target. If another scope is provided, that Scope is made a child of the current scope and the html elements that the appended Scope references is then added to the parent Scope's DOM Element's as the child of the selected element. 
+When a element or an html string is provided the the object to append, the object is added to the Scope's template in the same way that [include()](#scopeinclude) adds an element to the selected target. If another scope is provided, that Scope is made a child of the current scope and the html elements that the appended Scope references is then added to the parent Scope's DOM Element's as the child of the selected element.
 
 Example:
 ```javascript
 stateless.register(`
 	<div id="image-gallery">
-		<img src="1.jpg"/>
-		<img src="2.jpg" class="middle"/>
-		<img src="3.jpg"/>
+
 	</div>
 `)
-
-stateless.register(`<button id="btn"></button>`)
+stateless.register(`
+    <div id="image">
+        <img>
+    </div>
+`)
+stateless.register(`<button id="btn">Like</button>`)
 
 gallery = stateless.instantiate("image-gallery")
-likeButton = stateless.instantiate("btn")
-dislikeButton = stateless.instantiate("btn")
+gallery.append("<span>Welcome to our gallery. Below are our pictures for you viewing</span>")
+
+;["1.jpg", "2.jpg", "3.jpg"].forEach(function(imgLink){
+    gallery.append(
+        stateless.instantiate("image") // this returns a new Scope instance
+    )
+})
+
+gallery.children.forEach(function(imageScope){
+    imageScope.append(
+        stateless.instantiate("btn")
+            .on("click", function(ev){
+                imageScope.addClass("$ img", "like")
+            })
+    )
+})
 ```
 
 ## Scope.appendChild()
