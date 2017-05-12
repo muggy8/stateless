@@ -646,6 +646,17 @@
 
 		// functions for module manip begin
 
+        /*public_method.test = overload()
+            .args({a: "undefined"}).use(function(){
+                console.log("A is undefined")
+            })
+            .args({b: "undefined"}).use(function(){
+                console.log("B is undefined")
+            })
+            .args().use(function(){
+                console.log("something went worng")
+            })*/
+
 		public_method.property = public_method.define = function(prop, config){
 			var deffs = {
 				enumerable: (typeof config.enumerable == "undefined")?  true : config.enumerable,
