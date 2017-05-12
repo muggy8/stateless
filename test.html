@@ -179,6 +179,21 @@ instantiated_domobject.scope -> property that provides the templateInstance
 			secondDiv.getOnly = 12
 			console.log("secondDiv.getOnly should still be \"meow8\" has", (secondDiv.getOnly == secondDiv.static + secondDiv.status)? "passed" : `failed. secondDiv.getOnly = ${secondDiv.getOnly}`);
 
+			secondDiv.define("hidden", {
+				get: function(){
+					return this.data1 + " " + this.data2
+				},
+				set: function(s1){
+					this.data1 = s1 || "string 1"
+				},
+				data1: "default string 1",
+				data2: "default string 2"
+			})
+			console.log("secondDiv.hidden should be \"default string 1 default string 2\" has", (secondDiv.hidden == "default string 1 default string 2")? "passed" : `failed. secondDiv.hidden = ${secondDiv.hidden}`);
+
+			secondDiv.hidden = "gibrish"
+			console.log("secondDiv.hidden should be \"gibrish default string 2\" has", (secondDiv.hidden == "gibrish default string 2")? "passed" : `failed. secondDiv.hidden = ${secondDiv.hidden}`);
+
 			var indexable = []
 			for(var key in secondDiv){
 				indexable.push(key)
