@@ -634,6 +634,8 @@
 
 		public_method.property = public_method.define = overload()
 			.args("string", {get: "function", static: "undefined", asVar: "undefined"}).use(function(prop, config){
+				configs.scope = self
+				
 				var deffs = {
 					enumerable: (typeof config.enumerable == "undefined")?  true : config.enumerable,
 					configurable: true,
@@ -642,26 +644,48 @@
 				if (config.set) {
 					deffs.set = config.set
 				}
+
+				if (deffs.get.bind){
+					deffs.get = deffs.get.bind(config)
+				}
+				if (deffs.set.bind){
+					deffs.set = deffs.set.bind(config)
+				}
+
 				Object.defineProperty(self, prop, deffs)
 				return self
 			})
 			.args("string", {get: "undefined", set:"undefined", asVar: "undefined", static: "!undefined"}).use(function(prop, config){
+				configs.scope = self
+
 				var deffs = {
 					enumerable: (typeof config.enumerable == "undefined")?  true : config.enumerable,
 					configurable: true,
 					writable: false,
 					value: config.static
 				}
+
+				if (deffs.value.bind){
+					deffs.value = deffs.value.bind(config)
+				}
+
 				Object.defineProperty(self, prop, deffs)
 				return self
 			})
 			.args("string", {get: "undefined", set:"undefined", asVar: "!undefined", static: "undefined"}).use(function(prop, config){
+				configs.scope = self
+
 				var deffs = {
 					enumerable: (typeof config.enumerable == "undefined")?  true : config.enumerable,
 					configurable: true,
 					writable: true,
 					value: config.asVar
 				}
+
+				if (deffs.value.bind){
+					deffs.value = deffs.value.bind(config)
+				}
+
 				Object.defineProperty(self, prop, deffs)
 				return self
 			})
