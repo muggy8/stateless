@@ -31,6 +31,7 @@
 	}
 
 	var converter = document.createElement("div")
+    var instances = []
 
 	// --------------------------------------------------------
 	// The templater that does the heavy lifting kinda
@@ -60,15 +61,9 @@
 			enumerable: false,
 			configurable: false,
 			get: function(){
-				var unique = [];
-				Array.prototype.forEach.call(ele.querySelectorAll("*"), function(item){
-					var scope = item.scope
-					// todo: refactor this and make a better way of keeping track of child scopes.
-					if (scope && scope != self && scope.parent == self && unique.indexOf(scope) === -1){
-						unique.push(scope)
-					}
-				})
-				return unique;
+				return instances.filter(function(scope){
+                    return scope.parent == self
+                })
 			}
 		})
 
@@ -103,8 +98,6 @@
 		// begin dom manip functions
 
 		var listeners = {}
-		// var cl = context.listeners = context.listeners || []
-		// cl.push(listeners)
 
 		// public methods (kept in the prototype) for others to access
 		public_method.on = overload()
@@ -926,6 +919,7 @@
 		value: function(identifyer){ // public static function
 			if (stateless[identifyer]) {
 				var instance = Scope(stateless[identifyer].cloneNode(true))
+                instances.push(instance)
 				return instance
 			}
 			else {
