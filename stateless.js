@@ -268,6 +268,10 @@
 				}
 				return self
 			})
+			.args({scope:"object", className:"string"}, "string").use(function(ele, c){
+				self.addClass(ele, c, false)
+				return self
+			})
 			.args({"0":"object", length:"number", forEach:"function"}, "string", "boolean").use(function(eles, c, multiple){
 				eles.forEach(function(ele){
 					self.addClass(ele, c, multiple)
@@ -331,6 +335,10 @@
 				else {
 					ele.scope.removeClass(ele, c, multiple)
 				}
+				return self
+			})
+			.args({scope:"object", className:"string"}, "string").use(function(ele, c){
+				self.removeClass(ele, c, false)
 				return self
 			})
 			.args({"0":"object", length:"number", forEach:"function"}, "string", "boolean").use(function(eles, c, multiple){
