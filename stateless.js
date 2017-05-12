@@ -681,17 +681,11 @@
 				return self
 			})
 			.args("string", {get: "undefined", set:"undefined", asVar: "!undefined", static: "undefined"}).use(function(prop, config){
-				config.scope = self
-
 				var deffs = {
 					enumerable: (typeof config.enumerable == "undefined")?  true : config.enumerable,
 					configurable: true,
 					writable: true,
 					value: config.asVar
-				}
-
-				if (deffs.value.bind){
-					deffs.value = deffs.value.bind(config)
 				}
 
 				Object.defineProperty(self, prop, deffs)
