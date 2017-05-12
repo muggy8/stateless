@@ -641,14 +641,14 @@
 					configurable: true,
 					get: config.get
 				}
-				if (config.set) {
+				if (config.set && typeof config.set === "function") {
 					deffs.set = config.set
 				}
 
 				if (deffs.get.bind){
 					deffs.get = deffs.get.bind(config)
 				}
-				if (deffs.set.bind){
+				if (deffs.set && deffs.set.bind){
 					deffs.set = deffs.set.bind(config)
 				}
 
