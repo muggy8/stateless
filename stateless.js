@@ -13,8 +13,8 @@
 	    return bound
 	}
 
-	// method-overload v0.0.1
-	var overload = (function(a){var b=function(a,c){var d=!0;for(var e in c)"object"==typeof a[e]&&"object"==typeof c[e]?d=b(a[e],c[e])&&d:typeof a[e]!==c[e]&&(d=!1);return d};a.overload=a.overload||function(){var a=this,c=arguments;1===arguments.length&&(c=arguments[0]);var d=[],e=function(){};e.use=e.args=function(){return e};var f=function(){for(var a in d){var c=d[a];if(b(arguments,c.a))return c.b.apply(this,arguments)}},g=function(){var g=arguments;return{use:function(h){if(!g.length)delete f.args;return d.push({a:g,b:h}),c.length&&b(c,g)?(h.apply(a,c),e):f}}};return f.args=g,f};return a.overload})({})
+	// modified method-overload v0.1.1
+	var overload = (function(){var b=function(a,c){var d=!0;for(var e in c){"string"==typeof c[e]&&"!"===c[e][0]?typeof a[e]===c[e].substring(1)&&(d=!1):"object"==typeof a[e]&&"object"==typeof c[e]?d=b(a[e],c[e])&&d:typeof a[e]!==c[e]&&(d=!1)}return d};return function(){var a=this,c=arguments;1===arguments.length&&(c=arguments[0]);var d=[],e=function(){};e.use=e.args=function(){return e};var f=function(){for(var a in d){var c=d[a];if(b(arguments,c.m))return c.e.apply(this,arguments)}},g=function(){var g=arguments;return{use:function(h){return 0==g.length&&delete f.args,d.push({m:g,e:h}),c.length&&b(c,g)?(h.apply(a,c),e):f}}};return f.args=g,f}})();
 
 	// make sure that only 1 of 2 or more variables are defined
 	var onlyOneIsDefined = function(){
@@ -657,39 +657,43 @@
                 console.log("something went worng")
             })*/
 
-		public_method.property = public_method.define = function(prop, config){
-			var deffs = {
-				enumerable: (typeof config.enumerable == "undefined")?  true : config.enumerable,
-				configurable: true
-			}
-
-			if (!onlyOneIsDefined((config.get || config.set), config.static, config.asVar)) {
-				throw new Error("You can only have one of (getter[+setter]), static, or asVar");
-			}
-			else if (config.get || config.set){
-				if (config.set && config.get){
+		public_method.property = public_method.define = overload()
+			.args("string", {get: "function", static: "undefined", asVar: "undefined"}).use(function(prop, config){
+				var deffs = {
+					enumerable: (typeof config.enumerable == "undefined")?  true : config.enumerable,
+					configurable: true,
+					get: config.get
+				}
+				if (config.set) {
 					deffs.set = config.set
 				}
-				else if (config.set && !config.get){
-					throw new Error("You need a getter with your setter")
+				Object.defineProperty(self, prop, deffs)
+				return self
+			})
+			.args("string", {get: "undefined", set:"undefined", asVar: "undefined", static: "!undefined"}).use(function(prop, config){
+				var deffs = {
+					enumerable: (typeof config.enumerable == "undefined")?  true : config.enumerable,
+					configurable: true,
+					writable: false,
+					value: config.static
 				}
-
-				deffs.get = config.get
-			}
-			else if (config.static){
-				deffs.value = config.static
-			}
-			else if (config.asVar !== null || typeof config.asVar != "undefined"){
-				deffs.value = config.asVar
-				deffs.writable = true
-			}
-			else {
-				throw new Error("Your congifs must include either a get, a static, or an asVar property")
-			}
-
-			Object.defineProperty(self, prop, deffs)
-			return self
-		}
+				Object.defineProperty(self, prop, deffs)
+				return self
+			})
+			.args("string", {get: "undefined", set:"undefined", asVar: "!undefined", static: "undefined"}).use(function(prop, config){
+				var deffs = {
+					enumerable: (typeof config.enumerable == "undefined")?  true : config.enumerable,
+					configurable: true,
+					writable: true,
+					value: config.asVar
+				}
+				Object.defineProperty(self, prop, deffs)
+				return self
+			})
+			.args().use(function(){
+				console.warn("property/define function inputs improperly formatted")
+				return self
+			})
 
 		public_method.element = function(selector){
 			if (selector){
