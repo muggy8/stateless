@@ -326,7 +326,7 @@
 				if (ele.scope == self){
 					var globalMatch = (multiple)? "g" : ""
 					var matcher =  new RegExp("(^"+c+"$|\\s"+c+"\\s|^"+c+"\\s|\\s"+c+"$)", globalMatch)
-
+					
 					ele.className = ele.className
 						.replace(matcher, " ")
 						.replace(/(^\s+|\s+$)/g, "")
