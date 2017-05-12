@@ -634,8 +634,8 @@
 
 		public_method.property = public_method.define = overload()
 			.args("string", {get: "function", static: "undefined", asVar: "undefined"}).use(function(prop, config){
-				configs.scope = self
-				
+				config.scope = self
+
 				var deffs = {
 					enumerable: (typeof config.enumerable == "undefined")?  true : config.enumerable,
 					configurable: true,
@@ -656,7 +656,7 @@
 				return self
 			})
 			.args("string", {get: "undefined", set:"undefined", asVar: "undefined", static: "!undefined"}).use(function(prop, config){
-				configs.scope = self
+				config.scope = self
 
 				var deffs = {
 					enumerable: (typeof config.enumerable == "undefined")?  true : config.enumerable,
@@ -673,7 +673,7 @@
 				return self
 			})
 			.args("string", {get: "undefined", set:"undefined", asVar: "!undefined", static: "undefined"}).use(function(prop, config){
-				configs.scope = self
+				config.scope = self
 
 				var deffs = {
 					enumerable: (typeof config.enumerable == "undefined")?  true : config.enumerable,
