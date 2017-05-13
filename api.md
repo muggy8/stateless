@@ -571,7 +571,7 @@ ScopeInstance.property(attribute, {asVar: value})
 
 the property function sets a value with the scope using [Object.defineProperty](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty). many of the goals you would want to achieve with this function can also be done with ScopeInstance[property] = value however, that would require you to break the chain. you can also make a relatively simple 2 way data binding by using the getters and setters and binding variables to user input.
 
-Additionally, the configuration object that you passed into the define function is accessible from any value functions within the object via the "this" keyword. Additionally, the Scope instance that is associated with that object is attached to the config object's "scope" parameter. This allows you to have private information that's only available to the defined function without making those values publicly accessable as a reference to the object is not publicly available
+Additionally, the configuration object that you passed into the define function is accessible from any value functions within the object via the "this" keyword. Additionally, the Scope instance that is associated with that object is attached to the config object's "scope" parameter. This allows you to have private information that's only available to the defined function without making those values publicly accessible as a reference to the object is not publicly available. If this effect is not desireable use the "asVar" declaration as that allows you to use the function as a standard prototypal inheritance function. This is useful for situations where prototypal inheritance for recursive actions is useful.
 
 Example:
 ```javascript
