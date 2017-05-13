@@ -571,6 +571,8 @@ ScopeInstance.property(attribute, {asVar: value})
 
 the property function sets a value with the scope using [Object.defineProperty](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty). many of the goals you would want to achieve with this function can also be done with ScopeInstance[property] = value however, that would require you to break the chain. you can also make a relatively simple 2 way data binding by using the getters and setters and binding variables to user input.
 
+Additionally, the configuration object that you passed into the define function is accessible from any value functions within the object via the "this" keyword. Additionally, the Scope instance that is associated with that object is attached to the config object's "scope" parameter. This allows you to have private information that's only available to the defined function without making those values publicly accessable as a reference to the object is not publicly available
+
 Example:
 ```javascript
 stateless.register(`
@@ -583,34 +585,29 @@ stateless.register(`
 
 var gallery = stateless.instantiate("image-gallery")
 	.on("$ img", "click", function(ev){
-		if (gallery.hasClass(ev.target, "like")){
-			gallery.removeClass(ev.target, "like")
-		}
-		else {
-			gallery.addClass(ev.target, "like")
-		}
+		gallery.like = ev.target
 	})
-	.on("$ img", "contextmenu" function(ev){
-		gallery.favorite(ev.target)
-	})
-	.property("liked", {
+	.property("like", {
 		get: function(){
-			return gallery.elements("$ .liked, .favorited")
+			return this.data
+		},
+		set: function(ele){
+		 	// get rid of the previous like if it existed
+			if (this.previousLike){
+				this.scope.removeClass(this.previousLike, "was-liked")
+			}
+			// turn the current liked item into the previous liked item
+			if (this.element){
+				this.scope.removeClass(this.element, "like")
+				this.scope.addClass(this.element, "was-liked")
+			}
+			// update which item has the "was-liked" and "like" class
+			this.previousLike = this.element
+			this.scope.addClass(ele, "like")
+			// remember the current element internally as a liked element
+			this.element = ele
 		}
 	})
-	.property("favorite", {
-		static: function(image){
-			gallery.addClass(image, "favorited")
-		}
-	})
-	.property("exportLikes", {
-		static: function(){
-			return gallery.liked.map(function(image){
-				return gallery.attr(image, "src")
-			})
-		}
-	})
-
 ```
 
 ## Scope.define()
