@@ -575,7 +575,7 @@ Additionally, the configuration object that you passed into the define function 
 
 Example:
 ```javascript
-stateless.register(`<div class="color-box"></div>`)
+stateless.register(`<div id="color-box"></div>`)
 
 var currentNode,
 	divWidth = window.innerWidth
