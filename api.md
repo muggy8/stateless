@@ -571,43 +571,97 @@ ScopeInstance.property(attribute, {asVar: value})
 
 the property function sets a value with the scope using [Object.defineProperty](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty). many of the goals you would want to achieve with this function can also be done with ScopeInstance[property] = value however, that would require you to break the chain. you can also make a relatively simple 2 way data binding by using the getters and setters and binding variables to user input.
 
-Additionally, the configuration object that you passed into the define function is accessible from any value functions within the object via the "this" keyword. Additionally, the Scope instance that is associated with that object is attached to the config object's "scope" parameter. This allows you to have private information that's only available to the defined function without making those values publicly accessible as a reference to the object is not publicly available. If this effect is not desireable use the "asVar" declaration as that allows you to use the function as a standard prototypal inheritance function. This is useful for situations where prototypal inheritance for recursive actions is useful.
+Additionally, the configuration object that you passed into the define function is accessible from any value functions within the object via the "this" keyword. Additionally, the Scope instance that is associated with that object is attached to the config object's "scope" parameter. This allows you to have private information that's only available to the defined function without making those values publicly accessible as a reference to the object is not publicly available. If this effect is not desirable use the "asVar" declaration as that allows you to use the function as a standard prototypal inheritance function. This is useful for situations where prototypal inheritance for recursive actions is useful.
 
 Example:
 ```javascript
-stateless.register(`
-	<div id="image-gallery">
-		<img src="1.jpg"/>
-		<img src="2.jpg" class="middle"/>
-		<img src="3.jpg"/>
-	</div>
-`)
+stateless.register(`<div class="color-box"></div>`)
 
-var gallery = stateless.instantiate("image-gallery")
-	.on("$ img", "click", function(ev){
-		gallery.like = ev.target
-	})
-	.property("like", {
-		get: function(){
-			return this.data
-		},
-		set: function(ele){
-		 	// get rid of the previous like if it existed
-			if (this.previousLike){
-				this.scope.removeClass(this.previousLike, "was-liked")
-			}
-			// turn the current liked item into the previous liked item
-			if (this.element){
-				this.scope.removeClass(this.element, "like")
-				this.scope.addClass(this.element, "was-liked")
-			}
-			// update which item has the "was-liked" and "like" class
-			this.previousLike = this.element
-			this.scope.addClass(ele, "like")
-			// remember the current element internally as a liked element
-			this.element = ele
+var currentNode,
+	divWidth = window.innerWidth
+
+while( divWidth > 100) {
+	var newNode = stateless.instantiate("color-box")
+	if (currentNode) {
+		currentNode.append(
+			newNode
+				.css("padding", "1.5em")
+				.css("border", "solid 1px #888")
+				.on("click", function(ev){
+					newNode.selected = ev.target.scope
+					ev.stopPropagation()
+				})
+		)
+	}
+	else {
+		newNode.render()
+	}
+	currentNode = newNode
+	divWidth = parseInt(newNode.css("width").replace("px", ""))
+}
+
+currentNode.root
+	.define("color", {
+		// function that if called from a scope, function's this parameter is always the scope that this function is called from
+		asVar: function(rgb){
+			this.children.forEach(function(childScope){
+				childScope.color(rgb)
+			})
+			this.css("background-color", rgb)
 		}
 	})
+	.define("selected", {
+		// these getter and setters will always have a "this" value of the object that they are assigned in
+		get: function(){
+			return this.selection
+		},
+		set: function(targetScope){
+			if (this.selection){
+				this.selection.css("border", "solid 1px #888")
+			}
+			this.selection = targetScope.css("border", "solid 2px #000")
+		}
+	})
+	.define("red", {
+		// these getter and setters will always have a "this" value of the object that they are assigned in
+		get: function(){
+			return this.value
+		},
+		set: function(val){
+			var scope = this.scope
+			this.value = val
+			scope.selected.color("rgb("+scope.red+", "+scope.green+", "+scope.blue+")")
+		},
+		value: 255
+	})
+	.define("green", {
+		// these getter and setters will always have a "this" value of the object that they are assigned in
+		get: function(){
+			return this.value
+		},
+		set: function(val){
+			var scope = this.scope
+			this.value = val
+			scope.selected.color("rgb("+scope.red+", "+scope.green+", "+scope.blue+")")
+		},
+		value: 255
+	})
+	.define("blue", {
+		// these getter and setters will always have a "this" value of the object that they are assigned in
+		get: function(){
+			return this.value
+		},
+		set: function(val){
+			var scope = this.scope
+			this.value = val
+			scope.selected.color("rgb("+scope.red+", "+scope.green+", "+scope.blue+")")
+		},
+		value: 255
+	})
+	.append(`<div>R:<input type="range" min="0" max="255" value="255" onmouseup="this.scope.red=this.value"></div>`)
+	.append(`<div>G:<input type="range" min="0" max="255" value="255" onmouseup="this.scope.green=this.value"></div>`)
+	.append(`<div>B:<input type="range" min="0" max="255" value="255" onmouseup="this.scope.blue=this.value"></div>`)
+	.selected = currentNode.root.children[0] // set the default selected item to be the first child
 ```
 
 ## Scope.define()
