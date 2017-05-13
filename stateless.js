@@ -450,9 +450,12 @@
 				if (ele.scope == self){
 					if (typeof value != "undefined"){
 						var elemStyles = self.attr(ele, "style") || "",
-							replaceRule = new RegExp(rule + ".*(;|$)", "gi"),
+							ruleForm = rule + "[^;]*(;|$)"
+							replaceRule = new RegExp("((^(\\n|\\s)*|;)(\\s|\\n)*" + ruleForm + "|^" + ruleForm + ")", "gi"),
 							replaceWith = rule + ":" + value + ";"
-							newRules = elemStyles.replace(replaceRule, replaceWith)
+							newRules = elemStyles
+								.replace(replaceRule, ";" + replaceWith)
+								.replace(/^;/, "")
 
 						if (newRules == elemStyles){
 							self.attr(ele, "style", elemStyles + replaceWith)
