@@ -326,7 +326,7 @@
 				if (ele.scope == self){
 					var globalMatch = (multiple)? "g" : ""
 					var matcher =  new RegExp("(^"+c+"$|\\s"+c+"\\s|^"+c+"\\s|\\s"+c+"$)", globalMatch)
-					
+
 					ele.className = ele.className
 						.replace(matcher, " ")
 						.replace(/(^\s+|\s+$)/g, "")
@@ -602,7 +602,7 @@
 		public_method.include = overload()
 			.args({scope:"object", appendChild:"function"}, "object").use(function(ele, subEle){
 				if (ele.scope == self && !subEle.scope){
-					recursiveDefineScope(subEle, false)
+					recursiveDefineScope(subEle)
 					ele.appendChild(subEle)
 				}
 				else if (!subEle.scope){
