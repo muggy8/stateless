@@ -1,4 +1,7 @@
 (function(context, eval){
+    if (context.stateless){ // lets not do extra work when we re-loading stuff
+        return
+    }
 
 	// --------------------------------------------------------
 	// helper functions that do stuff
@@ -944,6 +947,42 @@
 			else {
 				throw new Error( identifyer + " cannot be found in the template library")
 			}
+		}
+	})
+
+    var subscription = {}
+    Object.defineProperty(statelessOpps, "on", {
+		enumerable: false,
+		configurable: false,
+		writable: false,
+		value: function(nameSpace, callback){ // public static function
+            subscription[nameSpace] = subscription[nameSpace] || []
+			subscription[nameSpace].push(callback)
+		}
+	})
+
+    Object.defineProperty(statelessOpps, "off", {
+		enumerable: false,
+		configurable: false,
+		writable: false,
+		value: function(nameSpace, callback){ // public static function
+            subscription[nameSpace] && subscription[nameSpace].forEach(function(subscriber, subscriberIndex, subscriberList){
+				if (subscriber == callback){
+					subscriberList.splice(subscriberIndex, 1)
+				}
+			})
+		}
+	})
+
+    Object.defineProperty(statelessOpps, "emit", {
+		enumerable: false,
+		configurable: false,
+		writable: false,
+		value: function(nameSpace, data){ // public static function
+            data = data || {}
+			subscription[nameSpace] && subscription[nameSpace].forEach(function(callback){
+				callback(data)
+			})
 		}
 	})
 })(
