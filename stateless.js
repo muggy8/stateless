@@ -951,13 +951,17 @@
 	})
 
     var subscription = {}
-    Object.defineProperty(statelessOpps, "on", {
+    Object.defineProperty(statelessOpps, "watch", {
 		enumerable: false,
 		configurable: false,
 		writable: false,
 		value: function(nameSpace, callback){ // public static function
             subscription[nameSpace] = subscription[nameSpace] || []
-			subscription[nameSpace].push(callback)
+			var itemIndex = subscription[nameSpace].push(callback) - 1
+
+			return function(){
+				subscription[nameSpace].splice(itemIndex, 1);
+			}
 		}
 	})
 
