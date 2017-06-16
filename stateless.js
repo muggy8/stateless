@@ -984,10 +984,15 @@
 		configurable: false,
 		writable: false,
 		value: function(name, val){ // public static function
-            if (statelessPlugins[name]){
+            if (statelessPlugins.hasOwnProperty(name)){
                 return console.warn("Plugin already defined")
             }
-            statelessPlugins[name] = val
+            Object.defineProperty(statelessPlugins, name, {
+                enumerable: true,
+                configurable: true,
+                writable: true,
+                value: val
+            })
 		}
 	})
 })(

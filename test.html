@@ -17,7 +17,6 @@ step 1 - register:
 stateless.register (element)
 stateless.register (htmlString)
 stateless.register ([elements...])
-stateless.import (url)
 
 step 2 - instantiate
 var item = stateless.instantiate(id)
@@ -47,6 +46,9 @@ item.include([element,] anotherElement) -> inclode another html node into the cu
 Other options:
 stateless.each(callback(item, index)) -> itterate through all the templates once
 instantiated_domobject.scope -> property that provides the templateInstance
+stateless.watch(eventName, callback) -> standalone watch for genaric non-dom standard events (returns a function that can be called to stop watching)
+stateless.emit(event, data) -> emits an event to the watchers of of that event and a data object associated with the event
+stateless.plugin(name, value) -> add a plugin to stateless (can override anything)
 </pre>
 		<div id="first-div" class="test1-div">
 			<strong>testing</strong>
@@ -236,6 +238,19 @@ instantiated_domobject.scope -> property that provides the templateInstance
 			secondDiv.color = "orange"
 
 			console.log(`secondDiv.color == "rgb(255, 165, 0)"`, (secondDiv.color == "rgb(255, 165, 0)")? "passed" : "failed")
+
+            console.log(`stateless.watch followed by stateless.emit `)
+            var stop = stateless.watch("ev", function(){
+                console.log("passes")
+                stop()
+            })
+            stateless.emit("ev")
+
+            console.log(`add a plugin to stateless called log`)
+            stateless.plugin("log", function(data){
+                console.log(data)
+            })
+            stateless.log("passed")
 		</script>
 	</body>
 </html>
