@@ -8,6 +8,9 @@ stateless
 -   [.register()](#statelessregister)
 -   [.instantiate()](#statelessinstantiate)
 -   [.each()](#statelesseach)
+-   [.watch()](#statelesswatch)
+-   [.emit()](#statelesseach)
+-   [.plugin()](#statelessplugin)
 
 [Scope](#scope)
 -   [.parent](#scopeparent)
@@ -98,6 +101,72 @@ Example:
 stateless.each(function(template, index){
 	console.log(`template ${index} registered in stateless is:`, template)
 })
+```
+
+## stateless.watch()
+usage:
+```javascript
+statelss.watch(customEventName, callback)
+```
+
+The watch function lets you watch for spicific "events" to be fired by something and then calls the function in the callback with an object that is passed by the event. If no data object is provided, then the callback is passed an empty object. The function returns another function that can be called to remove the listener that got added.
+
+Example:
+```javascript
+var stopWatching = stateless.watch("myEvent", function(data){
+    if (data.prop === true){
+        stopWatching()
+        console.log("successfully watched an event till prop has been set to true")
+    }
+    else {
+        console.log("This event is not the one we are looking for")
+    }
+})
+```
+
+## stateless.emit()
+usage:
+```javascript
+statelss.emit(customEventName[, dataObject])
+```
+
+The emit function allows you to emit custom events that may or may not have watchers waiting for them. You may optionally attach objects to the events you send this way and will allow you to pass data to the callbacks.
+
+Example:
+```javascript
+var stopWatching = stateless.watch("myEvent", function(data){
+    if (data.prop === true){
+        stopWatching()
+        console.log("successfully watched an event till prop has been set to true")
+    }
+    else {
+        console.log("This event is not the one we are looking for")
+    }
+})
+
+stateless.emit("myEvent")
+stateless.emit("myEvent")
+stateless.emit("myEvent", {prop: false})
+stateless.emit("myEvent", {prop: true})
+```
+
+## stateless.plugin()
+Usage:
+```javascript
+stateless.plugin(pluginName, pluginValue)
+stateless.plugin(pluginName)
+```
+
+The plugin function allows you to add Additional functionality (eg routing) to stateless that is otherwise not part of the standard package. you can override any part of the default functionalities (eg the each function) and add any Additional data or functionality. The default objects are tucked away in a inheritance tree and if you override a core functionality, it is still accessable via the prototype of the statelss object. You can optionally declare functions and values directly into stateless via `stateless.prop = someValue` however the top level statelss object is mostly reserved for template objects and you should avoid directly adding functionality to it. If your plugin shares a name with a template element, calling plugin without a value variable will allow you to get the plugin component associated to that name
+
+Example:
+```javascript
+stateless.plugin("meaningOfLife", function(){
+    console.log("the meaning of life is", 42)
+    return 42
+})
+stateless.register(`<div id="meaningOfLife"></div>`)
+stateless.plugin("meaningOfLife")()
 ```
 
 ## Scope

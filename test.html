@@ -251,6 +251,14 @@ stateless.plugin(name, value) -> add a plugin to stateless (can override anythin
                 console.log(data)
             })
             stateless.log("passed")
+
+            stateless.plugin("meaningOfLife", function(){
+                console.log("the meaning of life is", 42)
+                return 42
+            })
+            stateless.register(`<div id="meaningOfLife"></div>`)
+
+            console.log(`the meaning of life should be 42 ${(stateless.plugin("meaningOfLife")() == 42)? "passed" : "failed: " + stateless.plugin("meaningOfLife")()}`)
 		</script>
 	</body>
 </html>
