@@ -983,17 +983,27 @@
 		enumerable: false,
 		configurable: false,
 		writable: false,
-		value: function(name, val){ // public static function
-            if (statelessPlugins.hasOwnProperty(name)){
-                return console.warn("Plugin already defined")
-            }
-            Object.defineProperty(statelessPlugins, name, {
-                enumerable: true,
-                configurable: true,
-                writable: true,
-                value: val
+		value: overload()
+            .args("string", "!undefined").use(function(name, val){ // public static function
+                if (statelessPlugins.hasOwnProperty(name)){
+                    return console.warn("Plugin already defined")
+                }
+                Object.defineProperty(statelessPlugins, name, {
+                    enumerable: true,
+                    configurable: true,
+                    writable: true,
+                    value: val
+                })
+    		})
+            .args("string", "undefined").use(function(name){
+                if (statelessPlugins.hasOwnProperty(name)){
+                    return statelessPlugins[name]
+                }
             })
-		}
+            .args().use(function(){
+                console.warn("plugin error")
+            })
+
 	})
 })(
 	//var context =
