@@ -23,7 +23,5 @@
     "url": "https://github.com/muggy8/stateless/issues"
   },
   "homepage": "https://github.com/muggy8/stateless#readme",
-  "devDependencies": {
-    "gulp": "^3.9.1"
-  }
+  "devDependencies": {}
 }
