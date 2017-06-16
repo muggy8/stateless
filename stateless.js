@@ -844,8 +844,10 @@
 	// Stateless object exposed to the main execution scope for managing and playing with the templates
 	// --------------------------------------------------------
 	context.stateless = {}
-	var statelessOpps = {}
-	Object.setPrototypeOf(context.stateless, statelessOpps)
+	var statelessOpps = {},
+        statelessPlugins = {}
+	Object.setPrototypeOf(context.stateless, statelessPlugins)
+	Object.setPrototypeOf(statelessPlugins, statelessOpps)
 
 	// private values to be manipulated internally
 	var length = 0
@@ -965,19 +967,6 @@
 		}
 	})
 
-    Object.defineProperty(statelessOpps, "off", {
-		enumerable: false,
-		configurable: false,
-		writable: false,
-		value: function(nameSpace, callback){ // public static function
-            subscription[nameSpace] && subscription[nameSpace].forEach(function(subscriber, subscriberIndex, subscriberList){
-				if (subscriber == callback){
-					subscriberList.splice(subscriberIndex, 1)
-				}
-			})
-		}
-	})
-
     Object.defineProperty(statelessOpps, "emit", {
 		enumerable: false,
 		configurable: false,
@@ -987,6 +976,18 @@
 			subscription[nameSpace] && subscription[nameSpace].forEach(function(callback){
 				callback(data)
 			})
+		}
+	})
+
+    Object.defineProperty(statelessOpps, "plugin", {
+		enumerable: false,
+		configurable: false,
+		writable: false,
+		value: function(name, val){ // public static function
+            if (statelessPlugins[name]){
+                return console.warn("Plugin already defined")
+            }
+            statelessPlugins[name] = val
 		}
 	})
 })(
