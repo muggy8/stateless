@@ -1,4 +1,4 @@
-(function(context, eval){
+(function(context){
     if (context.stateless){ // lets not do extra work when we re-loading stuff
         return
     }
@@ -1005,12 +1005,4 @@
             })
 
 	})
-})(
-	//var context =
-		this,
-	//var safeEval =
-		function(code){
-			var safeContext = this;
-			eval.call(safeContext, code)
-		}.bind(this)
-)
+})(this)
