@@ -1,24 +1,8 @@
-(function(context){
+(function(context, overload, recursive){
     if (context.stateless){ // lets not do extra work when we re-loading stuff
         return
     }
-
-	// --------------------------------------------------------
-	// helper functions that do stuff
-	// --------------------------------------------------------
-
-	// lets you declare recursive anonamyous recursive functions
-	function recursive(fn){
-	    var bound = function(){
-	        var inputs = Array.prototype.concat.call([bound], Array.prototype.splice.call(arguments, 0))
-	        return fn.apply(null, inputs)
-	    }
-	    return bound
-	}
-
-	// modified method-overload v0.1.1
-	var overload = (function(){var b=function(a,c){var d=!0;for(var e in c){"string"==typeof c[e]&&"!"===c[e][0]?typeof a[e]===c[e].substring(1)&&(d=!1):"object"==typeof a[e]&&"object"==typeof c[e]?d=b(a[e],c[e])&&d:typeof a[e]!==c[e]&&(d=!1)}return d};return function(){var a=this,c=arguments;1===arguments.length&&(c=arguments[0]);var d=[],e=function(){};e.use=e.args=function(){return e};var f=function(){for(var a in d){var c=d[a];if(b(arguments,c.m))return c.e.apply(this,arguments)}},g=function(){var g=arguments;return{use:function(h){return 0==g.length&&delete f.args,d.push({m:g,e:h}),c.length&&b(c,g)?(h.apply(a,c),e):f}}};return f.args=g,f}})();
-
+    
 	var converter = document.createElement("div")
     var instances = []
 
@@ -1003,6 +987,18 @@
             .args().use(function(){
                 console.warn("plugin error")
             })
-
 	})
-})(this)
+})(
+    this,
+	// modified method-overload v0.1.1
+    (function(){var b=function(a,c){var d=!0;for(var e in c){"string"==typeof c[e]&&"!"===c[e][0]?typeof a[e]===c[e].substring(1)&&(d=!1):"object"==typeof a[e]&&"object"==typeof c[e]?d=b(a[e],c[e])&&d:typeof a[e]!==c[e]&&(d=!1)}return d};return function(){var a=this,c=arguments;1===arguments.length&&(c=arguments[0]);var d=[],e=function(){};e.use=e.args=function(){return e};var f=function(){for(var a in d){var c=d[a];if(b(arguments,c.m))return c.e.apply(this,arguments)}},g=function(){var g=arguments;return{use:function(h){return 0==g.length&&delete f.args,d.push({m:g,e:h}),c.length&&b(c,g)?(h.apply(a,c),e):f}}};return f.args=g,f}})(),
+
+    // anonamyous recursive functions
+	function(fn){
+	    var bound = function(){
+	        var inputs = Array.prototype.concat.call([bound], Array.prototype.splice.call(arguments, 0))
+	        return fn.apply(null, inputs)
+	    }
+	    return bound
+	}
+)
