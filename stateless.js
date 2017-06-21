@@ -938,7 +938,7 @@
 
     var subscription = {},
         globalWatchers = []
-        
+
     Object.defineProperty(statelessOpps, "watch", {
 		enumerable: false,
 		configurable: false,
@@ -946,17 +946,25 @@
 		value: overload()
             .args("string", "function").use(function(nameSpace, callback){ // public static function
                 subscription[nameSpace] = subscription[nameSpace] || []
-    			var itemIndex = subscription[nameSpace].push(callback) - 1
+    			subscription[nameSpace].push(callback)
 
     			return function(){
-    				subscription[nameSpace].splice(itemIndex, 1)
+                    subscription[nameSpace].forEach(function(watcher, index){
+                        if (watcher == callback){
+                            subscription[nameSpace].splice(index, 1)
+                        }
+                    })
     			}
     		})
             .args("function").use(function(callback){
-                var itemIndex = globalWatchers.push(callback) - 1
+                globalWatchers.push(callback)
 
                 return function(){
-                    globalWatchers.splice(itemIndex)
+                    globalWatchers.forEach(function(watcher, index){
+                        if (watcher == callback){
+                            globalWatchers.splice(index, 1)
+                        }
+                    })
                 }
             })
             .args().use(function(){
