@@ -114,6 +114,8 @@ The watch function lets you watch for specific "events" to be fired by something
 
 If you want to watch for all events emitted by the event system. you can call stateless.watch without an event name and if you do, the callback will be fired when all any event is triggered. This callback is called after all the appropriate named watchers resolve and is passed the event name as the first parameter and the event data as the second parameter instead of just the event data.
 
+Because this function returns the unwatcher function, it goes without saying that this function is not chainable
+
 Example:
 ```javascript
 var stopWatching = stateless.watch("myEvent", function(data){ // this event will fire first
@@ -168,10 +170,10 @@ var stopGlobalPeeker = statelss.watch(function(eventType, target){ // this event
 })
 
 stateless.emit("myEvent")
-stateless.emit("myEvent")
-stateless.emit("myEvent", {prop: false})
-stateless.emit("yourEvent", {prop: true})
-stateless.emit("myEvent", {prop: true})
+    .emit("myEvent")
+    .emit("myEvent", {prop: false})
+    .emit("yourEvent", {prop: true})
+    .emit("myEvent", {prop: true})
 ```
 
 ## stateless.plugin()
