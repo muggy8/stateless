@@ -938,6 +938,7 @@
 
     var subscription = {},
         globalWatchers = []
+        
     Object.defineProperty(statelessOpps, "watch", {
 		enumerable: false,
 		configurable: false,
@@ -983,8 +984,8 @@
 		enumerable: false,
 		configurable: false,
 		writable: false,
-		value: overload()
-            .args("string", "!undefined").use(function(name, val){ // public static function
+		value: overload() // public static function
+            .args("string", "!undefined").use(function(name, val){ // set a plugin function
                 if (statelessPlugins.hasOwnProperty(name)){
                     return console.warn("Plugin already defined")
                 }
@@ -996,7 +997,7 @@
                 })
                 return context.stateless
     		})
-            .args("string", "undefined").use(function(name){
+            .args("string", "undefined").use(function(name){ // get a plugin function
                 if (statelessPlugins.hasOwnProperty(name)){
                     return statelessPlugins[name]
                 }
