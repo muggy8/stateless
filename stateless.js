@@ -975,6 +975,7 @@
             globalWatchers.forEach(function(watcher){
                 watcher(nameSpace, data)
             })
+            return context.stateless
 		}
 	})
 
@@ -993,14 +994,17 @@
                     writable: true,
                     value: val
                 })
+                return context.stateless
     		})
             .args("string", "undefined").use(function(name){
                 if (statelessPlugins.hasOwnProperty(name)){
                     return statelessPlugins[name]
                 }
+                return context.stateless
             })
             .args().use(function(){
                 console.warn("plugin error")
+                return context.stateless
             })
 	})
 })(
