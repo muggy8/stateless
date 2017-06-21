@@ -94,7 +94,7 @@ Usage:
 stateless.each(callback)
 ```
 
-The each function in stateless allows you to itterate through each item in the library. The function is a wrapper for the [forEach](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) function of standard javascript without the last property
+The each function in stateless allows you to iterate through each item in the library. The function is a wrapper for the [forEach](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) function of standard javascript without the last property
 
 Example:
 ```javascript
@@ -106,16 +106,29 @@ stateless.each(function(template, index){
 ## stateless.watch()
 usage:
 ```javascript
-statelss.watch(customEventName, callback)
+statelsss.watch(customEventName, callback)
+stateless.watch(callback)
 ```
 
-The watch function lets you watch for spicific "events" to be fired by something and then calls the function in the callback with an object that is passed by the event. If no data object is provided, then the callback is passed an empty object. The function returns another function that can be called to remove the listener that got added.
+The watch function lets you watch for specific "events" to be fired by something and then calls the function in the callback with an object that is passed by the event. If no data object is provided, then the callback is passed an empty object. The function returns another function that can be called to remove the listener that got added.
+
+If you want to watch for all events emitted by the event system. you can call stateless.watch without an event name and if you do, the callback will be fired when all any event is triggered. This callback is called after all the appropriate named watchers resolve and is passed the event name as the first parameter and the event data as the second parameter instead of just the event data.
 
 Example:
 ```javascript
-var stopWatching = stateless.watch("myEvent", function(data){
+var stopWatching = stateless.watch("myEvent", function(data){ // this event will fire first
     if (data.prop === true){
         stopWatching()
+        console.log("successfully watched an event till prop has been set to true")
+    }
+    else {
+        console.log("This event is not the one we are looking for")
+    }
+})
+
+var stopGlobalPeeker = statelss.watch(function(eventType, target){ // this event will fire second
+    if (data.prop === true){
+        stopGlobalPeeker()
         console.log("successfully watched an event till prop has been set to true")
     }
     else {
@@ -144,9 +157,20 @@ var stopWatching = stateless.watch("myEvent", function(data){
     }
 })
 
+var stopGlobalPeeker = statelss.watch(function(eventType, target){ // this event will fire second
+    if (data.prop === true){
+        stopGlobalPeeker()
+        console.log("successfully watched an event till prop has been set to true")
+    }
+    else {
+        console.log("This event is not the one we are looking for")
+    }
+})
+
 stateless.emit("myEvent")
 stateless.emit("myEvent")
 stateless.emit("myEvent", {prop: false})
+stateless.emit("yourEvent", {prop: true})
 stateless.emit("myEvent", {prop: true})
 ```
 
