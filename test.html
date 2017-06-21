@@ -239,6 +239,9 @@ stateless.plugin(name, value) -> add a plugin to stateless (can override anythin
 
 			console.log(`secondDiv.color == "rgb(255, 165, 0)"`, (secondDiv.color == "rgb(255, 165, 0)")? "passed" : "failed")
 
+            stateless.watch(function(event, data){
+                console.log('global event watcher fired with:', event, data)
+            })
             console.log(`stateless.watch followed by stateless.emit `)
             var stop = stateless.watch("ev", function(){
                 console.log("passes")

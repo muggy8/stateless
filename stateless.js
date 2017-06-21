@@ -2,7 +2,7 @@
     if (context.stateless){ // lets not do extra work when we re-loading stuff
         return
     }
-    
+
 	var converter = document.createElement("div")
     var instances = []
 
@@ -936,19 +936,31 @@
 		}
 	})
 
-    var subscription = {}
+    var subscription = {},
+        globalWatchers = []
     Object.defineProperty(statelessOpps, "watch", {
 		enumerable: false,
 		configurable: false,
 		writable: false,
-		value: function(nameSpace, callback){ // public static function
-            subscription[nameSpace] = subscription[nameSpace] || []
-			var itemIndex = subscription[nameSpace].push(callback) - 1
+		value: overload()
+            .args("string", "function").use(function(nameSpace, callback){ // public static function
+                subscription[nameSpace] = subscription[nameSpace] || []
+    			var itemIndex = subscription[nameSpace].push(callback) - 1
 
-			return function(){
-				subscription[nameSpace].splice(itemIndex, 1);
-			}
-		}
+    			return function(){
+    				subscription[nameSpace].splice(itemIndex, 1)
+    			}
+    		})
+            .args("function").use(function(callback){
+                var itemIndex = globalWatchers.push(callback) - 1
+
+                return function(){
+                    globalWatchers.splice(itemIndex)
+                }
+            })
+            .args().use(function(){
+                console.warn("watcher registration error")
+            })
 	})
 
     Object.defineProperty(statelessOpps, "emit", {
@@ -960,6 +972,9 @@
 			subscription[nameSpace] && subscription[nameSpace].forEach(function(callback){
 				callback(data)
 			})
+            globalWatchers.forEach(function(watcher){
+                watcher(nameSpace, data)
+            })
 		}
 	})
 
