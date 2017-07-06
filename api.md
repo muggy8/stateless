@@ -11,6 +11,8 @@ stateless
 -   [.watch()](#statelesswatch)
 -   [.emit()](#statelesseach)
 -   [.plugin()](#statelessplugin)
+-   [.view()](#statelessview)
+-   [.build()](#statelessbuild)
 
 [Scope](#scope)
 -   [.parent](#scopeparent)
@@ -194,6 +196,79 @@ stateless.plugin("meaningOfLife", function(){
 stateless.register(`<div id="meaningOfLife"></div>`)
 stateless.plugin("meaningOfLife")()
 ```
+
+## stateless.view()
+usage:
+```javascript
+stateless.view(htmlElement)
+stateless.view(templateString)
+```
+
+The view method allows you to construct scope objects directly from HTML elements / HTMLstring bypassing the need to register them. This is useful for building larger more complicated views that have multiple components and sub components but only one set of common methods (much like views and controllers in an MVC framework). This method will return the scope object created as if it was a stateless.register().instantiate() call without adding the item to the stateless template repository and thus, you cannot chain this method with any other stateless methods. That said you can choose to chain standsard Scope methods from here.
+
+Example:
+```javascript
+var tr = document.createElement("tr")
+tr.id = "tr"
+var th = document.createElement("th")
+th.id = "th"
+var td = document.createElement("td")
+td.id = "td"
+
+stateless
+    .register(tr)
+    .register(th)
+    .register(td)
+
+var tableView = stateless
+    .view(`
+        <table>
+            <thead>
+                <tr></tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+                <tr></tr>
+            </tfoot>
+        </table>
+    `)
+    .render()
+
+var cols = 5
+for(var i = 0; i < cols; i++){
+    tableView.appendChild(
+        "$ thead tr",
+        stateless.instantiate("th")
+            .html(i + "th head")
+    )
+
+    tableView.appendChild(
+        "$ tfoot tr",
+        stateless.instantiate("td")
+            .html(i + "th foot")
+    )
+}    
+
+["a", "b", "c"].forEach(function(letter){
+    var row;
+    tableView.appendChild(
+        "$ tbody",
+        row = stateless.instantiate("tr")
+    )
+
+    for(var i = 0; i < cols; i++){
+        row.appendChild(
+            stateless.instantiate("td")
+                .html(letter + " " + i)
+        )
+    }
+})
+
+```
+
+## stateless.build()
+This is an alias for [.view()](#stateless.view())
 
 ## Scope
 The Scope object is returned by the [instantiate()](#statelessinstantiate) function. This object contains a number of useful functions that you can use to manipulate the DOM element that is a part of the object. You can directly manipulate the DOM element that is attached to this object but often time, it's better to use the provided functions to do that. If there's a particular feature that you feel should be part of this object for manipulating the element feel free to open an issue or fork this project.
