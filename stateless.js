@@ -4,7 +4,6 @@
     }
 
 	var converter = document.createElement("div")
-    var instances = []
 
 	// --------------------------------------------------------
 	// The templater that does the heavy lifting kinda
@@ -33,11 +32,21 @@
 		Object.defineProperty(public_method, "children", {
 			enumerable: false,
 			configurable: false,
-			get: function(){
-				return instances.filter(function(scope){
-                    return scope.parent == self
+			get: recursive(function(recur, children){
+                children = children || ele.children
+                var childList = []
+
+                Array.prototype.forEach.call(children, function(item){
+                    if (item.scope != self){
+                        childList.push(item.scope)
+                    }
+                    else {
+                        Array.prototype.push.apply(childList, recur(item.children))
+                    }
                 })
-			}
+
+                return childList
+            })
 		})
 
 		Object.defineProperty(public_method, "root", {
@@ -834,39 +843,42 @@
 	Object.setPrototypeOf(statelessPlugins, statelessOpps)
 
 	// private values to be manipulated internally
-	var length = 0
+	var length = 0,
+        migrateId = function(ele){
+            if (ele.id){
+    			var className = ele.className
+    			ele.className = ele.id
+    			if (className){
+    				ele.className += " " + className
+    			}
+    			ele.removeAttribute("id")
+    		}
+        },
+    	pushEle = function(ele){
+    		var index = length
+    		var id = ele.id || index
+    		migrateId(ele)
+    		length ++
 
-	var pushEle = function (ele){
-		var index = length
-		var id = ele.id || index
-		if (ele.id){
-			var className = ele.className
-			ele.className = ele.id
-			if (className){
-				ele.className += " " + className
-			}
-			ele.removeAttribute("id")
-		}
-		length ++
+    		Object.defineProperty(context.stateless, id, {
+    			enumerable: false,
+    			configurable: false,
+    			writable: false,
+    			value: ele
+    		})
 
-		Object.defineProperty(context.stateless, id, {
-			enumerable: false,
-			configurable: false,
-			writable: false,
-			value: ele
-		})
+    		if (!context.stateless[index]){
+    			Object.defineProperty(context.stateless, index, {
+    				enumerable: false,
+    				configurable: false,
+    				writable: false,
+    				value: ele
+    			})
+    		}
 
-		if (!context.stateless[index]){
-			Object.defineProperty(context.stateless, index, {
-				enumerable: false,
-				configurable: false,
-				writable: false,
-				value: ele
-			})
-		}
+    		return id
+    	}
 
-		return id
-	}
 	// public unchangeable variable
 	Object.defineProperty(statelessOpps, "length", {
 		enumerable: false,
@@ -908,16 +920,26 @@
 		value: statelessOpps.consume
 	})
 
-	Object.defineProperty(statelessOpps, "each", {
+	Object.defineProperty(statelessOpps, "view", {
 		enumerable: false,
 		configurable: false,
 		writable: false,
-		value: function(callback){
-			for (var i = 0; i < length; i++){
-				callback(context.stateless[i], i)
+		value: function(ele){
+            if (ele instanceof HTMLElement){
+                ele.parentElement && ele.parentElement.removeChild(ele)
+                migrateId(ele)
+                return Scope(ele)
+            }
+            else if (typeof ele === "string"){
+                converter.innerHTML = ele
+                if (converter.children.length === 1){
+                    return stateless.view(converter.children[0])
+                }
+            }
+			else {
+				throw new Error("Invalid inputs")
 			}
-			return context.stateless
-		}
+        }
 	})
 
 	Object.defineProperty(statelessOpps, "instantiate", {
@@ -927,12 +949,23 @@
 		value: function(identifyer){ // public static function
 			if (stateless[identifyer]) {
 				var instance = Scope(stateless[identifyer].cloneNode(true))
-                instances.push(instance)
 				return instance
 			}
 			else {
 				throw new Error( identifyer + " cannot be found in the template library")
 			}
+		}
+	})
+
+	Object.defineProperty(statelessOpps, "each", {
+		enumerable: false,
+		configurable: false,
+		writable: false,
+		value: function(callback){
+			for (var i = 0; i < length; i++){
+				callback(context.stateless[i], i)
+			}
+			return context.stateless
 		}
 	})
 

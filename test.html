@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<script src="stateless.min.js"></script>
+		<script src="stateless.js"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<style>
 			.test2-div{
@@ -79,8 +79,7 @@ stateless.plugin(name, value) -> add a plugin to stateless (can override anythin
 			}
 
 			// a dom based console module made using stateless
-			stateless.consume("<div id='console'><pre style='width: 100%; height:8em; border: solid 1px #000; overflow:auto;'></pre><textarea rows='3' style='width:100%; margin-top:1em; margin-bottom:1em;'></textarea><button onclick='this.scope._eval(true)' style='width:50%; display:inline'>run and clear</button><button onclick='this.scope._eval()' style='width:50%; display:inline'>run</button></div>")
-			var cons = stateless.instantiate("console")
+			var cons = stateless.view("<div id='console'><pre style='width: 100%; height:8em; border: solid 1px #000; overflow:auto;'></pre><textarea rows='3' style='width:100%; margin-top:1em; margin-bottom:1em;'></textarea><button onclick='this.scope._eval(true)' style='width:50%; display:inline'>run and clear</button><button onclick='this.scope._eval()' style='width:50%; display:inline'>run</button></div>")
 			cons._eval = function(clear){
 					var string = cons.element("textarea").value
 					clear && (cons.element("textarea").value = "")
@@ -116,7 +115,7 @@ stateless.plugin(name, value) -> add a plugin to stateless (can override anythin
 				});
 
 			var firstDiv = stateless.instantiate("first-div")
-				.appendChild("$.first-div-subdiv", stateless.instantiate(3))
+				.appendChild("$.first-div-subdiv", stateless.instantiate(2))
 				.render()
 
 			firstDiv.fn = function(){
