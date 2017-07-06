@@ -1,6 +1,6 @@
 {
   "name": "statelessjs",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Front end javascript library for building web applications",
   "main": "stateless.min.js",
   "scripts": {
