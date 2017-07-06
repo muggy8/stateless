@@ -942,6 +942,13 @@
         }
 	})
 
+	Object.defineProperty(statelessOpps, "build", {
+		enumerable: false,
+		configurable: false,
+		writable: false,
+		value: statelessOpps.view
+	})
+
 	Object.defineProperty(statelessOpps, "instantiate", {
 		enumerable: false,
 		configurable: false,
