@@ -599,10 +599,26 @@
 		// functions for dom manip end
 
 		public_method.include = overload()
-			.args({scope:"object", appendChild:"function"}, "object").use(function(ele, subEle){
+			.args({scope:"object", appendChild:"function"}, "object").use(function(ele, subEle, before){
 				if (ele.scope == self && !subEle.scope){
-					recursiveDefineScope(subEle)
-					ele.appendChild(subEle)
+					if (!before){
+						recursiveDefineScope(subEle)
+						ele.appendChild(subEle)
+					}
+					else {
+						if (typeof before == "string" && before[0] == "$"){
+							before = self.element(before)
+						}
+
+						var beforeParent = before.parentNode
+						if (beforeParent.scope != self){
+							beforeParent.scope.include(beforeParent, subEle, before)
+						}
+						else {
+							recursiveDefineScope(subEle)
+							beforeParent.insertBefore(subEle, before)
+						}
+					}
 				}
 				else if (!subEle.scope){
 					ele.scope.include(ele, subEle)
@@ -612,17 +628,17 @@
 				}
 				return self
 			})
-			.args("string", "object").use(function(selector, subEle){
+			.args("string", "object").use(function(selector, subEle, before){
 				if(selector[0] == "$"){
-					self.include(self.element(selector), subEle)
+					self.include(self.element(selector), subEle, before)
 				}
 				else {
 					console.warn("selector must begin with '$'")
 				}
 				return self
 			})
-			.args("object").use(function(subEle){
-				self.include(ele, subEle)
+			.args("object").use(function(subEle, before){
+				self.include(ele, subEle, before)
 				return self
 			})
 			.args().use(function(){
@@ -631,7 +647,7 @@
 				})
 				self.elements().forEach(function(ele){
 					if (!ele.scope){
-						self.include(self.element(), ele)
+						self.include(self.element(), ele, ele)
 					}
 				})
 				return self
@@ -666,7 +682,7 @@
 				config.scope = self
 
 				var deffs = {
-					enumerable: (typeof config.enumerable == "undefined")?  true : config.enumerable,
+					enumerable: (typeof config.enumerable == "undefined")? true : config.enumerable,
 					configurable: true,
 					writable: false,
 					value: config.static
@@ -725,11 +741,26 @@
 
 		public_method.append = public_method.appendChild = overload()
 			// main method 1 append child scope
-			.args({scope:{append:"function"}, appendChild:"function"}, {children:"object", root:"object", element:"function", unlink:"function"}).use(function(ele, subScope){
+			.args({scope:{append:"function"}, appendChild:"function"}, {children:"object", root:"object", element:"function", unlink:"function"}).use(function(ele, subScope, before){
 				if (ele.scope == self){
 					subScope.unlink()
 					Object.setPrototypeOf(Object.getPrototypeOf(subScope), self)
-					ele.appendChild(subScope.element())
+					if (!before){
+						ele.appendChild(subScope.element())
+					}
+					else {
+						if (typeof before == "string" && before[0] == "$"){
+							before = self.element(before)
+						}
+
+						var beforeParent = before.parentNode
+						if (beforeParent.scope != self){
+							beforeParent.scope.append(beforeParent, subScope, before)
+						}
+						else {
+							beforeParent.insertBefore(subScope.element(), before)
+						}
+					}
 				}
 				else {
 					ele.scope.append(ele, subScope)
@@ -737,9 +768,9 @@
 				return self
 			})
 			// bootstrap off main method 1
-			.args("string", {children:"object", root:"object", element:"function", unlink:"function"}).use(function(selector, subScope){
+			.args("string", {children:"object", root:"object", element:"function", unlink:"function"}).use(function(selector, subScope, before){
 				if(selector[0] == "$"){
-					self.append(self.element(selector), subScope)
+					self.append(self.element(selector), subScope, before)
 				}
 				else {
 					console.warn("selector must begin with '$'")
@@ -747,19 +778,19 @@
 				return self
 			})
 			// main method 2: alias for include
-			.args({scope:{append:"function"}, appendChild:"function"}, "object").use(function(ele, addedEle){
+			.args({scope:{append:"function"}, appendChild:"function"}, "object").use(function(ele, addedEle, before){
 				if (ele.scope == self){
-					self.include(ele, addedEle)
+					self.include(ele, addedEle, before)
 				}
 				else {
-					ele.scope.include(ele, addedEle)
+					ele.scope.include(ele, addedEle, before)
 				}
 				return self
 			})
 			// main bootstrap off main metho 2
-			.args("string", "object").use(function(selector, addedEle){
+			.args("string", "object").use(function(selector, addedEle, before){
 				if(selector[0] == "$"){
-					self.append(self.element(selector), addedEle)
+					self.append(self.element(selector), addedEle, before)
 				}
 				else {
 					console.warn("selector must begin with '$'")
@@ -767,21 +798,30 @@
 				return self
 			})
 			// bootstrap off main method 2
-			.args({scope:{append:"function"}, appendChild:"function"}, "string").use(function(ele, htmlString){
+			.args({scope:{append:"function"}, appendChild:"function"}, "string").use(function(ele, htmlString, before){
 				converter.innerHTML = htmlString
 				Array.prototype.slice.call(converter.children, 0).forEach(function(addedEle){
-					self.append(ele, addedEle)
+					self.append(ele, addedEle, before)
 				})
 				return self
 			})
 			// bootstrap off main method 2
-			.args("string", "string").use(function(selector, htmlString){
+			.args("string", "string").use(function(selector, htmlString, before){
 				if(selector[0] == "$"){
-					var ele = self.element(selector)
+					var el = self.element(selector)
 					converter.innerHTML = htmlString
 
 					Array.prototype.slice.call(converter.children, 0).forEach(function(addedEle){
-						self.append(ele, addedEle)
+						self.append(el, addedEle, before)
+					})
+				}
+				else if (htmlString[0] == "$"){
+					// using string with a before selector
+					before = htmlString
+					htmlString = selector
+					converter.innerHTML = htmlString
+					Array.prototype.slice.call(converter.children, 0).forEach.call(converter.children, function(addedEle){
+						self.append(ele, addedEle, before)
 					})
 				}
 				else {
@@ -790,14 +830,14 @@
 				return self
 			})
 			// bootstrp off of main method 1
-			.args({children:"object", root:"object", element:"function", unlink:"function"}).use(function(subScope){
-				self.append(ele, subScope)
+			.args({children:"object", root:"object", element:"function", unlink:"function"}).use(function(subScope, before){
+				self.append(ele, subScope, before)
 				return self
 			})
 			// bootstraps off main method 2
-			.args("object").use(function(addedEle){
+			.args("object").use(function(addedEle, before){
 				if (ele.scope == self){
-					self.append(ele, addedEle)
+					self.append(ele, addedEle, before)
 				}
 				return self
 			})

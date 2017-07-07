@@ -115,7 +115,7 @@ stateless.plugin(name, value) -> add a plugin to stateless (can override anythin
 				});
 
 			var firstDiv = stateless.instantiate("first-div")
-				.appendChild("$.first-div-subdiv", stateless.instantiate(2))
+				.appendChild("$.first-div-subdiv", stateless.instantiate(2), "$p")
 				.render()
 
 			firstDiv.fn = function(){
@@ -261,6 +261,8 @@ stateless.plugin(name, value) -> add a plugin to stateless (can override anythin
             stateless.register(`<div id="meaningOfLife"></div>`)
 
             console.log(`the meaning of life should be 42 ${(stateless.plugin("meaningOfLife")() == 42)? "passed" : "failed: " + stateless.plugin("meaningOfLife")()}`)
+
+			firstDiv.append("<div style='width: 50%; margin-left: auto; margin-right: auto; padding-bottom: 1em; background-color: green'></div>", "$a.link")
 		</script>
 	</body>
 </html>
