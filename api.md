@@ -865,6 +865,11 @@ ScopeInstance.append(selector, DOMelement, beforeSelectorOrBeforeElement)
 ScopeInstance.append(ScopeInstance.element(), DOMelement, beforeSelectorOrBeforeElement)
 ```
 
+General example:
+```javascript
+ScopeInstance.append([insertLocationSelectorOrInsertLocationElement, ]anotherScopeOrStringOrElement[, insertElementsBeforeSelectorOrElement])
+```
+
 The append function acts partly as an alias for include while also providing a method of adding another Scope instance as a child of the current Scope. When a Scope is added as a child of the current scope, the child scope will inherit via prototypal inheritance from the parent Scope from the javascript level. this means that if a parent has a function defined in it's scope, all child Scopes will have access to the function. This doesn't mean that event listeners are transferred over as those are attached to the element rather than the Javascript object.
 
 When a element or an html string is provided the the object to append, the object is added to the Scope's template in the same way that [include()](#scopeinclude) adds an element to the selected target. If another scope is provided, that Scope is made a child of the current scope and the html elements that the appended Scope references is then added to the parent Scope's DOM Element's as the child of the selected element.
@@ -889,7 +894,7 @@ gallery.append("<span>Welcome to our gallery. Below are our pictures for you vie
 ;["1.jpg", "2.jpg", "3.jpg"].forEach(function(imgLink){
 	gallery.append(
 		stateless.instantiate("image"), // this returns a new Scope instance
-		"$ span"
+		"$ span" // insert this scope before the span element.
 	)
 })
 
