@@ -1,7 +1,7 @@
 (function(context, overload, recursive){
-    if (context.stateless){ // lets not do extra work when we re-loading stuff
-        return
-    }
+	if (context.stateless){ // lets not do extra work when we re-loading stuff
+		return
+	}
 
 	var converter = document.createElement("div")
 
@@ -33,20 +33,20 @@
 			enumerable: false,
 			configurable: false,
 			get: recursive(function(recur, children){
-                children = children || ele.children
-                var childList = []
+				children = children || ele.children
+				var childList = []
 
-                Array.prototype.forEach.call(children, function(item){
-                    if (item.scope != self){
-                        childList.push(item.scope)
-                    }
-                    else {
-                        Array.prototype.push.apply(childList, recur(item.children))
-                    }
-                })
+				Array.prototype.forEach.call(children, function(item){
+					if (item.scope != self){
+						childList.push(item.scope)
+					}
+					else {
+						Array.prototype.push.apply(childList, recur(item.children))
+					}
+				})
 
-                return childList
-            })
+				return childList
+			})
 		})
 
 		Object.defineProperty(public_method, "root", {
@@ -838,46 +838,46 @@
 	// --------------------------------------------------------
 	context.stateless = {}
 	var statelessOpps = {},
-        statelessPlugins = {}
+		statelessPlugins = {}
 	Object.setPrototypeOf(context.stateless, statelessPlugins)
 	Object.setPrototypeOf(statelessPlugins, statelessOpps)
 
 	// private values to be manipulated internally
 	var length = 0,
-        migrateId = function(ele){
-            if (ele.id){
-    			var className = ele.className
-    			ele.className = ele.id
-    			if (className){
-    				ele.className += " " + className
-    			}
-    			ele.removeAttribute("id")
-    		}
-        },
-    	pushEle = function(ele){
-    		var index = length
-    		var id = ele.id || index
-    		migrateId(ele)
-    		length ++
+		migrateId = function(ele){
+			if (ele.id){
+				var className = ele.className
+				ele.className = ele.id
+				if (className){
+					ele.className += " " + className
+				}
+				ele.removeAttribute("id")
+			}
+		},
+		pushEle = function(ele){
+			var index = length
+			var id = ele.id || index
+			migrateId(ele)
+			length ++
 
-    		Object.defineProperty(context.stateless, id, {
-    			enumerable: false,
-    			configurable: false,
-    			writable: false,
-    			value: ele
-    		})
+			Object.defineProperty(context.stateless, id, {
+				enumerable: false,
+				configurable: false,
+				writable: false,
+				value: ele
+			})
 
-    		if (!context.stateless[index]){
-    			Object.defineProperty(context.stateless, index, {
-    				enumerable: false,
-    				configurable: false,
-    				writable: false,
-    				value: ele
-    			})
-    		}
+			if (!context.stateless[index]){
+				Object.defineProperty(context.stateless, index, {
+					enumerable: false,
+					configurable: false,
+					writable: false,
+					value: ele
+				})
+			}
 
-    		return id
-    	}
+			return id
+		}
 
 	// public unchangeable variable
 	Object.defineProperty(statelessOpps, "length", {
@@ -925,21 +925,21 @@
 		configurable: false,
 		writable: false,
 		value: function(ele){
-            if (ele instanceof HTMLElement){
-                ele.parentElement && ele.parentElement.removeChild(ele)
-                migrateId(ele)
-                return Scope(ele)
-            }
-            else if (typeof ele === "string"){
-                converter.innerHTML = ele
-                if (converter.children.length === 1){
-                    return stateless.view(converter.children[0])
-                }
-            }
+			if (ele instanceof HTMLElement){
+				ele.parentElement && ele.parentElement.removeChild(ele)
+				migrateId(ele)
+				return Scope(ele)
+			}
+			else if (typeof ele === "string"){
+				converter.innerHTML = ele
+				if (converter.children.length === 1){
+					return stateless.view(converter.children[0])
+				}
+			}
 			else {
 				throw new Error("Invalid inputs")
 			}
-        }
+		}
 	})
 
 	Object.defineProperty(statelessOpps, "build", {
@@ -976,97 +976,97 @@
 		}
 	})
 
-    var subscription = {},
-        globalWatchers = []
+	var subscription = {},
+		globalWatchers = []
 
-    Object.defineProperty(statelessOpps, "watch", {
+	Object.defineProperty(statelessOpps, "watch", {
 		enumerable: false,
 		configurable: false,
 		writable: false,
 		value: overload()
-            .args("string", "function").use(function(nameSpace, callback){ // public static function
-                subscription[nameSpace] = subscription[nameSpace] || []
-    			subscription[nameSpace].push(callback)
+			.args("string", "function").use(function(nameSpace, callback){ // public static function
+				subscription[nameSpace] = subscription[nameSpace] || []
+				subscription[nameSpace].push(callback)
 
-    			return function(){
-                    subscription[nameSpace].forEach(function(watcher, index){
-                        if (watcher == callback){
-                            subscription[nameSpace].splice(index, 1)
-                        }
-                    })
-    			}
-    		})
-            .args("function").use(function(callback){
-                globalWatchers.push(callback)
+				return function(){
+					subscription[nameSpace].forEach(function(watcher, index){
+						if (watcher == callback){
+							subscription[nameSpace].splice(index, 1)
+						}
+					})
+				}
+			})
+			.args("function").use(function(callback){
+				globalWatchers.push(callback)
 
-                return function(){
-                    globalWatchers.forEach(function(watcher, index){
-                        if (watcher == callback){
-                            globalWatchers.splice(index, 1)
-                        }
-                    })
-                }
-            })
-            .args().use(function(){
-                console.warn("watcher registration error")
-            })
+				return function(){
+					globalWatchers.forEach(function(watcher, index){
+						if (watcher == callback){
+							globalWatchers.splice(index, 1)
+						}
+					})
+				}
+			})
+			.args().use(function(){
+				console.warn("watcher registration error")
+			})
 	})
 
-    Object.defineProperty(statelessOpps, "emit", {
+	Object.defineProperty(statelessOpps, "emit", {
 		enumerable: false,
 		configurable: false,
 		writable: false,
 		value: function(nameSpace, data){ // public static function
-            data = data || {}
+			data = data || {}
 			subscription[nameSpace] && subscription[nameSpace].forEach(function(callback){
 				callback(data)
 			})
-            globalWatchers.forEach(function(watcher){
-                watcher(nameSpace, data)
-            })
-            return context.stateless
+			globalWatchers.forEach(function(watcher){
+				watcher(nameSpace, data)
+			})
+			return context.stateless
 		}
 	})
 
-    Object.defineProperty(statelessOpps, "plugin", {
+	Object.defineProperty(statelessOpps, "plugin", {
 		enumerable: false,
 		configurable: false,
 		writable: false,
 		value: overload() // public static function
-            .args("string", "!undefined").use(function(name, val){ // set a plugin function
-                if (statelessPlugins.hasOwnProperty(name)){
-                    return console.warn("Plugin already defined")
-                }
-                Object.defineProperty(statelessPlugins, name, {
-                    enumerable: true,
-                    configurable: true,
-                    writable: true,
-                    value: val
-                })
-                return context.stateless
-    		})
-            .args("string", "undefined").use(function(name){ // get a plugin function
-                if (statelessPlugins.hasOwnProperty(name)){
-                    return statelessPlugins[name]
-                }
-                return context.stateless
-            })
-            .args().use(function(){
-                console.warn("plugin error")
-                return context.stateless
-            })
+			.args("string", "!undefined").use(function(name, val){ // set a plugin function
+				if (statelessPlugins.hasOwnProperty(name)){
+					return console.warn("Plugin already defined")
+				}
+				Object.defineProperty(statelessPlugins, name, {
+					enumerable: true,
+					configurable: true,
+					writable: true,
+					value: val
+				})
+				return context.stateless
+			})
+			.args("string", "undefined").use(function(name){ // get a plugin function
+				if (statelessPlugins.hasOwnProperty(name)){
+					return statelessPlugins[name]
+				}
+				return context.stateless
+			})
+			.args().use(function(){
+				console.warn("plugin error")
+				return context.stateless
+			})
 	})
 })(
-    this,
+	this,
 	// modified method-overload v0.1.1
-    (function(){var b=function(a,c){var d=!0;for(var e in c){"string"==typeof c[e]&&"!"===c[e][0]?typeof a[e]===c[e].substring(1)&&(d=!1):"object"==typeof a[e]&&"object"==typeof c[e]?d=b(a[e],c[e])&&d:typeof a[e]!==c[e]&&(d=!1)}return d};return function(){var a=this,c=arguments;1===arguments.length&&(c=arguments[0]);var d=[],e=function(){};e.use=e.args=function(){return e};var f=function(){for(var a in d){var c=d[a];if(b(arguments,c.m))return c.e.apply(this,arguments)}},g=function(){var g=arguments;return{use:function(h){return 0==g.length&&delete f.args,d.push({m:g,e:h}),c.length&&b(c,g)?(h.apply(a,c),e):f}}};return f.args=g,f}})(),
+	(function(){var b=function(a,c){var d=!0;for(var e in c){"string"==typeof c[e]&&"!"===c[e][0]?typeof a[e]===c[e].substring(1)&&(d=!1):"object"==typeof a[e]&&"object"==typeof c[e]?d=b(a[e],c[e])&&d:typeof a[e]!==c[e]&&(d=!1)}return d};return function(){var a=this,c=arguments;1===arguments.length&&(c=arguments[0]);var d=[],e=function(){};e.use=e.args=function(){return e};var f=function(){for(var a in d){var c=d[a];if(b(arguments,c.m))return c.e.apply(this,arguments)}},g=function(){var g=arguments;return{use:function(h){return 0==g.length&&delete f.args,d.push({m:g,e:h}),c.length&&b(c,g)?(h.apply(a,c),e):f}}};return f.args=g,f}})(),
 
-    // anonamyous recursive functions
+	// anonamyous recursive functions
 	function(fn){
-	    var bound = function(){
-	        var inputs = Array.prototype.concat.call([bound], Array.prototype.splice.call(arguments, 0))
-	        return fn.apply(null, inputs)
-	    }
-	    return bound
+		var bound = function(){
+			var inputs = Array.prototype.concat.call([bound], Array.prototype.splice.call(arguments, 0))
+			return fn.apply(null, inputs)
+		}
+		return bound
 	}
 )
