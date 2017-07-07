@@ -121,23 +121,23 @@ Because this function returns the unwatcher function, it goes without saying tha
 Example:
 ```javascript
 var stopWatching = stateless.watch("myEvent", function(data){ // this event will fire first
-    if (data.prop === true){
-        stopWatching()
-        console.log("successfully watched an event till prop has been set to true")
-    }
-    else {
-        console.log("This event is not the one we are looking for")
-    }
+	if (data.prop === true){
+		stopWatching()
+		console.log("successfully watched an event till prop has been set to true")
+	}
+	else {
+		console.log("This event is not the one we are looking for")
+	}
 })
 
 var stopGlobalPeeker = statelss.watch(function(eventType, target){ // this event will fire second
-    if (data.prop === true){
-        stopGlobalPeeker()
-        console.log("successfully watched an event till prop has been set to true")
-    }
-    else {
-        console.log("This event is not the one we are looking for")
-    }
+	if (data.prop === true){
+		stopGlobalPeeker()
+		console.log("successfully watched an event till prop has been set to true")
+	}
+	else {
+		console.log("This event is not the one we are looking for")
+	}
 })
 ```
 
@@ -152,30 +152,30 @@ The emit function allows you to emit custom events that may or may not have watc
 Example:
 ```javascript
 var stopWatching = stateless.watch("myEvent", function(data){
-    if (data.prop === true){
-        stopWatching()
-        console.log("successfully watched an event till prop has been set to true")
-    }
-    else {
-        console.log("This event is not the one we are looking for")
-    }
+	if (data.prop === true){
+		stopWatching()
+		console.log("successfully watched an event till prop has been set to true")
+	}
+	else {
+		console.log("This event is not the one we are looking for")
+	}
 })
 
 var stopGlobalPeeker = statelss.watch(function(eventType, target){ // this event will fire second
-    if (data.prop === true){
-        stopGlobalPeeker()
-        console.log("successfully watched an event till prop has been set to true")
-    }
-    else {
-        console.log("This event is not the one we are looking for")
-    }
+	if (data.prop === true){
+		stopGlobalPeeker()
+		console.log("successfully watched an event till prop has been set to true")
+	}
+	else {
+		console.log("This event is not the one we are looking for")
+	}
 })
 
 stateless.emit("myEvent")
-    .emit("myEvent")
-    .emit("myEvent", {prop: false})
-    .emit("yourEvent", {prop: true})
-    .emit("myEvent", {prop: true})
+	.emit("myEvent")
+	.emit("myEvent", {prop: false})
+	.emit("yourEvent", {prop: true})
+	.emit("myEvent", {prop: true})
 ```
 
 ## stateless.plugin()
@@ -190,8 +190,8 @@ The plugin function allows you to add Additional functionality (eg routing) to s
 Example:
 ```javascript
 stateless.plugin("meaningOfLife", function(){
-    console.log("the meaning of life is", 42)
-    return 42
+	console.log("the meaning of life is", 42)
+	return 42
 })
 stateless.register(`<div id="meaningOfLife"></div>`)
 stateless.plugin("meaningOfLife")()
@@ -216,53 +216,53 @@ var td = document.createElement("td")
 td.id = "td"
 
 stateless
-    .register(tr)
-    .register(th)
-    .register(td)
+	.register(tr)
+	.register(th)
+	.register(td)
 
 var tableView = stateless
-    .view(`
-        <table>
-            <thead>
-                <tr></tr>
-            </thead>
-            <tbody>
-            </tbody>
-            <tfoot>
-                <tr></tr>
-            </tfoot>
-        </table>
-    `)
-    .render()
+	.view(`
+		<table>
+			<thead>
+				<tr></tr>
+			</thead>
+			<tbody>
+			</tbody>
+			<tfoot>
+				<tr></tr>
+			</tfoot>
+		</table>
+	`)
+	.render()
 
 var cols = 5
 for(var i = 0; i < cols; i++){
-    tableView.appendChild(
-        "$ thead tr",
-        stateless.instantiate("th")
-            .html(i + "th head")
-    )
+	tableView.appendChild(
+		"$ thead tr",
+		stateless.instantiate("th")
+			.html(i + "th head")
+	)
 
-    tableView.appendChild(
-        "$ tfoot tr",
-        stateless.instantiate("td")
-            .html(i + "th foot")
-    )
-}    
+	tableView.appendChild(
+		"$ tfoot tr",
+		stateless.instantiate("td")
+			.html(i + "th foot")
+	)
+}
 
 ["a", "b", "c"].forEach(function(letter){
-    var row;
-    tableView.appendChild(
-        "$ tbody",
-        row = stateless.instantiate("tr")
-    )
+	var row;
+	tableView.appendChild(
+		"$ tbody",
+		row = stateless.instantiate("tr")
+	)
 
-    for(var i = 0; i < cols; i++){
-        row.appendChild(
-            stateless.instantiate("td")
-                .html(letter + " " + i)
-        )
-    }
+	for(var i = 0; i < cols; i++){
+		row.appendChild(
+			stateless.instantiate("td")
+				.html(letter + " " + i)
+		)
+	}
 })
 
 ```
@@ -851,6 +851,18 @@ ScopeInstance.append(ScopeInstance.element(), htmlString)
 ScopeInstance.append(DOMelement)
 ScopeInstance.append(selector, DOMelement)
 ScopeInstance.append(ScopeInstance.element(), DOMelement)
+
+ScopeInstance.append(AnotherScopeInstance, beforeSelectorOrBeforeElement)
+ScopeInstance.append(selector, AnotherScopeInstance, beforeSelectorOrBeforeElement)
+ScopeInstance.append(ScopeInstance.element(), AnotherScopeInstance, beforeSelectorOrBeforeElement)
+
+ScopeInstance.append(htmlString, beforeSelectorOrBeforeElement)
+ScopeInstance.append(selector, htmlString, beforeSelectorOrBeforeElement)
+ScopeInstance.append(ScopeInstance.element(), htmlString, beforeSelectorOrBeforeElement)
+
+ScopeInstance.append(DOMelement, beforeSelectorOrBeforeElement)
+ScopeInstance.append(selector, DOMelement, beforeSelectorOrBeforeElement)
+ScopeInstance.append(ScopeInstance.element(), DOMelement, beforeSelectorOrBeforeElement)
 ```
 
 The append function acts partly as an alias for include while also providing a method of adding another Scope instance as a child of the current Scope. When a Scope is added as a child of the current scope, the child scope will inherit via prototypal inheritance from the parent Scope from the javascript level. this means that if a parent has a function defined in it's scope, all child Scopes will have access to the function. This doesn't mean that event listeners are transferred over as those are attached to the element rather than the Javascript object.
@@ -865,28 +877,31 @@ stateless.register(`
 	</div>
 `)
 stateless.register(`
-    <div id="image">
-        <img>
-    </div>
+	<div id="image">
+		<img>
+	</div>
 `)
 stateless.register(`<button id="btn">Like</button>`)
 
 gallery = stateless.instantiate("image-gallery")
-gallery.append("<span>Welcome to our gallery. Below are our pictures for you viewing</span>")
+gallery.append("<span>Welcome to our gallery. Below are our pictures for you viewing</span>", )
 
 ;["1.jpg", "2.jpg", "3.jpg"].forEach(function(imgLink){
-    gallery.append(
-        stateless.instantiate("image") // this returns a new Scope instance
-    )
+	gallery.append(
+		stateless.instantiate("image"), // this returns a new Scope instance
+		"$ span"
+	)
 })
 
 gallery.children.forEach(function(imageScope){
-    imageScope.append(
-        stateless.instantiate("btn")
-            .on("click", function(ev){
-                imageScope.addClass("$ img", "like")
-            })
-    )
+	if (imageScope.element("$ img")){
+		imageScope.append(
+			stateless.instantiate("btn")
+				.on("click", function(ev){
+					imageScope.addClass("$ img", "like")
+				})
+		)
+	}
 })
 ```
 
@@ -909,24 +924,24 @@ stateless.register(`
 	</div>
 `)
 stateless.register(`
-    <div id="image">
-        <img>
-    </div>
+	<div id="image">
+		<img>
+	</div>
 `)
 
 gallery = stateless.instantiate("image-gallery")
 gallery.append("<span>Welcome to our gallery. Below are our pictures for you viewing</span>")
 
 ;["1.jpg", "2.jpg", "3.jpg"].forEach(function(imgLink){
-    gallery.append(
-        stateless.instantiate("image") // this returns a new Scope instance
-    )
+	gallery.append(
+		stateless.instantiate("image") // this returns a new Scope instance
+	)
 })
 
 gallery.children.forEach(function(imageScope){
-    imageScope.on("click", function(ev){
-        imageScope.unlink()
-    })
+	imageScope.on("click", function(ev){
+		imageScope.unlink()
+	})
 })
 ```
 
@@ -950,5 +965,5 @@ stateless.register(`
 `)
 
 var gallery = stateless.instantiate("image-gallery")
-    .render()
+	.render()
 ```
