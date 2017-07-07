@@ -743,9 +743,9 @@
 			// main method 1 append child scope
 			.args({scope:{append:"function"}, appendChild:"function"}, {children:"object", root:"object", element:"function", unlink:"function"}).use(function(ele, subScope, before){
 				if (ele.scope == self){
-					subScope.unlink()
-					Object.setPrototypeOf(Object.getPrototypeOf(subScope), self)
 					if (!before){
+						subScope.unlink()
+						Object.setPrototypeOf(Object.getPrototypeOf(subScope), self)
 						ele.appendChild(subScope.element())
 					}
 					else {
@@ -758,6 +758,8 @@
 							beforeParent.scope.append(beforeParent, subScope, before)
 						}
 						else {
+							subScope.unlink()
+							Object.setPrototypeOf(Object.getPrototypeOf(subScope), self)
 							beforeParent.insertBefore(subScope.element(), before)
 						}
 					}
