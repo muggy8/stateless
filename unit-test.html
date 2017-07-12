@@ -1,0 +1,46 @@
+<html>
+	<head>
+		<title>Unit Testing for Stateless</title>
+		<Script src="stateless.js"></script>
+	</head>
+	<body>
+		<div id="wrap"></div>
+		<span id="wrap"></span>
+		<div class="div"></div>
+
+		<script>
+			function verdict(verdict, input, output, test){
+				this.verdict = verdict
+				this.input = input
+				this.output = output
+				this.test = test
+			}
+
+			var results = {}
+			function testRegister(input, expectedChecker){
+				var selfResults = results.registerFn = results.registerFn || []
+				var output = stateless.register(input)
+				if (expectedChecker(output, input)) {
+					selfResults.push(new verdict("pass", input, output, testRegister))
+				}
+				else {
+					selfResults.push(new verdict("failed", input, output, testRegister))
+				}
+			}
+			testRegister(document.querySelector(".div"), function(output, input){
+				try {
+					if (
+						output &&
+						input.getAttribute("id") == null &&
+						stateless[0] == input
+					){
+						return true
+					}
+					return false
+				} catch(o3o){
+					return false
+				}
+			})
+		</script>
+	</body>
+</html>
