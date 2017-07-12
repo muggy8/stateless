@@ -2,6 +2,11 @@
 	<head>
 		<title>Unit Testing for Stateless</title>
 		<Script src="stateless.js"></script>
+        <style>
+            div {
+                padding: 5px;
+            }
+        </style>
 	</head>
 	<body>
 		<div id="wrap"></div>
@@ -19,7 +24,13 @@
 			var results = {}
 			function testRegister(input, expectedChecker){
 				var selfResults = results.registerFn = results.registerFn || []
-				var output = stateless.register(input)
+				var output
+                try {
+                    output = stateless.register(input)
+                }
+                catch(o3o){
+                    output = o3o
+                }
 				if (expectedChecker(output, input)) {
 					selfResults.push(new verdict("pass", input, output, testRegister))
 				}
@@ -27,12 +38,49 @@
 					selfResults.push(new verdict("failed", input, output, testRegister))
 				}
 			}
+
 			testRegister(document.querySelector(".div"), function(output, input){
 				try {
 					if (
-						output &&
+						output == stateless &&
 						input.getAttribute("id") == null &&
-						stateless[0] == input
+						stateless[0] == input &&
+                        document.querySelector(".div:not([id])") == null
+					){
+						return true
+					}
+					return false
+				} catch(o3o){
+					return false
+				}
+			})
+
+			testRegister(document.querySelector("div#wrap"), function(output, input){
+				try {
+					if (
+						output == stateless &&
+						input.getAttribute("id") == null &&
+						stateless[1] == input &&
+                        stateless.wrap == stateless[1] &&
+                        document.querySelector("div#wrap") == null
+					){
+						return true
+					}
+					return false
+				} catch(o3o){
+					return false
+				}
+			})
+
+			testRegister(document.querySelector("span#wrap"), function(output, input){
+				try {
+					if (
+						output instanceof Error &&
+						input.getAttribute("id") == null &&
+						stateless[1] != input &&
+                        stateless.wrap == stateless[1] &&
+                        typeof stateless[2] == "undefined" &&
+                        document.querySelector("span#wrap") != null
 					){
 						return true
 					}
@@ -42,5 +90,32 @@
 				}
 			})
 		</script>
+
+        <script>
+            function displayResultRow(test, index, results) {
+                var div, title, message
+                div = document.createElement("div")
+                div.appendChild(title = document.createElement("strong"))
+                title.appendChild(document.createTextNode(test + " " + index + ": "))
+                div.appendChild(document.createTextNode(results.verdict))
+
+                if (results.verdict == "failed"){
+                    div.style.backgroundColor = "red"
+
+                    div.appendChild(message = document.createElement("div"))
+                    message.appendChild(document.createTextNode("Please see console for further details"))
+                    console.warn(test, index , results)
+                } else {
+                    console.log(test, index , results)
+                }
+                document.body.appendChild(div)
+            }
+
+            for (var test in results) {
+                results[test].forEach(function(item, index){
+                    displayResultRow(test, index, item);
+                })
+            }
+        </script>
 	</body>
 </html>
