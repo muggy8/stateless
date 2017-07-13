@@ -76,7 +76,7 @@
 				try {
 					if (
 						output instanceof Error &&
-						input.getAttribute("id") == null &&
+						input.getAttribute("id") != null &&
 						stateless[1] != input &&
                         stateless.wrap == stateless[1] &&
                         typeof stateless[2] == "undefined" &&
@@ -89,6 +89,59 @@
 					return false
 				}
 			})
+
+            testRegister(`<div id="was-string"></div>`, function(output, input){
+                try {
+                    input = input.replace("id", "class")
+					if (
+                        output == stateless &&
+						stateless[2].outerHTML == input &&
+                        stateless["was-string"] == stateless[2]
+					){
+						return true
+					}
+					return false
+				} catch(o3o){
+					return false
+				}
+            })
+
+            testRegister(`<div id="was-string-2" class="some-other-class"></div>`, function(output, input){
+                try {
+                    input = input.replace("id", "class")
+					if (
+                        output == stateless &&
+						stateless[3].outerHTML == `<div class="was-string-2 some-other-class"></div>` &&
+                        stateless["was-string-2"] == stateless[3]
+					){
+						return true
+					}
+					return false
+				} catch(o3o){
+					return false
+				}
+            })
+
+            testRegister(`
+                <div id="was-string-4"></div>
+                <div id="was-string-5" class="some-other-class"></div>
+            `, function(output, input){
+                try {
+                    input = input.replace("id", "class")
+					if (
+                        output == stateless &&
+						stateless[4].outerHTML == `<div class="was-string-4"></div>` &&
+                        stateless["was-string-4"] == stateless[4] &&
+						stateless[5].outerHTML == `<div class="was-string-5 some-other-class"></div>` &&
+                        stateless["was-string-5"] == stateless[5]
+					){
+						return true
+					}
+					return false
+				} catch(o3o){
+					return false
+				}
+            })
 		</script>
 
         <script>

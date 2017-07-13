@@ -899,9 +899,8 @@
 		pushEle = function(ele){
 			var index = length
 			var id = ele.id || index
-			migrateId(ele)
-			length ++
 
+            // will check if the item is already in stateless here. if it is, it will error and no sideeffects will happen
 			Object.defineProperty(context.stateless, id, {
 				enumerable: false,
 				configurable: false,
@@ -918,6 +917,8 @@
 				})
 			}
 
+			migrateId(ele)
+			length ++
 			return id
 		}
 
@@ -936,17 +937,15 @@
 		writable: false,
 		value: function(ele){ // public static function
 			if (ele instanceof HTMLElement){
-				ele.parentElement && ele.parentElement.removeChild(ele)
 				pushEle(ele)
+				ele.parentElement && ele.parentElement.removeChild(ele)
 			}
 			else if (typeof ele === "string"){
 				converter.innerHTML = ele
 				stateless.consume(converter.children)
-			}
-			else if (ele.length && ele[0] ){ //
-				for (var i = 0; i < ele.length; i++){
-					stateless.consume(ele[i])
-				}
+                Array.prototype.forEach.call(converter.children, function(ele){
+                    stateless.consume(ele)
+                })
 			}
 			else {
 				throw new Error("Invalid inputs")
