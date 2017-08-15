@@ -942,7 +942,6 @@
 			}
 			else if (typeof ele === "string"){
 				converter.innerHTML = ele
-				stateless.consume(converter.children)
                 Array.prototype.forEach.call(converter.children, function(ele){
                     stateless.consume(ele)
                 })
