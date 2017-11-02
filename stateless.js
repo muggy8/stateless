@@ -942,9 +942,10 @@
 			}
 			else if (typeof ele === "string"){
 				converter.innerHTML = ele
-                Array.prototype.forEach.call(converter.children, function(ele){
-                    stateless.consume(ele)
-                })
+				while (converter.children[0]){
+					console.log(converter.children, converter.children[0])
+					stateless.consume(converter.children[0])
+				}
 			}
 			else {
 				throw new Error("Invalid inputs")
