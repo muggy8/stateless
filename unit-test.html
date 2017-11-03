@@ -22,22 +22,37 @@
 			}
 
 			var results = {}
-			function testRegister(input, expectedChecker){
-				var selfResults = results.registerFn = results.registerFn || []
-				var output
-                try {
-                    output = stateless.register(input)
-                }
-                catch(o3o){
-                    output = o3o
-                }
-				if (expectedChecker(output, input)) {
-					selfResults.push(new verdict("pass", input, output, testRegister))
+			function createTesterFunction(nameOfFunctionToTest, objectFunctionBelongsTo = stateless){
+				var selfResults = results[nameOfFunctionToTest] = results[nameOfFunctionToTest] || []
+				var checkerFn = function(input, expectedChecker){
+					var output
+					try {
+						output = objectFunctionBelongsTo[nameOfFunctionToTest](input)
+					}
+					catch(o3o){
+						output = o3o
+					}
+					if (typeof expectedChecker == "function"){
+						if (expectedChecker(output, input)){
+							selfResults.push(new verdict("pass", input, output, checkerFn))
+						}
+						else {
+							selfResults.push(new verdict("failed", input, output, checkerFn))
+						}
+					}
+					else {
+						if (output === expectedChecker){
+							selfResults.push(new verdict("pass", input, output, checkerFn))
+						}
+						else {
+							selfResults.push(new verdict("failed", input, output, checkerFn))
+						}
+					}
 				}
-				else {
-					selfResults.push(new verdict("failed", input, output, testRegister))
-				}
+				return checkerFn
 			}
+
+			var testRegister = createTesterFunction("register", stateless)
 
 			testRegister(document.querySelector(".div"), function(output, input){
 				try {
@@ -141,7 +156,7 @@
 				} catch(o3o){
 					return false
 				}
-            })
+			})
 		</script>
 
         <script>
