@@ -44,14 +44,6 @@
 				unlink: "function"
 			}
 
-			var isInstance = overload()
-				.args(scopeIdentifyer).use(function(){
-					return true
-				})
-				.args().use(function(){
-					return false
-				})
-
 			var results = {}
 			function createTesterFunction(nameOfFunctionToTest, objectFunctionBelongsTo = stateless){
 				var selfResults = results[nameOfFunctionToTest] = results[nameOfFunctionToTest] || []
@@ -189,8 +181,28 @@
 				}
 			})
 
-			var testInstantiate = createTesterFunction("instantiate", stateless)
+			var testInstantiate = createTesterFunction("instantiate", stateless)		
 
+			var isInstance = overload()
+				.args(scopeIdentifyer).use(function(){
+					return true
+				})
+				.args().use(function(){
+					return false
+				})
+
+			testInstantiate(0, function(output, input){
+				if (
+					isInstance(output) &&
+					output.element().outerHTML == `<div class="div"></div>`
+				){
+					return true
+				}
+				else {
+					return false
+				}
+			})
+			
 			testInstantiate(0, function(output, input){
 				if (
 					isInstance(output) &&
@@ -222,7 +234,7 @@
                     console.log(test, index , results)
                 }
                 document.body.appendChild(div)
-            }
+			}	
 
             for(var test in results){
                 results[test].forEach(function(item, index){
