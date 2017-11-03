@@ -202,11 +202,11 @@
 					return false
 				}
 			})
-			
-			testInstantiate(0, function(output, input){
+
+			testInstantiate("was-string", function(output, input){
 				if (
 					isInstance(output) &&
-					output.element().outerHTML == `<div class="div"></div>`
+					output.element().outerHTML == `<div class="was-string"></div>`
 				){
 					return true
 				}
