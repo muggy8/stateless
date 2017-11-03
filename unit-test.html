@@ -26,12 +26,31 @@
 				addClass: "function", 
 				append: "function", 
 				appendChild: "function",
-				attr: "function"
+				attr: "function",
+				css: "function",
+				data: "function", 
+				define: "function", 
+				element: "function", 
+				elements: "function", 
+				hasClass: "function", 
+				html: "function",
+				include: "function",
+				off: "function", 
+				on: "function",
+				once: "function", 
+				property: "function",
+				removeClass: "function",
+				render: "function", 
+				unlink: "function"
 			}
 
-			function isInstance(potentialScope){
-
-			}
+			var isInstance = overload()
+				.args(scopeIdentifyer).use(function(){
+					return true
+				})
+				.args()..use(function(){
+					return false
+				})
 
 			var results = {}
 			function createTesterFunction(nameOfFunctionToTest, objectFunctionBelongsTo = stateless){
@@ -173,7 +192,14 @@
 			var testInstantiate = createTesterFunction("instantiate", stateless)
 
 			testInstantiate(0, function(output, input){
-				// the rest of the logic goes here
+				if (
+					isInstance(output)
+				){
+					return true
+				}
+				else {
+					return false
+				}
 			})
 		</script>
 
@@ -197,7 +223,7 @@
                 document.body.appendChild(div)
             }
 
-            for (var test in results) {
+            for(var test in results){
                 results[test].forEach(function(item, index){
                     displayResultRow(test, index, item);
                 })
