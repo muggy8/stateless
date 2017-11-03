@@ -2,6 +2,7 @@
 	<head>
 		<title>Unit Testing for Stateless</title>
 		<Script src="stateless.js"></script>
+		<Script src="//unpkg.com/method-overload"></script>
         <style>
             div {
                 padding: 5px;
@@ -19,6 +20,17 @@
 				this.input = input
 				this.output = output
 				this.test = test
+			}
+
+			var scopeIdentifyer = {
+				addClass: "function", 
+				append: "function", 
+				appendChild: "function",
+				attr: "function"
+			}
+
+			function isInstance(potentialScope){
+
 			}
 
 			var results = {}
@@ -156,6 +168,12 @@
 				} catch(o3o){
 					return false
 				}
+			})
+
+			var testInstantiate = createTesterFunction("instantiate", stateless)
+
+			testInstantiate(0, function(output, input){
+				// the rest of the logic goes here
 			})
 		</script>
 
