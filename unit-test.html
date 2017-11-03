@@ -193,7 +193,8 @@
 
 			testInstantiate(0, function(output, input){
 				if (
-					isInstance(output)
+					isInstance(output) &&
+					output.element().outerHTML == `<div class="div"></div>`
 				){
 					return true
 				}
@@ -225,7 +226,7 @@
 
             for(var test in results){
                 results[test].forEach(function(item, index){
-                    displayResultRow(test, index, item);
+                    displayResultRow(test, index, item)
                 })
             }
         </script>
