@@ -3,11 +3,11 @@
 		<title>Unit Testing for Stateless</title>
 		<Script src="stateless.js"></script>
 		<Script src="//unpkg.com/method-overload"></script>
-        <style>
-            div {
-                padding: 5px;
-            }
-        </style>
+		<style>
+			div {
+				padding: 5px;
+			}
+		</style>
 	</head>
 	<body>
 		<div id="wrap"></div>
@@ -83,7 +83,7 @@
 						output == stateless &&
 						input.getAttribute("id") == null &&
 						stateless[0] == input &&
-                        document.querySelector(".div:not([id])") == null
+						document.querySelector(".div:not([id])") == null
 					){
 						return true
 					}
@@ -99,8 +99,8 @@
 						output == stateless &&
 						input.getAttribute("id") == null &&
 						stateless[1] == input &&
-                        stateless.wrap == stateless[1] &&
-                        document.querySelector("div#wrap") == null
+						stateless.wrap == stateless[1] &&
+						document.querySelector("div#wrap") == null
 					){
 						return true
 					}
@@ -116,9 +116,9 @@
 						output instanceof Error &&
 						input.getAttribute("id") != null &&
 						stateless[1] != input &&
-                        stateless.wrap == stateless[1] &&
-                        typeof stateless[2] == "undefined" &&
-                        document.querySelector("span#wrap") != null
+						stateless.wrap == stateless[1] &&
+						typeof stateless[2] == "undefined" &&
+						document.querySelector("span#wrap") != null
 					){
 						return true
 					}
@@ -128,13 +128,13 @@
 				}
 			})
 
-            testRegister(`<div id="was-string"></div>`, function(output, input){
-                try {
-                    input = input.replace("id", "class")
+			testRegister(`<div id="was-string"></div>`, function(output, input){
+				try {
+					input = input.replace("id", "class")
 					if (
-                        output == stateless &&
+						output == stateless &&
 						stateless[2].outerHTML == input &&
-                        stateless["was-string"] == stateless[2]
+						stateless["was-string"] == stateless[2]
 					){
 						return true
 					}
@@ -142,15 +142,15 @@
 				} catch(o3o){
 					return false
 				}
-            })
+			})
 
-            testRegister(`<div id="was-string-2" class="some-other-class"></div>`, function(output, input){
-                try {
-                    input = input.replace("id", "class")
+			testRegister(`<div id="was-string-2" class="some-other-class"></div>`, function(output, input){
+				try {
+					input = input.replace("id", "class")
 					if (
-                        output == stateless &&
+						output == stateless &&
 						stateless[3].outerHTML == `<div class="was-string-2 some-other-class"></div>` &&
-                        stateless["was-string-2"] == stateless[3]
+						stateless["was-string-2"] == stateless[3]
 					){
 						return true
 					}
@@ -158,20 +158,20 @@
 				} catch(o3o){
 					return false
 				}
-            })
+			})
 
-            testRegister(`
-                <div id="was-string-4"></div>
-                <div id="was-string-5" class="some-other-class"></div>
-            `, function(output, input){
-                try {
-                    input = input.replace("id", "class")
+			testRegister(`
+				<div id="was-string-4"></div>
+				<div id="was-string-5" class="some-other-class"></div>
+			`, function(output, input){
+				try {
+					input = input.replace("id", "class")
 					if (
-                        output == stateless &&
+						output == stateless &&
 						stateless[4].outerHTML == `<div class="was-string-4"></div>` &&
-                        stateless["was-string-4"] == stateless[4] &&
+						stateless["was-string-4"] == stateless[4] &&
 						stateless[5].outerHTML == `<div class="was-string-5 some-other-class"></div>` &&
-                        stateless["was-string-5"] == stateless[5]
+						stateless["was-string-5"] == stateless[5]
 					){
 						return true
 					}
@@ -214,33 +214,58 @@
 					return false
 				}
 			})
+			
+			(function(){
+				var testEach = createTesterFunction("each", stateless)
+				
+				var itemList = [],
+					indexLish = []
+				testEach(function(item, index){
+					itemList.push(item)
+					indexList.push(index)
+				}, function(output, input){
+					var createdItemList = []
+					var createdIndexList = []
+					for(var i = 0; i < stateless.length; i++){
+						createdIndexList.push(i)
+						createdItemList.push(stateless[i])
+					}
+					if(
+						output == stateless //&&
+						// other stuff
+					){
+						
+					}
+				})
+			})()
+			
+			
 		</script>
+		<script>
+			function displayResultRow(test, index, results) {
+				var div, title, message
+				div = document.createElement("div")
+				div.appendChild(title = document.createElement("strong"))
+				title.appendChild(document.createTextNode(test + " " + index + ": "))
+				div.appendChild(document.createTextNode(results.verdict))
 
-        <script>
-            function displayResultRow(test, index, results) {
-                var div, title, message
-                div = document.createElement("div")
-                div.appendChild(title = document.createElement("strong"))
-                title.appendChild(document.createTextNode(test + " " + index + ": "))
-                div.appendChild(document.createTextNode(results.verdict))
+				if (results.verdict == "failed"){
+					div.style.backgroundColor = "red"
 
-                if (results.verdict == "failed"){
-                    div.style.backgroundColor = "red"
-
-                    div.appendChild(message = document.createElement("div"))
-                    message.appendChild(document.createTextNode("Please see console for further details"))
-                    console.warn(test, index , results)
-                } else {
-                    console.log(test, index , results)
-                }
-                document.body.appendChild(div)
+					div.appendChild(message = document.createElement("div"))
+					message.appendChild(document.createTextNode("Please see console for further details"))
+					console.warn(test, index , results)
+				} else {
+					console.log(test, index , results)
+				}
+				document.body.appendChild(div)
 			}	
 
-            for(var test in results){
-                results[test].forEach(function(item, index){
-                    displayResultRow(test, index, item)
-                })
-            }
-        </script>
+			for(var test in results){
+				results[test].forEach(function(item, index){
+					displayResultRow(test, index, item)
+				})
+			}
+		</script>
 	</body>
 </html>
