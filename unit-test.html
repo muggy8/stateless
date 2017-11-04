@@ -3,6 +3,7 @@
 		<title>Unit Testing for Stateless</title>
 		<Script src="stateless.js"></script>
 		<Script src="//unpkg.com/method-overload"></script>
+		<script src="https://getfirebug.com/firebug-lite.js"></script>
 		<style>
 			div {
 				padding: 5px;
@@ -84,7 +85,7 @@
 					else if (typeof a[key] != "object" && a[key] !== b[key]){
 						equvilance = equvilance && false
 					}
-					else if (typoof a[key] == "object"){
+					else if (typeof a[key] == "object"){
 						equivlance = equvilance && objectEquivilance(a[key], b[key])
 					}
 				}
@@ -96,15 +97,54 @@
 					else if (typeof b[key] != "object" && b[key] !== a[key]){
 						equvilance = equvilance && false
 					}
-					else if (typoof b[key] == "object"){
+					else if (typeof b[key] == "object"){
 						equivlance = equvilance && objectEquivilance(b[key], a[key])
 					}
 				}
 				
 				return equivlance
 			}
-
-			var testRegister = createTesterFunction("register", stateless)
+			/*
+			var foo = {
+						foo: "foo",	 
+					bar:[1,2,3], 
+					baz:{
+						a:"a", 
+						b:"b", 
+						c:"cd
+						d: ["a", "b" c"]
+						}
+				}
+				
+{
+				foo: "foo", 
+				bar:[1,2,3], 
+				baz:{
+					a:"a", 
+					b:"b", 
+					c:"c",
+					d:["a", "b", "c"]
+				}
+			}", "			 			}
+ 				}
+				
+				var baz = bar
+				var ban = {
+					foo: "foo", 
+					bar:	[1 ,2,3], 
+						 	baz:{
+							 	a:"a", 
+								b:"b", 
+						c:"",
+							d: ["a", "b", "d"]
+						}
+				}
+				console.log(objectEquivilance(foo, bar));
+				console.log(objectEquivilance(baz, bar));
+				console.log(objectEquivilance(foo, baz));
+				console.log(
+*/objectEquivilance(ban, foo));
+				erFunction("register", stateless)
 
 			testRegister(document.querySelector(".div"), function(output, input){
 				try {
