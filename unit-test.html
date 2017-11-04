@@ -83,6 +83,7 @@
 						output == stateless &&
 						input.getAttribute("id") == null &&
 						stateless[0] == input &&
+						stateless.length === 1 &&
 						document.querySelector(".div:not([id])") == null
 					){
 						return true
@@ -99,6 +100,7 @@
 						output == stateless &&
 						input.getAttribute("id") == null &&
 						stateless[1] == input &&
+						stateless.length === 2 &&
 						stateless.wrap == stateless[1] &&
 						document.querySelector("div#wrap") == null
 					){
@@ -134,6 +136,7 @@
 					if (
 						output == stateless &&
 						stateless[2].outerHTML == input &&
+						stateless.length === 3 &&
 						stateless["was-string"] == stateless[2]
 					){
 						return true
@@ -150,6 +153,7 @@
 					if (
 						output == stateless &&
 						stateless[3].outerHTML == `<div class="was-string-2 some-other-class"></div>` &&
+						stateless.length === 4 &&
 						stateless["was-string-2"] == stateless[3]
 					){
 						return true
@@ -171,7 +175,8 @@
 						stateless[4].outerHTML == `<div class="was-string-4"></div>` &&
 						stateless["was-string-4"] == stateless[4] &&
 						stateless[5].outerHTML == `<div class="was-string-5 some-other-class"></div>` &&
-						stateless["was-string-5"] == stateless[5]
+						stateless["was-string-5"] == stateless[5] &&
+						stateless.length === 6
 					){
 						return true
 					}
