@@ -3,7 +3,6 @@
 		<title>Unit Testing for Stateless</title>
 		<Script src="stateless.js"></script>
 		<Script src="//unpkg.com/method-overload"></script>
-		<script src="https://getfirebug.com/firebug-lite.js"></script>
 		<style>
 			div {
 				padding: 5px;
@@ -24,24 +23,24 @@
 			}
 
 			var scopeIdentifyer = {
-				addClass: "function", 
-				append: "function", 
+				addClass: "function",
+				append: "function",
 				appendChild: "function",
 				attr: "function",
 				css: "function",
-				data: "function", 
-				define: "function", 
-				element: "function", 
-				elements: "function", 
-				hasClass: "function", 
+				data: "function",
+				define: "function",
+				element: "function",
+				elements: "function",
+				hasClass: "function",
 				html: "function",
 				include: "function",
-				off: "function", 
+				off: "function",
 				on: "function",
-				once: "function", 
+				once: "function",
 				property: "function",
 				removeClass: "function",
-				render: "function", 
+				render: "function",
 				unlink: "function"
 			}
 
@@ -49,7 +48,7 @@
 			function createTesterFunction(nameOfFunctionToTest, objectFunctionBelongsTo = stateless){
 				var selfResults = results[nameOfFunctionToTest] = results[nameOfFunctionToTest] || []
 				var checkerFn = function(input, expectedChecker){
-					var outpu
+					var output
 					try {
 						output = objectFunctionBelongsTo[nameOfFunctionToTest](input)
 					}
@@ -75,76 +74,71 @@
 				}
 				return checkerFn
 			}
-			
-			function objectEquivilance(a, b){
-				var equvilance = true
-				for(var key in a){
-					if (typeof a[key] != "object" && a[key] === b[key]){
-						equvilance = equvilance && true
-					}
-					else if (typeof a[key] != "object" && a[key] !== b[key]){
-						equvilance = equvilance && false
-					}
-					else if (typeof a[key] == "object"){
-						equivlance = equvilance && objectEquivilance(a[key], b[key])
-					}
-				}
-				
-				for(var key in b){
-					if (typeof b[key] != "object" && b[key] === a[key]){
-						equvilance = equvilance && true
-					}
-					else if (typeof b[key] != "object" && b[key] !== a[key]){
-						equvilance = equvilance && false
-					}
-					else if (typeof b[key] == "object"){
-						equivlance = equvilance && objectEquivilance(b[key], a[key])
-					}
-				}
-				
-				return equivlance
+
+			function objectEquivalence(a, b){
+				var equivalence = true
+                keyA = Object.keys(a)
+                keyB = Object.keys(b)
+
+                keyA.forEach(function(key){
+                    if (typeof a[key] !== typeof b[key]){
+                        return equivalence = false
+                    }
+
+                    if (typeof a[key] === "object"){ // we got here so type of b[key] should also equal object
+                        return equivalence && objectEquivalence(a[key], b[key])
+                    }
+                    else if (a[key] === b[key]){
+                        keyB.splice(keyB.indexOf(key), 1)
+                    }
+                })
+                if (keyB.length != 0){
+                    equivalence = false
+                }
+				return equivalence
 			}
-			/*
-			var foo = {
-						foo: "foo",	 
-					bar:[1,2,3], 
-					baz:{
-						a:"a", 
-						b:"b", 
-						c:"cd
-						d: ["a", "b" c"]
-						}
-				}
-				
-{
-				foo: "foo", 
-				bar:[1,2,3], 
-				baz:{
-					a:"a", 
-					b:"b", 
-					c:"c",
-					d:["a", "b", "c"]
-				}
-			}", "			 			}
- 				}
-				
-				var baz = bar
-				var ban = {
-					foo: "foo", 
-					bar:	[1 ,2,3], 
-						 	baz:{
-							 	a:"a", 
-								b:"b", 
-						c:"",
-							d: ["a", "b", "d"]
-						}
-				}
-				console.log(objectEquivilance(foo, bar));
-				console.log(objectEquivilance(baz, bar));
-				console.log(objectEquivilance(foo, baz));
-				console.log(
-*/objectEquivilance(ban, foo));
-				erFunction("register", stateless)
+
+			// var foo = {
+			// 	foo: "foo",
+			// 	bar:[1,2,3],
+			// 	baz:{
+			// 		a:"a",
+			// 		b:"b",
+			// 		c:"cd",
+			// 		d: ["a", "b", "c"]
+			// 	}
+            // }
+            //
+            // var bar = {
+			// 	foo: "foo",
+			// 	bar:[1,2,3],
+			// 	baz:{
+			// 		a:"a",
+			// 		b:"b",
+			// 		c:"c",
+			// 		d:["a", "b", "c"]
+			// 	}
+			// }
+            //
+			// var baz = bar
+			// var ban = {
+			// 	foo: "foo",
+			// 	bar:[1,2,3],
+			// 	baz:{
+			// 		a:"a",
+			// 		b:"b",
+			// 		c:"c",
+			// 		d:["a", "b", "d"]
+			// 	}
+			// }
+            //
+			// console.log(objectEquivalence(foo, bar)) // true
+			// console.log(objectEquivalence(baz, bar)) // true
+			// console.log(objectEquivalence(foo, baz)) // true
+			// console.log(objectEquivalence(ban, foo)) // false
+            // console.log(123)
+
+			var testRegister = createTesterFunction("register", stateless)
 
 			testRegister(document.querySelector(".div"), function(output, input){
 				try {
@@ -255,7 +249,7 @@
 				}
 			})
 
-			var testInstantiate = createTesterFunction("instantiate", stateless)		
+			var testInstantiate = createTesterFunction("instantiate", stateless)
 
 			var isInstance = overload()
 				.args(scopeIdentifyer).use(function(){
@@ -288,10 +282,10 @@
 					return false
 				}
 			})
-			
-			(function(){
+
+			;(function(){
 				var testEach = createTesterFunction("each", stateless)
-				
+
 				var itemList = [],
 					indexLish = []
 				testEach(function(item, index){
@@ -308,12 +302,12 @@
 						output == stateless //&&
 						// other stuff
 					){
-						
+
 					}
 				})
 			})()
-			
-			
+
+
 		</script>
 		<script>
 			function displayResultRow(test, index, results) {
@@ -333,7 +327,7 @@
 					console.log(test, index , results)
 				}
 				document.body.appendChild(div)
-			}	
+			}
 
 			for(var test in results){
 				results[test].forEach(function(item, index){
