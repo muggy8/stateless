@@ -287,7 +287,7 @@
 				var testEach = createTesterFunction("each", stateless)
 
 				var itemList = [],
-					indexLish = []
+					indexList = []
 				testEach(function(item, index){
 					itemList.push(item)
 					indexList.push(index)
@@ -295,15 +295,17 @@
 					var createdItemList = []
 					var createdIndexList = []
 					for(var i = 0; i < stateless.length; i++){
-						createdIndexList.push(i)
 						createdItemList.push(stateless[i])
+						createdIndexList.push(i)
 					}
 					if(
-						output == stateless //&&
-						// other stuff
+						output == stateless &&
+                        objectEquivalence(createdItemList, itemList) &&
+                        objectEquivalence(createdIndexList, indexList)
 					){
-
+                        return true
 					}
+                    return false
 				})
 			})()
 
