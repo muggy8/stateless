@@ -9,7 +9,7 @@ stateless
 -   [.instantiate()](#statelessinstantiate)
 -   [.each()](#statelesseach)
 -   [.watch()](#statelesswatch)
--   [.emit()](#statelesseach)
+-   [.emit()](#statelessemit)
 -   [.plugin()](#statelessplugin)
 -   [.view()](#statelessview)
 -   [.build()](#statelessbuild)
