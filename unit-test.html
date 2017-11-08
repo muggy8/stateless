@@ -344,34 +344,29 @@
                     return false
                 })
 
-
-                var emitReducerFactory = function(eventName){
-                    return function(currentState, item, index){
-                        if (item.payload != emitObj){
-                            return false
-                        }
-                        if (
-                            item.callback == (eventName + "-none-" + (index + 1)) ||
-                            item.callback == (eventName + "-none-" + (index - 1)) ||
-                            item.callback == (eventName + "-" + (index + 1))
-                        ){
-                            return currentState
-                        }
-                        else {
-                            return false
-                        }
-                    }
-                }
-
                 var emitObj = {
                     foo: "bar"
+                }
+
+                var emitObjReducer = function(currentState, item){
+                    if (item.payload != emitObj){
+                        return false
+                    }
+                    return currentState
+                }
+
+                var emitNullReducer = function(currentState, item){
+                    return currentState && objectEquivalence(item.payload, {})
                 }
 
                 testEmit("unregistered", emitObj, function(output, input){
                     if (
                         output == stateless &&
                         eventStore.unregistered.length == 2 &&
-                        eventStore.unregistered.reduce(emitReducerFactory("unregistered"), true)
+                        eventStore.unregistered.reduce(emitObjReducer, true) &&
+                        objectEquivalence(eventStore.unregistered.map(function(item){
+                            return item.callback
+                        }), ["unregistered-none-1", "unregistered-none-2"])
                     ){
                         return true
                     }
@@ -379,15 +374,50 @@
                 })
 
                 testEmit("testA", emitObj, function(output, input){
-                    if (
-                        output == stateless &&
-                        eventStore.testA.length == 4 &&
-                        eventStore.testA.reduce(emitReducerFactory("testA"), true)
-                    ){
+                    var t1 = output == stateless,
+                        t2 = eventStore.testA.length == 4,
+                        t3 = eventStore.testA.reduce(emitObjReducer, true),
+                        t4 = objectEquivalence(eventStore.testA.map(function(item){
+                            return item.callback
+                        }), ["testA-1", "testA-2", "testA-none-1", "testA-none-2"])
+
+                    if (t1, t2, t3, t4){
                         return true
                     }
                     return false
                 })
+
+                testEmit("somethingElse", function(output, input){
+                    console.log(eventStore)
+                    var t1 = output == stateless ,
+                        t2 = eventStore.somethingElse.length == 2 ,
+                        t3 = eventStore.somethingElse.reduce(emitNullReducer, true) ,
+                        t4 = objectEquivalence(eventStore.somethingElse.map(function(item){
+                            return item.callback
+                        }), ["somethingElse-none-1", "somethingElse-none-2"])
+
+                    if (t1 && t2 && t3 && t4){
+                        return true
+                    }
+                    return false
+                })
+
+                unwatchA1()
+
+                testEmit("testA", emitObj, function(output, input){
+                    var t1 = output == stateless,
+                        t2 = eventStore.testA.length == 7,
+                        t3 = eventStore.testA.reduce(emitObjReducer, true),
+                        t4 = objectEquivalence(eventStore.testA.map(function(item){
+                            return item.callback
+                        }), ["testA-1", "testA-2", "testA-none-1", "testA-none-2", "testA-2", "testA-none-1", "testA-none-2"])
+
+                    if (t1 && t2 && t3 && t4){
+                        return true
+                    }
+                    return false
+                })
+
             })()
 
 		</script>
