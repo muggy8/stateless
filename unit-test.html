@@ -47,28 +47,31 @@
 			var results = {}
 			function createTesterFunction(nameOfFunctionToTest, objectFunctionBelongsTo = stateless){
 				var selfResults = results[nameOfFunctionToTest] = results[nameOfFunctionToTest] || []
-				var checkerFn = function(input, expectedChecker){
+				var checkerFn = function(){
+                    var argList = Array.prototype.splice.call(arguments, 0)
+                    var expectedChecker = argList.splice(-1)[0]
+
 					var output
 					try {
-						output = objectFunctionBelongsTo[nameOfFunctionToTest](input)
+						output = objectFunctionBelongsTo[nameOfFunctionToTest].apply(objectFunctionBelongsTo, argList)
 					}
 					catch(o3o){
 						output = o3o
 					}
 					if (typeof expectedChecker == "function"){
-						if (expectedChecker(output, input)){
-							selfResults.push(new verdict("pass", input, output, checkerFn))
+						if (expectedChecker(output, argList)){
+							selfResults.push(new verdict("pass", argList, output, checkerFn))
 						}
 						else {
-							selfResults.push(new verdict("failed", input, output, checkerFn))
+							selfResults.push(new verdict("failed", argList, output, checkerFn))
 						}
 					}
 					else {
 						if (output === expectedChecker){
-							selfResults.push(new verdict("pass", input, output, checkerFn))
+							selfResults.push(new verdict("pass", argList, output, checkerFn))
 						}
 						else {
-							selfResults.push(new verdict("failed", input, output, checkerFn))
+							selfResults.push(new verdict("failed", argList, output, checkerFn))
 						}
 					}
 				}
@@ -98,190 +101,160 @@
 				return equivalence
 			}
 
-			// var foo = {
-			// 	foo: "foo",
-			// 	bar:[1,2,3],
-			// 	baz:{
-			// 		a:"a",
-			// 		b:"b",
-			// 		c:"cd",
-			// 		d: ["a", "b", "c"]
-			// 	}
-            // }
-            //
-            // var bar = {
-			// 	foo: "foo",
-			// 	bar:[1,2,3],
-			// 	baz:{
-			// 		a:"a",
-			// 		b:"b",
-			// 		c:"c",
-			// 		d:["a", "b", "c"]
-			// 	}
-			// }
-            //
-			// var baz = bar
-			// var ban = {
-			// 	foo: "foo",
-			// 	bar:[1,2,3],
-			// 	baz:{
-			// 		a:"a",
-			// 		b:"b",
-			// 		c:"c",
-			// 		d:["a", "b", "d"]
-			// 	}
-			// }
-            //
-			// console.log(objectEquivalence(foo, bar)) // true
-			// console.log(objectEquivalence(baz, bar)) // true
-			// console.log(objectEquivalence(foo, baz)) // true
-			// console.log(objectEquivalence(ban, foo)) // false
-            // console.log(123)
+			;(function(){
+                var testRegister = createTesterFunction("register", stateless)
 
-			var testRegister = createTesterFunction("register", stateless)
+    			testRegister(document.querySelector(".div"), function(output, input){
+                    input = input[0]
+    				try {
+    					if (
+    						output == stateless &&
+    						input.getAttribute("id") == null &&
+    						stateless[0] == input &&
+    						stateless.length === 1 &&
+    						document.querySelector(".div:not([id])") == null
+    					){
+    						return true
+    					}
+    					return false
+    				} catch(o3o){
+    					return false
+    				}
+    			})
 
-			testRegister(document.querySelector(".div"), function(output, input){
-				try {
-					if (
-						output == stateless &&
-						input.getAttribute("id") == null &&
-						stateless[0] == input &&
-						stateless.length === 1 &&
-						document.querySelector(".div:not([id])") == null
-					){
-						return true
-					}
-					return false
-				} catch(o3o){
-					return false
-				}
-			})
+    			testRegister(document.querySelector("div#wrap"), function(output, input){
+                    input = input[0]
+    				try {
+    					if (
+    						output == stateless &&
+    						input.getAttribute("id") == null &&
+    						stateless[1] == input &&
+    						stateless.length === 2 &&
+    						stateless.wrap == stateless[1] &&
+    						document.querySelector("div#wrap") == null
+    					){
+    						return true
+    					}
+    					return false
+    				} catch(o3o){
+    					return false
+    				}
+    			})
 
-			testRegister(document.querySelector("div#wrap"), function(output, input){
-				try {
-					if (
-						output == stateless &&
-						input.getAttribute("id") == null &&
-						stateless[1] == input &&
-						stateless.length === 2 &&
-						stateless.wrap == stateless[1] &&
-						document.querySelector("div#wrap") == null
-					){
-						return true
-					}
-					return false
-				} catch(o3o){
-					return false
-				}
-			})
+    			testRegister(document.querySelector("span#wrap"), function(output, input){
+                    input = input[0]
+                    try {
+    					if (
+    						output instanceof Error &&
+    						input.getAttribute("id") != null &&
+    						stateless[1] != input &&
+    						stateless.wrap == stateless[1] &&
+    						typeof stateless[2] == "undefined" &&
+    						document.querySelector("span#wrap") != null
+    					){
+    						return true
+    					}
+    					return false
+    				} catch(o3o){
+    					return false
+    				}
+    			})
 
-			testRegister(document.querySelector("span#wrap"), function(output, input){
-				try {
-					if (
-						output instanceof Error &&
-						input.getAttribute("id") != null &&
-						stateless[1] != input &&
-						stateless.wrap == stateless[1] &&
-						typeof stateless[2] == "undefined" &&
-						document.querySelector("span#wrap") != null
-					){
-						return true
-					}
-					return false
-				} catch(o3o){
-					return false
-				}
-			})
+    			testRegister(`<div id="was-string"></div>`, function(output, input){
+                    input = input[0]
+                    try {
+    					input = input.replace("id", "class")
+    					if (
+    						output == stateless &&
+    						stateless[2].outerHTML == input &&
+    						stateless.length === 3 &&
+    						stateless["was-string"] == stateless[2]
+    					){
+    						return true
+    					}
+    					return false
+    				} catch(o3o){
+    					return false
+    				}
+    			})
 
-			testRegister(`<div id="was-string"></div>`, function(output, input){
-				try {
-					input = input.replace("id", "class")
-					if (
-						output == stateless &&
-						stateless[2].outerHTML == input &&
-						stateless.length === 3 &&
-						stateless["was-string"] == stateless[2]
-					){
-						return true
-					}
-					return false
-				} catch(o3o){
-					return false
-				}
-			})
+    			testRegister(`<div id="was-string-2" class="some-other-class"></div>`, function(output, input){
+                    input = input[0]
+                    try {
+    					input = input.replace("id", "class")
+    					if (
+    						output == stateless &&
+    						stateless[3].outerHTML == `<div class="was-string-2 some-other-class"></div>` &&
+    						stateless.length === 4 &&
+    						stateless["was-string-2"] == stateless[3]
+    					){
+    						return true
+    					}
+    					return false
+    				} catch(o3o){
+    					return false
+    				}
+    			})
 
-			testRegister(`<div id="was-string-2" class="some-other-class"></div>`, function(output, input){
-				try {
-					input = input.replace("id", "class")
-					if (
-						output == stateless &&
-						stateless[3].outerHTML == `<div class="was-string-2 some-other-class"></div>` &&
-						stateless.length === 4 &&
-						stateless["was-string-2"] == stateless[3]
-					){
-						return true
-					}
-					return false
-				} catch(o3o){
-					return false
-				}
-			})
+    			testRegister(`
+    				<div id="was-string-4"></div>
+    				<div id="was-string-5" class="some-other-class"></div>
+    			`, function(output, input){
+                    input = input[0]
+    				try {
+    					input = input.replace("id", "class")
+    					if (
+    						output == stateless &&
+    						stateless[4].outerHTML == `<div class="was-string-4"></div>` &&
+    						stateless["was-string-4"] == stateless[4] &&
+    						stateless[5].outerHTML == `<div class="was-string-5 some-other-class"></div>` &&
+    						stateless["was-string-5"] == stateless[5] &&
+    						stateless.length === 6
+    					){
+    						return true
+    					}
+    					return false
+    				} catch(o3o){
+    					return false
+    				}
+    			})
+            })()
 
-			testRegister(`
-				<div id="was-string-4"></div>
-				<div id="was-string-5" class="some-other-class"></div>
-			`, function(output, input){
-				try {
-					input = input.replace("id", "class")
-					if (
-						output == stateless &&
-						stateless[4].outerHTML == `<div class="was-string-4"></div>` &&
-						stateless["was-string-4"] == stateless[4] &&
-						stateless[5].outerHTML == `<div class="was-string-5 some-other-class"></div>` &&
-						stateless["was-string-5"] == stateless[5] &&
-						stateless.length === 6
-					){
-						return true
-					}
-					return false
-				} catch(o3o){
-					return false
-				}
-			})
+            ;(function(){
+    			var testInstantiate = createTesterFunction("instantiate", stateless)
 
-			var testInstantiate = createTesterFunction("instantiate", stateless)
+    			var isInstance = overload()
+    				.args(scopeIdentifyer).use(function(){
+    					return true
+    				})
+    				.args().use(function(){
+    					return false
+    				})
 
-			var isInstance = overload()
-				.args(scopeIdentifyer).use(function(){
-					return true
-				})
-				.args().use(function(){
-					return false
-				})
+    			testInstantiate(0, function(output, input){
+    				if (
+    					isInstance(output) &&
+    					output.element().outerHTML == `<div class="div"></div>`
+    				){
+    					return true
+    				}
+    				else {
+    					return false
+    				}
+    			})
 
-			testInstantiate(0, function(output, input){
-				if (
-					isInstance(output) &&
-					output.element().outerHTML == `<div class="div"></div>`
-				){
-					return true
-				}
-				else {
-					return false
-				}
-			})
-
-			testInstantiate("was-string", function(output, input){
-				if (
-					isInstance(output) &&
-					output.element().outerHTML == `<div class="was-string"></div>`
-				){
-					return true
-				}
-				else {
-					return false
-				}
-			})
+    			testInstantiate("was-string", function(output, input){
+    				if (
+    					isInstance(output) &&
+    					output.element().outerHTML == `<div class="was-string"></div>`
+    				){
+    					return true
+    				}
+    				else {
+    					return false
+    				}
+    			})
+            })()
 
 			;(function(){
 				var testEach = createTesterFunction("each", stateless)
@@ -309,6 +282,113 @@
 				})
 			})()
 
+            ;(function(){
+                var testWatch = createTesterFunction("watch", stateless)
+                var testEmit = createTesterFunction("emit", stateless)
+
+                var eventStore = {},
+                    unwatchA1, unwatchA2, unwatchNameless1, unwatchNameless2
+                testWatch("testA", function(eventType, data){
+                    eventStore[eventType] = eventStore[eventType] || []
+                    eventStore[eventType].push({
+                        callback: eventType + "-1",
+                        payload: data
+                    })
+                }, function(output, input){
+                    unwatchA1 = output
+                    if (typeof output == "function"){
+                        return true
+                    }
+                    return false
+                })
+
+                testWatch("testA", function(eventType, data){
+                    eventStore[eventType] = eventStore[eventType] || []
+                    eventStore[eventType].push({
+                        callback: eventType + "-2",
+                        payload: data
+                    })
+                }, function(output, input){
+                    unwatchA2 = output
+                    if (typeof output == "function"){
+                        return true
+                    }
+                    return false
+                })
+
+                testWatch(function(eventType, data){
+                    eventStore[eventType] = eventStore[eventType] || []
+                    eventStore[eventType].push({
+                        callback: eventType + "-none-1",
+                        payload: data
+                    })
+                }, function(output, input){
+                    unwatchNameless1 = output
+                    if (typeof output == "function"){
+                        return true
+                    }
+                    return false
+                })
+
+                testWatch(function(eventType, data){
+                    eventStore[eventType] = eventStore[eventType] || []
+                    eventStore[eventType].push({
+                        callback: eventType + "-none-2",
+                        payload: data
+                    })
+                }, function(output, input){
+                    unwatchNameless2 = output
+                    if (typeof output == "function"){
+                        return true
+                    }
+                    return false
+                })
+
+
+                var emitReducerFactory = function(eventName){
+                    return function(currentState, item, index){
+                        if (item.payload != emitObj){
+                            return false
+                        }
+                        if (
+                            item.callback == (eventName + "-none-" + (index + 1)) ||
+                            item.callback == (eventName + "-none-" + (index - 1)) ||
+                            item.callback == (eventName + "-" + (index + 1))
+                        ){
+                            return currentState
+                        }
+                        else {
+                            return false
+                        }
+                    }
+                }
+
+                var emitObj = {
+                    foo: "bar"
+                }
+
+                testEmit("unregistered", emitObj, function(output, input){
+                    if (
+                        output == stateless &&
+                        eventStore.unregistered.length == 2 &&
+                        eventStore.unregistered.reduce(emitReducerFactory("unregistered"), true)
+                    ){
+                        return true
+                    }
+                    return false
+                })
+
+                testEmit("testA", emitObj, function(output, input){
+                    if (
+                        output == stateless &&
+                        eventStore.testA.length == 4 &&
+                        eventStore.testA.reduce(emitReducerFactory("testA"), true)
+                    ){
+                        return true
+                    }
+                    return false
+                })
+            })()
 
 		</script>
 		<script>
@@ -335,6 +415,7 @@
 				results[test].forEach(function(item, index){
 					displayResultRow(test, index, item)
 				})
+                document.body.appendChild(document.createElement("hr"))
 			}
 		</script>
 	</body>
