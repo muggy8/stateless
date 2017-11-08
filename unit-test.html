@@ -360,14 +360,13 @@
                 }
 
                 testEmit("unregistered", emitObj, function(output, input){
-                    if (
-                        output == stateless &&
-                        eventStore.unregistered.length == 2 &&
-                        eventStore.unregistered.reduce(emitObjReducer, true) &&
-                        objectEquivalence(eventStore.unregistered.map(function(item){
+                    var t1 = output == stateless,
+                        t2 = eventStore.unregistered.length == 2,
+                        t3 = eventStore.unregistered.reduce(emitObjReducer, true),
+                        t4 = objectEquivalence(eventStore.unregistered.map(function(item){
                             return item.callback
                         }), ["unregistered-none-1", "unregistered-none-2"])
-                    ){
+                    if (t1 && t2 && t3 && t4){
                         return true
                     }
                     return false
@@ -381,7 +380,7 @@
                             return item.callback
                         }), ["testA-1", "testA-2", "testA-none-1", "testA-none-2"])
 
-                    if (t1, t2, t3, t4){
+                    if (t1 && t2 && t3 && t4){
                         return true
                     }
                     return false
@@ -417,6 +416,26 @@
                     }
                     return false
                 })
+
+                // move the old tests over to old test
+                eventStore.oldTestA = eventStore.testA
+                delete eventStore.testA
+
+                testEmit("testA", function(output, input){
+                    var t1 = output == stateless,
+                        t2 = eventStore.testA.length == 3,
+                        t3 = eventStore.testA.reduce(emitNullReducer, true),
+                        t4 = objectEquivalence(eventStore.testA.map(function(item){
+                            return item.callback
+                        }), ["testA-2", "testA-none-1", "testA-none-2"])
+
+                    if (t1 && t2 && t3 && t4){
+                        return true
+                    }
+                    return false
+                })
+
+
 
             })()
 
