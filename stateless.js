@@ -1059,7 +1059,7 @@
 		value: function(nameSpace, data){ // public static function
 			data = data || {}
 			subscription[nameSpace] && subscription[nameSpace].forEach(function(callback){
-				callback(data)
+				callback(nameSpace, data)
 			})
 			globalWatchers.forEach(function(watcher){
 				watcher(nameSpace, data)
