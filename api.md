@@ -120,7 +120,7 @@ Because this function returns the unwatcher function, it goes without saying tha
 
 Example:
 ```javascript
-var stopWatching = stateless.watch("myEvent", function(data){ // this event will fire first
+var stopWatching = stateless.watch("myEvent", function(eventType, data){ // this event will fire first
 	if (data.prop === true){
 		stopWatching()
 		console.log("successfully watched an event till prop has been set to true")
@@ -141,6 +141,8 @@ var stopGlobalPeeker = statelss.watch(function(eventType, target){ // this event
 })
 ```
 
+NOTE: as of 2017-11-07, the latest Stateless commit has changed the callback function of watch to always be passed the event type as the first variable and the event data to be the second. If you rely on this package, please change accordingly. This change will be relaesed as version 0.2.0 in the near future
+
 ## stateless.emit()
 usage:
 ```javascript
@@ -151,7 +153,7 @@ The emit function allows you to emit custom events that may or may not have watc
 
 Example:
 ```javascript
-var stopWatching = stateless.watch("myEvent", function(data){
+var stopWatching = stateless.watch("myEvent", function(eventType, data){
 	if (data.prop === true){
 		stopWatching()
 		console.log("successfully watched an event till prop has been set to true")
