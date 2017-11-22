@@ -107,13 +107,12 @@
     			testRegister(document.querySelector(".div"), function(output, input){
                     input = input[0]
     				try {
-    					if (
-    						output == stateless &&
-    						input.getAttribute("id") == null &&
-    						stateless[0] == input &&
-    						stateless.length === 1 &&
-    						document.querySelector(".div:not([id])") == null
-    					){
+                        var t1 = output == stateless,
+                            t2 = input.getAttribute("id") == null,
+                            t3 = stateless[0] == input,
+                            t4 = stateless.length === 1,
+                            t5 = document.querySelector(".div:not([id])") == null
+    					if (t1 && t2 && t3 && t4 && t5){
     						return true
     					}
     					return false
@@ -125,14 +124,13 @@
     			testRegister(document.querySelector("div#wrap"), function(output, input){
                     input = input[0]
     				try {
-    					if (
-    						output == stateless &&
-    						input.getAttribute("id") == null &&
-    						stateless[1] == input &&
-    						stateless.length === 2 &&
-    						stateless.wrap == stateless[1] &&
-    						document.querySelector("div#wrap") == null
-    					){
+                        var t1 = output == stateless,
+                            t2 = input.getAttribute("id") == null ,
+                            t3 = stateless[1] == input,
+                            t4 = stateless.length === 2,
+                            t5 = stateless.wrap == stateless[1],
+                            t6 = document.querySelector("div#wrap") == null
+    					if (t1 && t2 && t3 && t4 && t5 && t6){
     						return true
     					}
     					return false
@@ -144,14 +142,13 @@
     			testRegister(document.querySelector("span#wrap"), function(output, input){
                     input = input[0]
                     try {
-    					if (
-    						output instanceof Error &&
-    						input.getAttribute("id") != null &&
-    						stateless[1] != input &&
-    						stateless.wrap == stateless[1] &&
-    						typeof stateless[2] == "undefined" &&
-    						document.querySelector("span#wrap") != null
-    					){
+                        var t1 = output instanceof Error,
+                            t2 = input.getAttribute("id") != null,
+                            t3 = stateless[1] != input,
+                            t4 = stateless.wrap == stateless[1],
+                            t5 = typeof stateless[2] == "undefined",
+                            t6 = document.querySelector("span#wrap") != null
+    					if (t1 && t2 && t3 && t4 && t5 && t6){
     						return true
     					}
     					return false
@@ -164,12 +161,11 @@
                     input = input[0]
                     try {
     					input = input.replace("id", "class")
-    					if (
-    						output == stateless &&
-    						stateless[2].outerHTML == input &&
-    						stateless.length === 3 &&
-    						stateless["was-string"] == stateless[2]
-    					){
+                        var t1 = output == stateless,
+                            t2 = stateless[2].outerHTML == input,
+                            t3 = stateless.length === 3,
+                            t4 = stateless["was-string"] == stateless[2]
+    					if (t1 && t2 && t3 && t4){
     						return true
     					}
     					return false
@@ -182,12 +178,11 @@
                     input = input[0]
                     try {
     					input = input.replace("id", "class")
-    					if (
-    						output == stateless &&
-    						stateless[3].outerHTML == `<div class="was-string-2 some-other-class"></div>` &&
-    						stateless.length === 4 &&
-    						stateless["was-string-2"] == stateless[3]
-    					){
+                        var t1 = output == stateless,
+                            t2 = stateless[3].outerHTML == `<div class="was-string-2 some-other-class"></div>`,
+                            t3 = stateless.length === 4,
+                            t4 = stateless["was-string-2"] == stateless[3]
+    					if (t1 && t2 && t3 && t4 ){
     						return true
     					}
     					return false
@@ -203,14 +198,13 @@
                     input = input[0]
     				try {
     					input = input.replace("id", "class")
-    					if (
-    						output == stateless &&
-    						stateless[4].outerHTML == `<div class="was-string-4"></div>` &&
-    						stateless["was-string-4"] == stateless[4] &&
-    						stateless[5].outerHTML == `<div class="was-string-5 some-other-class"></div>` &&
-    						stateless["was-string-5"] == stateless[5] &&
-    						stateless.length === 6
-    					){
+                        var t1 = output == stateless,
+                            t2 = stateless[4].outerHTML == `<div class="was-string-4"></div>`,
+                            t3 = stateless["was-string-4"] == stateless[4],
+                            t4 = stateless[5].outerHTML == `<div class="was-string-5 some-other-class"></div>`,
+                            t5 = stateless["was-string-5"] == stateless[5],
+                            t6 = stateless.length === 6
+                        if (t1 && t2 && t3 && t4 && t5 && t6){
     						return true
     					}
     					return false
@@ -232,10 +226,9 @@
     				})
 
     			testInstantiate(0, function(output, input){
-    				if (
-    					isInstance(output) &&
-    					output.element().outerHTML == `<div class="div"></div>`
-    				){
+                    var t1 = isInstance(output),
+                        t2 = output.element().outerHTML == `<div class="div"></div>`
+                    if (t1 && t2){
     					return true
     				}
     				else {
@@ -244,10 +237,9 @@
     			})
 
     			testInstantiate("was-string", function(output, input){
-    				if (
-    					isInstance(output) &&
-    					output.element().outerHTML == `<div class="was-string"></div>`
-    				){
+                    var t1 = isInstance(output),
+                        t2 = output.element().outerHTML == `<div class="was-string"></div>`
+    				if (t1 && t2){
     					return true
     				}
     				else {
