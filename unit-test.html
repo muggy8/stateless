@@ -101,9 +101,7 @@
 				return equivalence
 			}
 
-			;(function(){
-                var testRegister = createTesterFunction("register", stateless)
-
+			;(function(testRegister){
     			testRegister(document.querySelector(".div"), function(output, input){
                     input = input[0]
     				try {
@@ -212,11 +210,9 @@
     					return false
     				}
     			})
-            })()
+            })(createTesterFunction("register", stateless))
 
-            ;(function(){
-    			var testInstantiate = createTesterFunction("instantiate", stateless)
-
+            ;(function(testInstantiate){
     			var isInstance = overload()
     				.args(scopeIdentifyer).use(function(){
     					return true
@@ -246,13 +242,9 @@
     					return false
     				}
     			})
-            })()
+            })(createTesterFunction("instantiate", stateless))
 
-			;(function(){
-				var testEach = createTesterFunction("each", stateless)
-
-				var itemList = [],
-					indexList = []
+			;(function(testEach, itemList = [], indexList = []){
 				testEach(function(item, index){
 					itemList.push(item)
 					indexList.push(index)
@@ -272,14 +264,10 @@
 					}
                     return false
 				})
-			})()
+			})(createTesterFunction("each", stateless))
 
-            ;(function(){
-                var testWatch = createTesterFunction("watch", stateless)
-                var testEmit = createTesterFunction("emit", stateless)
-
-                var eventStore = {},
-                    unwatchA1, unwatchA2, unwatchNameless1, unwatchNameless2
+            ;(function(testWatch, testEmit, eventStore = {}){
+                var unwatchA1, unwatchA2, unwatchNameless1, unwatchNameless2
                 testWatch("testA", function(eventType, data){
                     eventStore[eventType] = eventStore[eventType] || []
                     eventStore[eventType].push({
@@ -426,7 +414,37 @@
                     }
                     return false
                 })
-            })()
+
+                unwatchNameless1()
+
+                testEmit("unnamed1", emitObj, function(output){
+                    var t1 = output == stateless,
+                        t2 = eventStore.unnamed1.length == 1,
+                        t3 = eventStore.unnamed1.reduce(emitObjReducer, true),
+                        t4 = objectEquivalence(eventStore.unnamed1.map(function(item){
+                            return item.callback
+                        }), ["unnamed1-none-2"])
+
+                    if (t1 && t2 && t3 && t4){
+                        return true
+                    }
+                    return false
+                })
+
+                testEmit("unnamed2", emitObj, function(output){
+                    var t1 = output == stateless,
+                        t2 = eventStore.unnamed2.length == 1,
+                        t3 = eventStore.unnamed2.reduce(emitObjReducer, true),
+                        t4 = objectEquivalence(eventStore.unnamed2.map(function(item){
+                            return item.callback
+                        }), ["unnamed2-none-2"])
+
+                    if (t1 && t2 && t3 && t4){
+                        return true
+                    }
+                    return false
+                })
+            })(createTesterFunction("watch", stateless), createTesterFunction("emit", stateless))
 
 		</script>
 		<script>
