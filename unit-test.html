@@ -15,6 +15,7 @@
 		<div class="div"></div>
 
 		<script>
+            "use strict"
 			function verdict(verdict, input, output, test){
 				this.verdict = verdict
 				this.input = input
@@ -78,28 +79,58 @@
 				return checkerFn
 			}
 
-			function objectEquivalence(a, b){
-				var equivalence = true
-                keyA = Object.keys(a)
-                keyB = Object.keys(b)
-
-                keyA.forEach(function(key){
-                    if (typeof a[key] !== typeof b[key]){
-                        return equivalence = false
+			var objectEquivalence = (function(){
+                // a helper function that's limited to the current scope that helps do the object equivalence stuff
+                function removeKeyFromList(key, list){
+                    var keyIndex = list.indexOf(key)
+                    if (keyIndex > -1){
+                        list.splice(keyIndex, 1)
                     }
-
-                    if (typeof a[key] === "object"){ // we got here so type of b[key] should also equal object
-                        return equivalence && objectEquivalence(a[key], b[key])
-                    }
-                    else if (a[key] === b[key]){
-                        keyB.splice(keyB.indexOf(key), 1)
-                    }
-                })
-                if (keyB.length != 0){
-                    equivalence = false
                 }
-				return equivalence
-			}
+
+                // return an anonymous that does the comparison of a and b
+                return function(a, b){
+    				var equivalence = true,
+                        keyA = Object.keys(a),
+                        keyB = Object.keys(b)
+
+                    // they should have the same number of keys if they dont we know it's not the same and return (this is a performance optimization)
+                    if (keyA.length != keyB.length){
+                        return false
+                    }
+
+                    // we check only on A. if we assume that they are the same then by the end of this process we try to disprove  that
+                    keyA.forEach(function(key){
+                        // a pretty big tell is if the key names don't match so we just stop and we know it's not the same
+                        if (typeof a[key] !== typeof b[key]){
+                            return equivalence = false
+                        }
+
+                        // if it's an object we want to recursively loop through sub items and find if the sub items match too
+                        if (typeof a[key] === "object"){ // we got here so type of b[key] should also equal object
+                            var subIsEqual = objectEquivalence(a[key], b[key])
+                            if (subIsEqual){
+                                // if the sub objects are the same, we can remove the same item from keyB
+                                removeKeyFromList(key, keyB)
+                                //keyB.splice(keyB.indexOf(key), 1)
+                            }
+                            // and we update / perserve the current equivalence state
+                            equivalence = equivalence && subIsEqual
+                        }
+                        // if it's not an object, it's a basic data property so we can do a strict === comparison
+                        else if (a[key] === b[key]){
+                            // if it does match we can cut this key out of the key B set
+                            removeKeyFromList(key, keyB)
+                            //keyB.splice(keyB.indexOf(key), 1)
+                        }
+                    })
+                    // by the end. we have looped through all the A keys and if the A keys match the B keys the B keys should be empty by now. if it's not then obviously the data doesn't match so we mark it false
+                    if (keyB.length != 0){
+                        equivalence = false
+                    }
+                    return equivalence
+    			}
+            })()
 
 			;(function(testRegister){
     			testRegister(document.querySelector(".div"), function(output, input){
@@ -213,7 +244,7 @@
             })(createTesterFunction("register", stateless))
 
             ;(function(testInstantiate){
-    			var isInstance = overload()
+                var isInstance = overload()
     				.args(scopeIdentifyer).use(function(){
     					return true
     				})
@@ -255,11 +286,14 @@
 						createdItemList.push(stateless[i])
 						createdIndexList.push(i)
 					}
-					if(
-						output == stateless &&
-                        objectEquivalence(createdItemList, itemList) &&
-                        objectEquivalence(createdIndexList, indexList)
-					){
+
+                    var t1 = output == stateless ,
+                        t2 = objectEquivalence(createdItemList, itemList),
+                        t3 = objectEquivalence(createdIndexList, indexList)
+
+                    console.log(t1, t2, t3, createdItemList, itemList)
+
+					if(t1 && t2 && t3){
                         return true
 					}
                     return false
@@ -446,8 +480,12 @@
                 })
             })(createTesterFunction("watch", stateless), createTesterFunction("emit", stateless))
 
-		</script>
-		<script>
+            ;(function(testPlugin){
+
+            })(createTesterFunction("plugin", stateless))
+
+            // display the various verdicts
+
 			function displayResultRow(test, index, results) {
 				var div, title, message
 				div = document.createElement("div")
