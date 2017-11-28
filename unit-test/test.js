@@ -125,12 +125,11 @@
     })()
 
     ;(function(testRegister){
-        testRegister(document.querySelector(".div"), function(output, input){
-            input = input[0]
+        testRegister(document.querySelector(".div"), function(output){
             try {
                 var t1 = output == stateless,
-                    t2 = input.getAttribute("id") == null,
-                    t3 = stateless[0] == input,
+                    t2 = stateless[0].outerHTML == '<div class="div"></div>',
+                    t3 = stateless[0].getAttribute("id") == null,
                     t4 = stateless.length === 1,
                     t5 = document.querySelector(".div:not([id])") == null
                 if (t1 && t2 && t3 && t4 && t5){
@@ -142,12 +141,11 @@
             }
         })
 
-        testRegister(document.querySelector("div#wrap"), function(output, input){
-            input = input[0]
+        testRegister(document.querySelector("div#wrap"), function(output){
             try {
                 var t1 = output == stateless,
-                    t2 = input.getAttribute("id") == null ,
-                    t3 = stateless[1] == input,
+                    t2 = stateless[1].getAttribute("id") == null ,
+                    t3 = stateless[1].outerHTML == '<div class="wrap"></div>',
                     t4 = stateless.length === 2,
                     t5 = stateless.wrap == stateless[1],
                     t6 = document.querySelector("div#wrap") == null
@@ -551,7 +549,7 @@
             }
             return false
         })
-        
+
     })(createTesterFunction("view", stateless))
 
     // display the various verdicts

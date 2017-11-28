@@ -937,8 +937,14 @@
 		writable: false,
 		value: function(ele){ // public static function
 			if (ele instanceof HTMLElement){
-				pushEle(ele)
-				ele.parentElement && ele.parentElement.removeChild(ele)
+                if (ele.id && context.stateless[ele.id]){
+                    throw new Error("Template with id of \"" + ele.id + "\" has already been declared");
+                }
+                else {
+                    pushEle(ele.cloneNode(true))
+	                ele.parentElement && ele.parentElement.removeChild(ele)
+                }
+
 			}
 			else if (typeof ele === "string"){
 				converter.innerHTML = ele

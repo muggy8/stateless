@@ -73,6 +73,17 @@ stateless.consume(myDiv)
 stateless.consume(document.querySelector("#element-id"))
 ```
 
+Consume does not keep the element that it consumed in memory. instead it creates a deep copy of that element and keeps that one instead. This means that you can do something like below but you would NEVER do something like this cuz there are far better ways of doing things like this
+
+```javascript
+var btn = document.createElement("button")
+for(var i = 1; i <= 10; i++){
+    btn.id = "button-" + i
+    btn.innerHTML = "select " + i
+    stateless.consume(btn)
+}
+```
+
 ## stateless.register()
 This is an alias for [.consume()](#stateless.consume())
 
