@@ -465,7 +465,57 @@
     })(createTesterFunction("watch", stateless), createTesterFunction("emit", stateless))
 
     ;(function(testPlugin){
-        testPlugin(function(){})
+        testPlugin(function(output){
+            var t1 = output === stateless
+            if (t1) {
+                return true
+            }
+            return false
+        })
+
+        testPlugin("none-existant-plugin", function(output){
+            var t1 = output === stateless
+            if (t1) {
+                return true
+            }
+            return false
+        })
+
+
+        testPlugin("overload", overload, function(output){
+            var t1 = output === stateless,
+                t2 = output.overload === overload
+            if (t1 && t2){
+                return true
+            }
+            return false
+        })
+
+        testPlugin("overload", function(output){
+            var t1 = output === overload
+            if (t1){
+                return true
+            }
+            return false
+        })
+
+        var wrapPlugin = {foo: "bar"}
+        testPlugin("wrap", wrapPlugin, function(output){
+            var t1 = output === stateless,
+                t2 = output.wrap !== wrapPlugin
+            if (t1, t2){
+                return true
+            }
+            return false
+        })
+
+        testPlugin("wrap", function(output){
+            var t1 = output === wrapPlugin
+            if (t1){
+                return true
+            }
+            return false
+        })
     })(createTesterFunction("plugin", stateless))
 
     // display the various verdicts
