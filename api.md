@@ -206,7 +206,7 @@ stateless.view(htmlElement)
 stateless.view(templateString)
 ```
 
-The view method allows you to construct scope objects directly from HTML elements / HTMLstring bypassing the need to register them. This is useful for building larger more complicated views that have multiple components and sub components but only one set of common methods (much like views and controllers in an MVC framework). This method will return the scope object created as if it was a stateless.register().instantiate() call without adding the item to the stateless template repository and thus, you cannot chain this method with any other stateless methods. That said you can choose to chain standsard Scope methods from here.
+The view method allows you to construct scope objects directly from HTML elements / HTMLstring bypassing the need to register them. This is useful for building larger more complicated views that have multiple components and sub components but only one set of common methods (much like views and controllers in an MVC framework). This method will return the scope object created as if it was a stateless.register().instantiate() call without adding the item to the stateless template repository and thus, you cannot chain this method with any other stateless methods. That said you can choose to chain standard Scope methods from here.
 
 Example:
 ```javascript

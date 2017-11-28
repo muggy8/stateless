@@ -29,6 +29,14 @@
         unlink: "function"
     }
 
+    var isInstance = overload()
+        .args(scopeIdentifyer).use(function(){
+            return true
+        })
+        .args().use(function(){
+            return false
+        })
+
     var results = {}
     function createTesterFunction(nameOfFunctionToTest, objectFunctionBelongsTo = stateless){
         var selfResults = results[nameOfFunctionToTest] = results[nameOfFunctionToTest] || []
@@ -228,14 +236,6 @@
     })(createTesterFunction("register", stateless))
 
     ;(function(testInstantiate){
-        var isInstance = overload()
-            .args(scopeIdentifyer).use(function(){
-                return true
-            })
-            .args().use(function(){
-                return false
-            })
-
         testInstantiate(0, function(output, input){
             var t1 = isInstance(output),
                 t2 = output.element().outerHTML == `<div class="div"></div>`
@@ -274,8 +274,6 @@
             var t1 = output == stateless ,
                 t2 = objectEquivalence(createdItemList, itemList),
                 t3 = objectEquivalence(createdIndexList, indexList)
-
-            console.log(t1, t2, t3, createdItemList, itemList)
 
             if(t1 && t2 && t3){
                 return true
@@ -385,7 +383,6 @@
         })
 
         testEmit("somethingElse", function(output, input){
-            console.log(eventStore)
             var t1 = output == stateless ,
                 t2 = eventStore.somethingElse.length == 2 ,
                 t3 = eventStore.somethingElse.reduce(emitNullReducer, true) ,
@@ -503,7 +500,7 @@
         testPlugin("wrap", wrapPlugin, function(output){
             var t1 = output === stateless,
                 t2 = output.wrap !== wrapPlugin
-            if (t1, t2){
+            if (t1 && t2){
                 return true
             }
             return false
@@ -517,6 +514,45 @@
             return false
         })
     })(createTesterFunction("plugin", stateless))
+
+    ;(function(testView){
+        var viewTemplateEle = document.createElement("div");
+        viewTemplateEle.appendChild(document.createElement("hr"))
+        viewTemplateEle.appendChild(document.createElement("p")).innerText="This is a test thing"
+        viewTemplateEle.appendChild(document.createElement("p")).innerText="Why am i doing this?"
+        viewTemplateEle.appendChild(document.createElement("hr"))
+        viewTemplateEle.id = "view"
+        viewTemplateEle.setAttribute("class", "super")
+
+        var viewTemplateText = `<div id="id-1" class="class-1 class-2">
+            <hr>
+            <p>This is the string version</p>
+            <p>I'm pretty sure most people will be doing this</p>
+            <hr>
+        </div>`
+
+        var viewDoubleTemplateText = `<div id="id-1" class="class-1 class-2">
+            <hr>
+            <p>This is the string version</p>
+            <p>I'm pretty sure most people will be doing this</p>
+            <hr>
+        </div><div id="id-2" class="class-1 class-2">Not sure how this will work actually</div>`
+
+        var pretestStatelessLen = stateless.length
+
+        testView(viewTemplateEle, function(output){
+            var t1 = isInstance(output),
+                t2 = output.element() === viewTemplateEle,
+                t3 = stateless.length === pretestStatelessLen,
+                t4 = viewTemplateEle.getAttribute("id") === null,
+                t5 = viewTemplateEle.className === "view super"
+            if (t1 && t2 && t3 && t4 && t5){
+                return true
+            }
+            return false
+        })
+        
+    })(createTesterFunction("view", stateless))
 
     // display the various verdicts
 
