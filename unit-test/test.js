@@ -550,6 +550,29 @@
             return false
         })
 
+        testView(viewTemplateText, function(output){
+            var t1 = isInstance(output),
+                t2 = output.element().outerHTML.replace(/\n\s*/g, "") === `<div class="id-1 class-1 class-2">
+                    <hr>
+                    <p>This is the string version</p>
+                    <p>I'm pretty sure most people will be doing this</p>
+                    <hr>
+                </div>`.replace(/\n\s*/g, ""),
+                t3 = stateless.length === pretestStatelessLen
+            if (t1 && t2 && t3){
+                return true
+            }
+            return false
+        })
+
+        testView(viewDoubleTemplateText, function(output){
+            var t1 = output instanceof Error,
+                t2 = stateless.length === pretestStatelessLen
+            if (t1 && t2){
+                return true
+            }
+            return false
+        })
     })(createTesterFunction("view", stateless))
 
     // display the various verdicts

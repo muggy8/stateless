@@ -980,7 +980,9 @@
 				converter.innerHTML = ele
 				if (converter.children.length === 1){
 					return stateless.view(converter.children[0])
-				}
+				} else {
+                    throw new Error("Views can only have 1 root element")
+                }
 			}
 			else {
 				throw new Error("Invalid inputs")
